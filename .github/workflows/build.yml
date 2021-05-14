@@ -2,7 +2,8 @@ name: Build Haxe Project
 
 on:
   push:
-    branches: master
+    branches: 
+      - main
 
 jobs:
   build:
