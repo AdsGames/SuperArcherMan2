@@ -123,6 +123,7 @@ class PlayState extends FlxState {
   }
 
   // HINT: THIS UPDATES
+  // THANKS TIPS
   override public function update(elapsed:Float) {
     // Move power text to mouse
     powerText.x = FlxG.mouse.x + 15;
@@ -137,9 +138,10 @@ class PlayState extends FlxState {
     FlxG.collide(characters, levelCollide);
     FlxG.collide(jim, levelCollide);
     FlxG.collide(jim.getArrows(), levelCollide);
+    FlxG.collide(drone, levelCollide);
     FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
 
-    // kill "friends"
+    // kill "friends"ß
     FlxG.overlap(jim.getArrows(), characters, hitEnemy);
 
     // Ladders

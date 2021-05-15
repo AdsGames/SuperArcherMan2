@@ -14,13 +14,13 @@ import flixel.system.FlxSound;
 // Swinging enemies
 class Drone extends Character {
   private static inline final MOVEMENT_SPEED_MAX:Float = 200;
+  private static inline final MOVEMENT_SPEED_Y_MAX:Float = 2500;
   private static inline final MOVEMENT_SPEED_CHANGE:Float = 10;
   private static inline final MOVEMENT_SPEED_DECELERATION_CHANGE:Float = 0.2;
+  private static inline final MOVEMENT_SPEED:Int = 200;
 
   // Pointer to jim
   private var jimPointer:Character;
-
-  private static inline final MOVEMENT_SPEED:Int = 200;
 
   // Create enemy
   public function new(jimPointer:Character) {
@@ -72,6 +72,30 @@ class Drone extends Character {
         acceleration.x = 0;
       }
     }
+    if (FlxG.keys.pressed.DOWN) {
+      // Movement
+      if (velocity.y < MOVEMENT_SPEED_Y_MAX) {
+        // Less movement acceleration when jumping
+
+        acceleration.y = MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_Y_MAX - velocity.y);
+      }
+      // Stop accelerating when we fast
+      else if (velocity.y >= MOVEMENT_SPEED_Y_MAX) {
+        acceleration.y = 0;
+      }
+    }
+    if (FlxG.keys.pressed.UP) {
+      // Movement
+      if (velocity.y > -MOVEMENT_SPEED_Y_MAX) {
+        // Less movement acceleration when jumping
+        acceleration.y = -MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_Y_MAX + velocity.y);
+      }
+      // Stop accelerating when we fast
+      else if (velocity.y <= -MOVEMENT_SPEED_Y_MAX) {
+        acceleration.y = 0;
+      }
+    }
+
     if (!FlxG.keys.pressed.LEFT && !FlxG.keys.pressed.RIGHT) {
       // Stopped
       if (velocity.x < 5 && velocity.x > -5) {
@@ -85,6 +109,21 @@ class Drone extends Character {
       }
       else if (velocity.x < 0) {
         acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_MAX - velocity.x);
+      }
+    }
+    if (!FlxG.keys.pressed.UP && !FlxG.keys.pressed.DOWN) {
+      // Stopped
+      if (velocity.y < 5 && velocity.y > -5) {
+        acceleration.y = 0;
+        velocity.y = 0;
+      }
+
+      // Decelerating
+      else if (velocity.y > 0) {
+        acceleration.y = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_Y_MAX + velocity.y);
+      }
+      else if (velocity.y < 0) {
+        acceleration.y = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_Y_MAX - velocity.y);
       }
     }
     super.move(elapsed);
