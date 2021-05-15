@@ -40,7 +40,7 @@ class Enemy extends Character {
     this.jimPointer = jimPointer;
 
     // Init health
-    health = 10;
+    health = 100;
 
     // Load sounds
     heySound = new FlxSound();
@@ -112,6 +112,6 @@ class Enemy extends Character {
 
   // Get hit
   public function getHit(velocity:Float) {
-    health -= Math.abs(velocity);
+    health -= Math.abs(velocity / 10.0);
   }
 }
