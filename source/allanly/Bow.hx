@@ -104,7 +104,7 @@ class Bow extends Arm {
   public function release() {
     // Min velocity
     if (power > minPower) {
-      arrowContainer.add(new Arrow(this, x + width / 2, y + height / 2, angle, power, 8));
+      arrowContainer.add(new Arrow(this, x + width / 2, y + height / 2, angle, power));
     }
     animation.frameIndex = 0;
     power = 0;

@@ -20,6 +20,9 @@ class Arrow extends FlxSprite {
   // Sounds
   private var arrowHitSound:FlxSound;
   private var bowReleaseSound:FlxSound;
+  private var yAccelertion:Int;
+
+  private static inline final ARROW_SPEED_MULTIPLIER:Float = 1.5;
 
   // Dead arrow
   public var dead:Bool;
@@ -28,12 +31,11 @@ class Arrow extends FlxSprite {
   public var trailEmitter:FlxEmitter;
 
   // Create arrow
-  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2, mass:Float = 1) {
+  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2) {
     super(x, y, AssetPaths.arrow__png);
     this.angle = angle;
-    this.mass = mass;
-    this.velocity.x = -Math.cos((angle + 90) * (Math.PI / 180)) * velocity;
-    this.velocity.y = -Math.sin((angle + 90) * (Math.PI / 180)) * velocity;
+    this.velocity.x = -Math.cos((angle + 90) * (Math.PI / 180)) * velocity * ARROW_SPEED_MULTIPLIER;
+    this.velocity.y = -Math.sin((angle + 90) * (Math.PI / 180)) * velocity * ARROW_SPEED_MULTIPLIER;
 
     this.parent = parent;
     dead = false;
@@ -43,6 +45,8 @@ class Arrow extends FlxSprite {
     height -= 2;
     offset.x = 7;
     width -= 13;
+
+    this.yAccelertion = 300;
 
     // Make sure x/y velocity is never 0 to help below scripts
     if (this.velocity.x == 0) {
@@ -103,10 +107,11 @@ class Arrow extends FlxSprite {
         arrowHitSound.proximity(x, y, parent, 800, true);
         arrowHitSound.play();
         trailEmitter.emitting = false;
+        acceleration.y = 0;
       }
       else {
-        // Fall down
-        velocity.y += mass;
+        // Gravity
+        acceleration.y = this.yAccelertion;
 
         // Point in proper direction
         angle = Math.atan2(velocity.y, velocity.x) * 180 / Math.PI;
