@@ -17,8 +17,8 @@ import js.html.AbortController;
 class Drone extends Character {
   private static inline final MOVEMENT_SPEED_MAX:Float = 200;
   private static inline final MOVEMENT_SPEED_Y_MAX:Float = 2500;
-  private static inline final MOVEMENT_SPEED_CHANGE:Float = 10;
-  private static inline final MOVEMENT_SPEED_DECELERATION_CHANGE:Float = 0.2;
+  private static inline final MOVEMENT_SPEED_CHANGE_2:Float = 10;
+  private static inline final MOVEMENT_SPEED_DECELERATION_CHANGE_2:Float = 0.2;
   private static inline final MOVEMENT_SPEED:Int = 200;
 
   // Pointer to jim
@@ -54,7 +54,7 @@ class Drone extends Character {
       // Movement
       if (velocity.x > -MOVEMENT_SPEED_MAX) {
         // Less movement acceleration when jumping
-        acceleration.x = -MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
+        acceleration.x = -MOVEMENT_SPEED_CHANGE_2 * (MOVEMENT_SPEED_MAX + velocity.x);
       }
       // Stop accelerating when we fast
       else if (velocity.x <= -MOVEMENT_SPEED_MAX) {
@@ -70,7 +70,7 @@ class Drone extends Character {
       if (velocity.x < MOVEMENT_SPEED_MAX) {
         // Less movement acceleration when jumping
 
-        acceleration.x = MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_MAX - velocity.x);
+        acceleration.x = MOVEMENT_SPEED_CHANGE_2 * (MOVEMENT_SPEED_MAX - velocity.x);
       }
       // Stop accelerating when we fast
       else if (velocity.x >= MOVEMENT_SPEED_MAX) {
@@ -85,7 +85,7 @@ class Drone extends Character {
       if (velocity.y < MOVEMENT_SPEED_Y_MAX) {
         // Less movement acceleration when jumping
 
-        acceleration.y = MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_Y_MAX - velocity.y);
+        acceleration.y = MOVEMENT_SPEED_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX - velocity.y);
       }
       // Stop accelerating when we fast
       else if (velocity.y >= MOVEMENT_SPEED_Y_MAX) {
@@ -96,7 +96,7 @@ class Drone extends Character {
       // Movement
       if (velocity.y > -MOVEMENT_SPEED_Y_MAX) {
         // Less movement acceleration when jumping
-        acceleration.y = -MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_Y_MAX + velocity.y);
+        acceleration.y = -MOVEMENT_SPEED_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX + velocity.y);
       }
       // Stop accelerating when we fast
       else if (velocity.y <= -MOVEMENT_SPEED_Y_MAX) {
@@ -114,10 +114,10 @@ class Drone extends Character {
 
       // Decelerating
       else if (velocity.x > 0) {
-        acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
+        acceleration.x = -MOVEMENT_SPEED_CHANGE_2 * MOVEMENT_SPEED_DECELERATION_CHANGE_2 * (MOVEMENT_SPEED_MAX + velocity.x);
       }
       else if (velocity.x < 0) {
-        acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_MAX - velocity.x);
+        acceleration.x = MOVEMENT_SPEED_CHANGE_2 * MOVEMENT_SPEED_DECELERATION_CHANGE_2 * (MOVEMENT_SPEED_MAX - velocity.x);
       }
     }
     if (!FlxG.keys.pressed.UP && !FlxG.keys.pressed.DOWN) {
@@ -129,10 +129,10 @@ class Drone extends Character {
 
       // Decelerating
       else if (velocity.y > 0) {
-        acceleration.y = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_Y_MAX + velocity.y);
+        acceleration.y = -MOVEMENT_SPEED_CHANGE_2 * MOVEMENT_SPEED_DECELERATION_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX + velocity.y);
       }
       else if (velocity.y < 0) {
-        acceleration.y = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_Y_MAX - velocity.y);
+        acceleration.y = MOVEMENT_SPEED_CHANGE_2 * MOVEMENT_SPEED_DECELERATION_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX - velocity.y);
       }
     }
     super.move(elapsed);
@@ -144,6 +144,10 @@ class Drone extends Character {
       return bow.getArrows();
     }
     return null;
+  }
+
+  public function getBow():Bow {
+    return Std.downcast(getArm(), Bow);
   }
 
   // Get hit

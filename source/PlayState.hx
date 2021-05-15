@@ -128,7 +128,7 @@ class PlayState extends FlxState {
   // HINT: THIS UPDATES
   // THANKS TIPS
   override public function update(elapsed:Float) {
-    // Move power text to mouse
+    trace("kill me right now"); // Move power text to mouse
     powerText.x = FlxG.mouse.x + 15;
     powerText.y = FlxG.mouse.y;
 
@@ -141,7 +141,8 @@ class PlayState extends FlxState {
     FlxG.collide(enemies, levelCollide);
     FlxG.collide(jim, levelCollide);
     FlxG.collide(jim.getArrows(), levelCollide);
-    FlxG.collide(jim.getDrone(), levelCollide);
+    if (jim.getDrone() != null)
+      FlxG.collide(jim.getDrone(), levelCollide);
 
     FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
 
@@ -153,11 +154,13 @@ class PlayState extends FlxState {
 
     // Door action
     FlxG.overlap(jim, doors, collideDoor);
-    FlxG.overlap(jim.getDrone(), doors, collideDoor);
+    if (jim.getDrone() != null)
+      FlxG.overlap(jim.getDrone(), doors, collideDoor);
 
     // Run into draw bridge
     FlxG.collide(jim, gameDrawbridge);
-    FlxG.collide(jim.getDrone(), gameDrawbridge);
+    if (jim.getDrone() != null)
+      FlxG.collide(jim.getDrone(), gameDrawbridge);
 
     FlxG.overlap(enemies, doors, collideDoor);
 

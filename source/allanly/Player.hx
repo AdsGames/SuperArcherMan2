@@ -26,6 +26,7 @@ class Player extends Character {
   private var ladderX:Float;
   private var dead:Bool;
   private var hasWon:Bool;
+  private var droneAlive:Bool;
 
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
@@ -45,13 +46,10 @@ class Player extends Character {
     ladderX = 0;
     dead = false;
     hasWon = false;
+    droneAlive = true;
 
     // Init health
     health = 100;
-
-    drone = new Drone(x, y); // Images and animations <-- this actually is not Images and aminations
-    drone.pickupArm(new Bow(600.0, 1.0, 100.0));
-    FlxG.state.add(drone);
 
     loadGraphic(AssetPaths.player__png, true, 14, 30);
     animation.add("walk", [0, 1, 2, 3], 10, true);
@@ -135,10 +133,16 @@ class Player extends Character {
 
     // Make arrows
     if (FlxG.mouse.justPressed) {
-      bow.pullBack();
+      if (drone == null)
+        bow.pullBack();
+      else
+        drone.getBow().pullBack();
     }
     else if (FlxG.mouse.justReleased) {
-      bow.release();
+      if (drone == null)
+        bow.release();
+      else
+        drone.getBow().release();
     }
 
     // Move around
@@ -153,6 +157,16 @@ class Player extends Character {
     if (!dead) {
       // Move that character
       // Right
+      if (FlxG.keys.pressed.F) {
+        if (droneAlive && drone == null) {
+          drone = new Drone(getPosition().x, getPosition().y); // Images and animations <-- this actually is not Images and aminations
+
+          drone.pickupArm(new Bow(600.0, 1.0, 100.0));
+
+          FlxG.state.add(drone);
+        }
+      }
+
       if (FlxG.keys.pressed.D) {
         moveRight();
       }
@@ -172,6 +186,7 @@ class Player extends Character {
         }
       }
       // Jump Jump!
+      // me on the edge of the building
       if (FlxG.keys.pressed.SPACE) {
         jump(JUMP_VELOCITY);
       }
