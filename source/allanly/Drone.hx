@@ -30,6 +30,7 @@ class Drone extends Character {
     super(x, y);
 
     // Init vars
+    health = 100;
 
     // Images and animations
     loadGraphic(AssetPaths.drone__png, true, 16, 16);
@@ -143,7 +144,7 @@ class Drone extends Character {
     super.kill();
   }
 
-  public function getArrows():FlxTypedGroup<Arrow> {
+  override public function getArrows():FlxTypedGroup<Arrow> {
     var bow = Std.downcast(getArm(), Bow);
     if (bow != null) {
       return bow.getArrows();

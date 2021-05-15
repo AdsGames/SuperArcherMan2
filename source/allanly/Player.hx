@@ -269,7 +269,7 @@ class Player extends Character {
   }
 
   // Get arrows
-  public function getArrows():FlxTypedGroup<Arrow> {
+  override public function getArrows():FlxTypedGroup<Arrow> {
     var bow = Std.downcast(getArm(), Bow);
     var allArrows = null;
     var droneBow = null;
