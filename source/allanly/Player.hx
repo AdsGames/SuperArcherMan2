@@ -11,6 +11,7 @@ import Math;
 import flixel.FlxG;
 import flixel.addons.display.FlxExtendedSprite.MouseCallback;
 import flixel.group.FlxGroup;
+import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
 import flixel.util.FlxTimer;
 
@@ -29,10 +30,6 @@ class Player extends Character {
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
   private static inline final DEATH_TIMER:Float = 3;
-  private static inline final MOVEMENT_SPEED_MAX:Float = 200;
-  private static inline final MOVEMENT_SPEED_CHANGE:Float = 10;
-  private static inline final MOVEMENT_SPEED_JUMPING_CHANGE:Float = 0.2;
-  private static inline final MOVEMENT_SPEED_DECELERATION_CHANGE:Float = 0.2;
 
   // Make character
   public function new(x:Float = 0, y:Float = 0) {
@@ -41,6 +38,7 @@ class Player extends Character {
 
     // Default values
     counter = 0;
+    movementSpeedMax = 200;
 
     // Variables
     isOnLadder = false;
@@ -130,6 +128,19 @@ class Player extends Character {
     if (!dead && FlxG.keys.pressed.K) {
       die();
     }
+
+    // Update bow target
+    var bow = Std.downcast(arm, Bow);
+    bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+
+    // Make arrows
+    if (FlxG.mouse.justPressed) {
+      bow.pullBack();
+    }
+    else if (FlxG.mouse.justReleased) {
+      bow.release();
+    }
+
     // Move around
     move(elapsed);
   }
@@ -143,52 +154,11 @@ class Player extends Character {
       // Move that character
       // Right
       if (FlxG.keys.pressed.D) {
-        // Movement
-        if (velocity.x < MOVEMENT_SPEED_MAX) {
-          // Less movement acceleration when jumping
-          if (!jumping) {
-            acceleration.x = MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_MAX - velocity.x);
-          }
-          else {
-            acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
-          }
-        }
-        // Stop accelerating when we fast
-        else if (velocity.x >= MOVEMENT_SPEED_MAX) {
-          acceleration.x = 0;
-        }
-        // Animation
-        animation.play("walk");
-
-        // Flip
-        if (scale.x < 0) {
-          scale.x *= -1;
-        }
+        moveRight();
       }
       // Left
       if (FlxG.keys.pressed.A) {
-        // Movement
-        if (velocity.x > -MOVEMENT_SPEED_MAX) {
-          // Less movement acceleration when jumping
-          if (!jumping) {
-            acceleration.x = -MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
-          }
-          else {
-            acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
-          }
-        }
-          // Stop accelerating when we fast
-        // no u
-        else if (velocity.x <= -MOVEMENT_SPEED_MAX) {
-          acceleration.x = 0;
-        }
-
-        // Animaiton
-        animation.play("walk");
-        // Flip
-        if (scale.x > 0) {
-          scale.x *= -1;
-        }
+        moveLeft();
       }
       // Ladder
       if (isOnLadder) {
@@ -223,7 +193,7 @@ class Player extends Character {
 
         // Decelerating
         else if (velocity.x > 0) {
-          acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
+          acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax + velocity.x);
 
           // Resolve animation if we're on a ladder
           if (!isOnLadder) {
@@ -234,7 +204,7 @@ class Player extends Character {
           }
         }
         else if (velocity.x < 0) {
-          acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_MAX - velocity.x);
+          acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax - velocity.x);
 
           // Resolve animation if we're on a ladder
           // ur butt is on a ladder

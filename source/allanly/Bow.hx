@@ -25,6 +25,8 @@ class Bow extends Arm {
   private var powerTimer:FlxTimer;
   private var power:Float;
 
+  private var target:FlxPoint;
+
   // Create bow
   public function new(maxPower:Float = 100.0, chargeTime:Float = 1.0, minPower:Float = 20.0) {
     super(AssetPaths.bow_arm__png);
@@ -41,6 +43,9 @@ class Bow extends Arm {
     // Arrow container
     arrowContainer = new FlxTypedGroup<Arrow>();
     FlxG.state.add(arrowContainer);
+
+    // Default target
+    target = new FlxPoint(0, 0);
   }
 
   // Update bow
@@ -48,20 +53,7 @@ class Bow extends Arm {
     super.update(elapsed);
 
     // Rotate
-    angle = new FlxPoint(x + width / 2.0, y + height / 2.0).angleBetween(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
-
-    // Make arrows
-    if (FlxG.mouse.justPressed) {
-      powerTimer.start(chargeTime / 100.0, powerTicker, 0);
-    }
-    else if (FlxG.mouse.justReleased) {
-      // Min velocity
-      if (power > minPower) {
-        arrowContainer.add(new Arrow(this, x + width / 2, y + height / 2, angle, power, 8));
-      }
-      power = 0;
-      powerTimer.cancel();
-    }
+    angle = new FlxPoint(x + width / 2.0, y + height / 2.0).angleBetween(target);
   }
 
   // Get power
@@ -87,5 +79,22 @@ class Bow extends Arm {
     if (power > maxPower) {
       power = maxPower;
     }
+  }
+
+  public function setTarget(point:FlxPoint) {
+    target = point;
+  }
+
+  public function pullBack() {
+    powerTimer.start(chargeTime / 100.0, powerTicker, 0);
+  }
+
+  public function release() {
+    // Min velocity
+    if (power > minPower) {
+      arrowContainer.add(new Arrow(this, x + width / 2, y + height / 2, angle, power, 8));
+    }
+    power = 0;
+    powerTimer.cancel();
   }
 }
