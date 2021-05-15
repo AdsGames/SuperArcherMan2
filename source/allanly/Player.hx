@@ -11,17 +11,22 @@ import Math;
 import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxTimer;
 
 class Player extends Character {
   // Timers
   private var counter:Int;
 
+  private var drone:Drone;
+
   // Variables
   private var isOnLadder:Bool;
   private var ladderX:Float;
   private var dead:Bool;
   private var hasWon:Bool;
+  private var droneAlive:Bool;
+  private var droneAmmo:Int;
 
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
@@ -41,6 +46,8 @@ class Player extends Character {
     ladderX = 0;
     dead = false;
     hasWon = false;
+    droneAlive = true;
+    droneAmmo = 1;
 
     // Init health
     health = 10000;
@@ -55,6 +62,49 @@ class Player extends Character {
       32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62
     ], 15, false);
     animation.play("idle");
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
 
     // BB Offset
     width = 16;
@@ -89,16 +139,29 @@ class Player extends Character {
     // Update bow target
     if (!dead) {
       var bow = Std.downcast(arm, Bow);
+      var isDrone = false;
+      if (drone != null) {
+        bow = drone.getBow();
+        isDrone = true;
+      }
       bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
       // Make arrows
       if (FlxG.mouse.justPressed) {
-        bow.pullBack();
+        trace("drone ammo");
+        trace(droneAmmo);
+        trace(isDrone);
+        if (!isDrone || droneAmmo > 0)
+          bow.pullBack();
       }
       else if (FlxG.mouse.justReleased) {
-        var arrow = bow.release(0);
-        if (arrow != null) {
-          Character.arrowContainer.add(arrow);
+        if (!isDrone || droneAmmo > 0) {
+          if (isDrone)
+            droneAmmo -= 1;
+          var arrow = bow.release(0);
+          if (arrow != null) {
+            Character.arrowContainer.add(arrow);
+          }
         }
       }
 
@@ -112,11 +175,23 @@ class Player extends Character {
   }
 
   // Move character (keep out danny)
+  // more like keep this rope off my neck
+
   override public function move(elapsed:Float) {
     ignoreGravity = isOnLadder;
     if (!dead) {
       // Move that character
       // Right
+      if (FlxG.keys.pressed.F) {
+        if (droneAlive && drone == null) {
+          drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
+
+          drone.pickupArm(new Bow(600.0, 1.0, 100.0));
+
+          FlxG.state.add(drone);
+        }
+      }
+
       if (FlxG.keys.pressed.D) {
         moveRight();
       }
@@ -136,6 +211,7 @@ class Player extends Character {
         }
       }
       // Jump Jump!
+      // me on the edge of the building
       if (FlxG.keys.pressed.SPACE) {
         jump(JUMP_VELOCITY);
       }
@@ -171,6 +247,7 @@ class Player extends Character {
           acceleration.x = movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax - velocity.x);
 
           // Resolve animation if we're on a ladder
+          // ur butt is on a ladder
           if (!isOnLadder) {
             animation.play("walk");
           }
@@ -181,6 +258,7 @@ class Player extends Character {
       }
 
       // Win
+      // no
       if (hasWon && counter >= DEATH_TIMER) {
         FlxG.sound.music.stop();
         counter = 0;
@@ -191,8 +269,12 @@ class Player extends Character {
       FlxG.sound.music.stop();
       FlxG.switchState(new PlayState(PlayState.levelOn));
     }
-
     super.move(elapsed);
+  }
+
+  // ur butt
+  public function getDrone():Drone {
+    return drone;
   }
 
   // Die
@@ -208,7 +290,12 @@ class Player extends Character {
     }
   }
 
+  public function getDroneAmmo() {
+    return droneAmmo;
+  }
+
   // Win
+  // kys
   public function win() {
     if (!hasWon) {
       hasWon = true;
@@ -228,7 +315,15 @@ class Player extends Character {
     }
   }
 
-  // Ready to climb
+  public function pickupDrone() {
+    trace("yo");
+    if (FlxG.keys.justPressed.G && drone != null) {
+      drone.kill();
+      drone = null;
+      droneAmmo = 1;
+    }
+  } // Ready to climb
+
   public function ladderPosition(player:Player, ladder:Ladder) {
     ladderX = ladder.x;
   }

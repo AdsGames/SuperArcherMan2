@@ -10,6 +10,7 @@ import allanly.Crank;
 import allanly.Crown;
 import allanly.Door;
 import allanly.Drawbridge;
+import allanly.Drone;
 import allanly.Enemy;
 import allanly.EnemyArcher;
 import allanly.EnemySword;
@@ -65,6 +66,7 @@ class PlayState extends FlxState {
   // Spawn point
   private var gameSpawn:Spawn;
 
+  // I have no idea how to use flixel
   // Win pointer
   private var winPointer:WinPointer;
 
@@ -110,7 +112,6 @@ class PlayState extends FlxState {
     gameDrawbridge = new Drawbridge(-100, -100, 0, 0);
     gameSpawn = new Spawn(-100, -100, 0, 0);
 
-    // Load map :D
     loadMap(levelOn);
 
     // Arrows
@@ -130,14 +131,21 @@ class PlayState extends FlxState {
   }
 
   // HINT: THIS UPDATES
+  // THANKS TIPS
   override public function update(elapsed:Float) {
-    // Move power text to mouse
+    // trace("kill me right now"); // Move power text to mouse
     powerText.x = FlxG.mouse.x + 15;
     powerText.y = FlxG.mouse.y;
 
     var bow = Std.downcast(jim.getArm(), Bow);
+    var isDrone = jim.getDrone() != null;
+    if (isDrone)
+      bow = jim.getDrone().getBow();
     if (bow != null) {
-      powerText.text = "" + bow.getPower() + "%";
+      if (isDrone)
+        powerText.text = "" + bow.getPower() + "%" + " Arrows: " + jim.getDroneAmmo();
+      else
+        powerText.text = "" + bow.getPower() + "%";
     }
 
     enemies.forEachDead(function(enemy) {
@@ -152,6 +160,13 @@ class PlayState extends FlxState {
     // Collide everybuddy
     FlxG.collide(enemies, levelCollide);
     FlxG.collide(jim, levelCollide);
+    if (jim.getDrone() != null)
+      FlxG.collide(jim.getDrone(), levelCollide);
+
+    if (jim.getDrone() != null)
+      FlxG.overlap(jim, jim.getDrone(), function collideDrone(player:Character, drone:Drone) {
+        jim.pickupDrone();
+      });
 
     // Arrow vs door
     FlxG.overlap(Character.getArrows(), doors, function hitDoorArrow(arrow:Arrow, door:Door) {
@@ -202,6 +217,16 @@ class PlayState extends FlxState {
     jim.onLadder(FlxG.overlap(jim, ladders, jim.ladderPosition));
 
     // Door action
+    if (jim.getDrone() != null)
+      FlxG.overlap(jim.getDrone(), doors, function collideDoor(player:Character, door:Door) {
+        door.hitDoor(player.velocity.x);
+      });
+
+    // Run into draw bridge
+    FlxG.collide(jim, gameDrawbridge);
+    if (jim.getDrone() != null)
+      FlxG.collide(jim.getDrone(), gameDrawbridge);
+
     FlxG.overlap(jim, doors, function collideDoor(player:Character, door:Door) {
       door.hitDoor(player.velocity.x);
     });
@@ -378,7 +403,11 @@ class PlayState extends FlxState {
         jim.pickupArm(new Bow(600.0, 1.0, 100.0));
         add(jim);
 
-        // Add spawn
+        // drone = new Drone(jim); // Load map :D
+        //                                   ^ turn that frown upside down
+
+        // add(drone); // Add ur bum
+
         gameSpawn = new Spawn(obj.x, obj.y, obj.width, obj.height);
         add(gameSpawn);
 
@@ -440,3 +469,4 @@ class PlayState extends FlxState {
     }
   }
 }
+// I literally want to die
