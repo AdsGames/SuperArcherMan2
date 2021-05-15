@@ -185,15 +185,6 @@ class Player extends Character {
     super.move(elapsed);
   }
 
-  // Get arrows
-  public function getArrows():FlxTypedGroup<Arrow> {
-    var bow = Std.downcast(getArm(), Bow);
-    if (bow != null) {
-      return bow.getArrows();
-    }
-    return null;
-  }
-
   // Die
   public function die() {
     if (!dead) {

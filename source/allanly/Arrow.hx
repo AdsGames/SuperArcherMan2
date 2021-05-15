@@ -17,15 +17,14 @@ import flixel.system.FlxSound;
 class Arrow extends FlxSprite {
   private var parent:FlxObject;
 
+  private static final ANGLE_MULTIPLIER = 180 / Math.PI;
+
   // Sounds
   private var arrowHitSound:FlxSound;
   private var bowReleaseSound:FlxSound;
   private var yAccelertion:Int;
 
   private static inline final ARROW_SPEED_MULTIPLIER:Float = 1.5;
-
-  // Dead arrow
-  public var dead:Bool;
 
   // The emitter
   public var trailEmitter:FlxEmitter;
@@ -34,19 +33,16 @@ class Arrow extends FlxSprite {
   public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2) {
     super(x, y, AssetPaths.arrow__png);
     this.angle = angle;
-    this.velocity.x = -Math.cos((angle + 90) * (Math.PI / 180)) * velocity * ARROW_SPEED_MULTIPLIER;
-    this.velocity.y = -Math.sin((angle + 90) * (Math.PI / 180)) * velocity * ARROW_SPEED_MULTIPLIER;
-
+    this.velocity.x = -Math.cos((angle + 90) * (Math.PI / 180)) * velocity;
+    this.velocity.y = -Math.sin((angle + 90) * (Math.PI / 180)) * velocity;
+    this.acceleration.y = 300;
     this.parent = parent;
-    dead = false;
 
     // Shrink box
     offset.y = 1;
     height -= 2;
     offset.x = 7;
     width -= 13;
-
-    this.yAccelertion = 300;
 
     // Make sure x/y velocity is never 0 to help below scripts
     if (this.velocity.x == 0) {
@@ -98,24 +94,26 @@ class Arrow extends FlxSprite {
     trailEmitter.setPosition(this.x, this.y);
 
     // Update unless dead
-    if (!dead) {
+    if (alive) {
       // Fall a bit
       if (velocity.y == 0 || velocity.x == 0) {
         velocity.y = 0;
         velocity.x = 0;
-        dead = true;
+        acceleration.y = 0;
+        alive = false;
         arrowHitSound.proximity(x, y, parent, 800, true);
         arrowHitSound.play();
         trailEmitter.emitting = false;
         acceleration.y = 0;
       }
       else {
-        // Gravity
-        acceleration.y = this.yAccelertion;
-
         // Point in proper direction
-        angle = Math.atan2(velocity.y, velocity.x) * 180 / Math.PI;
+        angle = Math.atan2(velocity.y, velocity.x) * ANGLE_MULTIPLIER;
       }
+    }
+
+    if (y > FlxG.camera.maxScrollY) {
+      kill();
     }
   }
 }
