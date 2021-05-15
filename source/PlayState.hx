@@ -136,6 +136,7 @@ class PlayState extends FlxState {
     FlxG.collide(characters, levelCollide);
     FlxG.collide(jim, levelCollide);
     FlxG.collide(jim.getArrows(), levelCollide);
+    FlxG.collide(jim.getDrone(), levelCollide);
 
     FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
 
@@ -147,11 +148,14 @@ class PlayState extends FlxState {
 
     // Door action
     FlxG.overlap(jim, doors, collideDoor);
+    FlxG.overlap(jim.getDrone(), doors, collideDoor);
 
     FlxG.overlap(characters, doors, collideDoor);
 
     // Run into draw bridge
     FlxG.collide(jim, gameDrawbridge);
+    FlxG.collide(jim.getDrone(), gameDrawbridge);
+
     FlxG.collide(characters, gameDrawbridge);
     FlxG.collide(jim.getArrows(), gameDrawbridge);
 

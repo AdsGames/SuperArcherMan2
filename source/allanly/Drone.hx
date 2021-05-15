@@ -105,6 +105,7 @@ class Drone extends Character {
 
     if (!FlxG.keys.pressed.LEFT && !FlxG.keys.pressed.RIGHT) {
       // Stopped
+      // just like my heart should be
       if (velocity.x < 5 && velocity.x > -5) {
         acceleration.x = 0;
         velocity.x = 0;

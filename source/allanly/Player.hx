@@ -11,6 +11,7 @@ import Math;
 import flixel.FlxG;
 import flixel.addons.display.FlxExtendedSprite.MouseCallback;
 import flixel.group.FlxGroup;
+import flixel.tile.FlxTilemap;
 import flixel.util.FlxTimer;
 
 class Player extends Character {
@@ -52,6 +53,7 @@ class Player extends Character {
 
     drone = new Drone(this); // Images and animations <-- this actually is not Images and aminations
     drone.pickupArm(new Bow(600.0, 1.0, 100.0));
+    FlxG.state.add(drone);
 
     loadGraphic(AssetPaths.player__png, true, 14, 30);
     animation.add("walk", [0, 1, 2, 3], 10, true);
@@ -128,7 +130,6 @@ class Player extends Character {
     if (!dead && FlxG.keys.pressed.K) {
       die();
     }
-    drone.update(elapsed);
     // Move around
     move(elapsed);
   }
@@ -236,6 +237,7 @@ class Player extends Character {
           acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_MAX - velocity.x);
 
           // Resolve animation if we're on a ladder
+          // ur butt is on a ladder
           if (!isOnLadder) {
             animation.play("walk");
           }
@@ -257,6 +259,11 @@ class Player extends Character {
       FlxG.switchState(new PlayState(PlayState.levelOn));
     }
     super.move(elapsed);
+  }
+
+  // ur butt
+  public function getDrone():Drone {
+    return drone;
   }
 
   // Get arrows
