@@ -211,7 +211,7 @@ class Player extends Character {
   }
 
   // Get arrows
-  public function getArrows():FlxGroup {
+  public function getArrows():FlxTypedGroup<Arrow> {
     var bow = Std.downcast(getArm(), Bow);
     if (bow != null) {
       return bow.getArrows();

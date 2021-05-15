@@ -23,12 +23,29 @@ class Enemy extends Character {
   // Constants
   private static inline final MOVEMENT_SPEED:Int = 200;
 
+  // Global identifier from tiled
+  private var name:String;
+
+  // Patrol points
+  private var patrolPoints:Array<FlxPoint>;
+
+  // Patrol point index
+  private var patrolPointIndex:Int;
+
+  // Is patrolling
+  private var patrolling:Bool;
+
   // Create enemy
-  public function new(jimPointer:Character, x:Float = 0, y:Float = 0) {
+  public function new(jimPointer:Character, name:String, x:Float = 0, y:Float = 0) {
     super(x, y - 40);
+
+    // Set id
+    this.name = name;
 
     // Init vars
     detected = false;
+    patrolling = false;
+    patrolPointIndex = 0;
 
     // Images and animations
     loadGraphic(AssetPaths.enemy__png, true, 14, 30);
@@ -45,6 +62,9 @@ class Enemy extends Character {
     // Load sounds
     heySound = new FlxSound();
     heySound.loadEmbedded(AssetPaths.enemy_hey__mp3);
+
+    // Patrol array
+    patrolPoints = new Array<FlxPoint>();
   }
 
   // Update
@@ -60,6 +80,7 @@ class Enemy extends Character {
 
   public function detectPlayer() {
     detected = true;
+    patrolling = false;
 
     // Hey! sound
     heySound.proximity(x, y, jimPointer, 800, true);
@@ -77,7 +98,13 @@ class Enemy extends Character {
     // Downcast sword
     var sword = Std.downcast(arm, Sword);
 
-    if (detected && x < jimPointer.x) {
+    // Change patrol point
+    if (patrolling && Math.abs(x - patrolPoints[patrolPointIndex].x) < 4) {
+      patrolPointIndex = (patrolPointIndex + 1) % patrolPoints.length;
+    }
+
+    // Move around
+    if ((detected && x < jimPointer.x) || (patrolling && x < patrolPoints[patrolPointIndex].x)) {
       if (sword != null) {
         sword.setSpinDir("right");
       }
@@ -89,7 +116,7 @@ class Enemy extends Character {
         scale.x *= -1;
       }
     }
-    else if (detected && x > jimPointer.x) {
+    else if ((detected && x > jimPointer.x) || (patrolling && x > patrolPoints[patrolPointIndex].x)) {
       if (sword != null) {
         sword.setSpinDir("left");
       }
@@ -118,5 +145,14 @@ class Enemy extends Character {
   public function getHit(velocity:Float, angleBetween:Float) {
     takeDamage(Math.abs(velocity / 10.0), angleBetween);
     detectPlayer();
+  }
+
+  public function getName() {
+    return name;
+  }
+
+  public function addPatrolPoint(point:FlxPoint) {
+    patrolPoints.push(point);
+    patrolling = true;
   }
 }
