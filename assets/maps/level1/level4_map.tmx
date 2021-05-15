@@ -3,22 +3,22 @@
  <tileset firstgid="1" name="tilemapflat" tilewidth="16" tileheight="16" tilecount="61" columns="61">
   <image source="level1_tiles.png" width="976" height="16"/>
  </tileset>
- <layer id="1" name="back" width="200" height="100">
+ <layer id="1" name="back" width="200" height="100" visible="0">
   <data encoding="base64" compression="zlib">
    eJzt0zEKAkEQRNFJNDX0/jcVg4VVKDAQeqd4D/4FZrrWAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAOAK7vprdJm+p7bo8v7Tx5q/q9073pAu9mEfZPZhH2T2YR9k9mEfZPZhH2T2YR9k9mEfZPZhH2T2YR9k9mEfZLc1f1sN2Ucn+7APMvuwDz5N31Jj9tHj+M9z0/e1e/bRwz7sg8w+7INs+pYas48e07fUmH30mL6lxuyjx/QtNfa9j+eF28n0W0mSJEmSJEmSJEm/9AKoFc8+
   </data>
  </layer>
- <layer id="2" name="mid" width="200" height="100">
+ <layer id="2" name="mid" width="200" height="100" visible="0">
   <data encoding="base64" compression="zlib">
-   eJzt0zENADAMwLAiGX+YQxCp33bYCPJkBgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKCd1wHwMX9A8wc0f0DzBzR/QPMHNH9A8wcAAAAAAADA3gVpmwEP
+   eJztwYEAAAAAw6D5Ux/gClUBAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAMAbOI8AAQ==
   </data>
  </layer>
  <layer id="3" name="collide" width="200" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt2kGKwkAQBdA+QUYddKuCMve/oRF1ZTdoyqGT8j0oAr3q1OdDFikFAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAgDkYxjmOsxnnx4Rm9ebumb9rP17NX4f049sM96dsp7PDvGQbZ4d5yTbODvOSbZwd5iXbODvMS7ZxdpiXbOPsMK9Htoeel1g4/chLtnF2mJds4+wwr/X9+dv1FsumH9CmH9CmH9CmH7k8/mk/lvp/2qVxbtpzpR85DJUz/dAPbmr9kO10vq9y2VfOZDudfuRyKs/fB+euN1o2/YA2/YA2/YC2Wj+2M53dZ1/93/2V/jszn585672bV2dpXQYAAAAAgOwugn0oww==
+   eJzt2kGKwkAQBdA+QUYddKuCw9z/hiagK9OgKaXT5XtQBLLq1M+HLFIKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAGswjHMeZzfOjwnN5sXds35TP57NX4f049sMt6tsl7PDvGQbZ4d5yTbODvOSbZwd5iXbODvMS7ZxdpiXbOPsMK97tqeWh+icfuQl2zg7zEu2cXaY1/Z2/W16ir7pB9TpB9TpB9TpRy73f9rPpf0/4Vlmoh85DDP3Wr9fvc9EP3KY64dsl/N9lctx5p5sl9OPXC7l8fvgr+mJ+qYfUKcfUKcfUDfXj/1K5/DeR/+4/9J+Z+b9s2atd/Ps9NZlAAAAAADI7gpV7yjh
   </data>
  </layer>
- <layer id="4" name="front" width="200" height="100" visible="0">
+ <layer id="4" name="front" width="200" height="100">
   <data encoding="base64" compression="zlib">
    eJzt0jsKACEMBUAPkc7733ObLUKwkXUVZKYx4CdEXmsAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADAjHjX/tO72eoep0SpI9V5xl726v1b/oMzVuQo5zPnd5TXGJz72h8AAAAAAAB2ewDFVAJc
   </data>
@@ -27,14 +27,12 @@
   <object id="2" type="player" x="80" y="1424" width="64" height="34"/>
   <object id="15" type="door" x="1792" y="1408.02" width="16" height="47.9767"/>
   <object id="31" type="drawBridge" x="1776" y="1408.31" width="16" height="47.6927"/>
-  <object id="34" type="ladder" x="1904" y="1312.08" width="16" height="143.222"/>
   <object id="38" type="tree" x="1081" y="1408" width="48" height="64"/>
   <object id="39" type="tree" x="1201" y="1408" width="48" height="64"/>
   <object id="40" type="tree" x="1537" y="1392" width="48" height="64"/>
-  <object id="41" type="water" x="1648" y="1472" width="128" height="16"/>
   <object id="42" type="tree" x="736" y="1408" width="48" height="64"/>
   <object id="43" type="tree" x="1041" y="1408" width="48" height="64"/>
-  <object id="46" name="enemy_1" type="enemy" x="1808" y="1296" width="7.81818" height="3.81818"/>
+  <object id="46" name="enemy_1" type="enemy_bow" x="1808" y="1296" width="7.81818" height="3.81818"/>
   <object id="49" type="tree" x="416" y="1392" width="48" height="64"/>
   <object id="50" type="tree" x="448" y="1392" width="48" height="64"/>
   <object id="51" type="tree" x="176" y="1392" width="48" height="64"/>
@@ -45,7 +43,7 @@
   <object id="56" type="tree" x="128" y="1392" width="48" height="64"/>
   <object id="57" type="tree" x="851.055" y="1407.96" width="48" height="64"/>
   <object id="58" name="enemy_1" type="enemy" x="1872" y="1296" width="7.81818" height="3.81818"/>
-  <object id="59" name="enemy_1" type="enemy" x="1920" y="1296" width="7.81818" height="3.81818"/>
+  <object id="59" name="enemy_1" type="enemy_bow" x="1920" y="1296" width="7.81818" height="3.81818"/>
   <object id="60" name="enemy_1" type="enemy_bow" x="1968" y="1296" width="7.81818" height="3.81818"/>
   <object id="61" name="enemy_1" type="enemy_bow" x="2048" y="1296" width="7.81818" height="3.81818"/>
   <object id="62" name="enemy_1" type="enemy_bow" x="2016" y="1296" width="7.81818" height="3.81818"/>
@@ -57,7 +55,7 @@
    </properties>
    <point/>
   </object>
-  <object id="48" name="patrol" x="3104" y="1328">
+  <object id="48" name="patrol" x="2080" y="1328">
    <properties>
     <property name="enemy_name" value="enemy_1"/>
    </properties>
