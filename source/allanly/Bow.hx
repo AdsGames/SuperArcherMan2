@@ -27,7 +27,11 @@ class Bow extends Arm {
 
   // Create bow
   public function new(maxPower:Float = 100.0, chargeTime:Float = 1.0, minPower:Float = 20.0) {
-    super(AssetPaths.bow_arm__png);
+    super();
+
+    loadGraphic(AssetPaths.bow_arm__png, true, 47, 24);
+    animation.add("drawback", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 10, true);
+    animation.play("drawback");
 
     // Init vars
     power = 0;
@@ -37,6 +41,8 @@ class Bow extends Arm {
     this.maxPower = maxPower;
     this.chargeTime = chargeTime;
     this.minPower = minPower;
+
+    origin = new FlxPoint(width / 2, 15);
 
     // Arrow container
     arrowContainer = new FlxGroup();
@@ -71,7 +77,7 @@ class Bow extends Arm {
 
   // Change location
   override public function setPosition(x:Float = 0.0, y:Float = 0.0) {
-    super.setPosition(x + 3, y + 2);
+    super.setPosition(x - 12, y - 5);
   }
 
   // Return arrows
