@@ -12,7 +12,7 @@ import flixel.FlxGame;
 class InitState extends FlxGame {
   public function new() {
     // Create the menu state
-    super(640, 480, MenuState, 1, 60, 60, true);
+    super(800, 600, MenuState, 1, 60, 60, true);
 
     // Load custom cursor and then hide hardware cursor
     FlxG.mouse.load(AssetPaths.cursor__png, 1, -7, -7);
