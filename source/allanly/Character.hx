@@ -37,10 +37,10 @@ class Character extends FlxSprite {
 
   // Movement vars
   private var movementSpeedMax:Float = 200;
+  private var movementSpeedChange:Float = 10;
 
   // Movement consts
   private final MOVEMENT_SPEED_JUMPING_CHANGE:Float = 0.2;
-  private final MOVEMENT_SPEED_CHANGE:Float = 10;
   private final MOVEMENT_SPEED_DECELERATION_CHANGE:Float = 0.2;
 
   // Make character
@@ -148,10 +148,10 @@ class Character extends FlxSprite {
     if (velocity.x > -movementSpeedMax) {
       // Less movement acceleration when jumping
       if (!jumping) {
-        acceleration.x = -MOVEMENT_SPEED_CHANGE * (movementSpeedMax + velocity.x);
+        acceleration.x = -movementSpeedChange * (movementSpeedMax + velocity.x);
       }
       else {
-        acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (movementSpeedMax + velocity.x);
+        acceleration.x = -movementSpeedChange * MOVEMENT_SPEED_JUMPING_CHANGE * (movementSpeedMax + velocity.x);
       }
     }
     // Stop accelerating when we fast
@@ -172,10 +172,10 @@ class Character extends FlxSprite {
     if (velocity.x < movementSpeedMax) {
       // Less movement acceleration when jumping
       if (!jumping) {
-        acceleration.x = MOVEMENT_SPEED_CHANGE * (movementSpeedMax - velocity.x);
+        acceleration.x = movementSpeedChange * (movementSpeedMax - velocity.x);
       }
       else {
-        acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (movementSpeedMax + velocity.x);
+        acceleration.x = movementSpeedChange * MOVEMENT_SPEED_JUMPING_CHANGE * (movementSpeedMax + velocity.x);
       }
     }
     // Stop accelerating when we fast

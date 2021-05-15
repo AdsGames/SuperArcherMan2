@@ -9,7 +9,6 @@ package allanly;
 // Imports
 import Math;
 import flixel.FlxG;
-import flixel.addons.display.FlxExtendedSprite.MouseCallback;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
@@ -53,6 +52,10 @@ class Player extends Character {
     animation.add("climb", [32], 5, true);
     animation.add("die", [33], 5, false);
     animation.play("idle");
+
+    // BB Offset
+    width = 16;
+    offset.set(3, 0);
 
     // Say a little something on creation
     var randomSaying:Int = Tools.myRandom(0, 4);
@@ -142,7 +145,7 @@ class Player extends Character {
 
         // Decelerating
         else if (velocity.x > 0) {
-          acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax + velocity.x);
+          acceleration.x = -movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax + velocity.x);
 
           // Resolve animation if we're on a ladder
           if (!isOnLadder) {
@@ -153,7 +156,7 @@ class Player extends Character {
           }
         }
         else if (velocity.x < 0) {
-          acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax - velocity.x);
+          acceleration.x = movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax - velocity.x);
 
           // Resolve animation if we're on a ladder
           if (!isOnLadder) {

@@ -35,6 +35,8 @@ class Bow extends Arm {
     animation.add("drawback", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 10, true);
     animation.play("drawback");
 
+    scale.set(0.75, 0.75);
+
     // Init vars
     power = 0;
     powerTimer = new FlxTimer();
@@ -69,7 +71,7 @@ class Bow extends Arm {
 
   // Change location
   override public function setPosition(x:Float = 0.0, y:Float = 0.0) {
-    super.setPosition(x - 12, y - 5);
+    super.setPosition(x - 10, y - 5);
   }
 
   // Return arrows
