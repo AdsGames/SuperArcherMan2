@@ -7,7 +7,9 @@ package allanly;
  * 29/5/2015
  */
 // Imports
+import Math;
 import flixel.FlxG;
+import flixel.addons.display.FlxExtendedSprite.MouseCallback;
 import flixel.group.FlxGroup;
 import flixel.util.FlxTimer;
 
@@ -24,7 +26,10 @@ class Player extends Character {
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
   private static inline final DEATH_TIMER:Float = 3;
-  private static inline final MOVEMENT_SPEED:Float = 200;
+  private static inline final MOVEMENT_SPEED_MAX:Float = 200;
+  private static inline final MOVEMENT_SPEED_CHANGE:Float = 10;
+  private static inline final MOVEMENT_SPEED_JUMPING_CHANGE:Float = 0.2;
+  private static inline final MOVEMENT_SPEED_DECELERATION_CHANGE:Float = 0.2;
 
   // Make character
   public function new(x:Float = 0, y:Float = 0) {
@@ -81,15 +86,30 @@ class Player extends Character {
     move(elapsed);
   }
 
-  // Move character
+  // Move character (keep out danny)
   override public function move(elapsed:Float) {
     ignoreGravity = isOnLadder;
     if (!dead) {
       // Move that character
       // Right
       if (FlxG.keys.pressed.D) {
-        velocity.x = MOVEMENT_SPEED;
+        // Movement
+        if (velocity.x < MOVEMENT_SPEED_MAX) {
+          // Less movement acceleration when jumping
+          if (!jumping) {
+            acceleration.x = MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_MAX - velocity.x);
+          }
+          else {
+            acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
+          }
+        }
+        // Stop accelerating when we fast
+        else if (velocity.x >= MOVEMENT_SPEED_MAX) {
+          acceleration.x = 0;
+        }
+        // Animation
         animation.play("walk");
+
         // Flip
         if (scale.x < 0) {
           scale.x *= -1;
@@ -97,7 +117,22 @@ class Player extends Character {
       }
       // Left
       if (FlxG.keys.pressed.A) {
-        velocity.x = -MOVEMENT_SPEED;
+        // Movement
+        if (velocity.x > -MOVEMENT_SPEED_MAX) {
+          // Less movement acceleration when jumping
+          if (!jumping) {
+            acceleration.x = -MOVEMENT_SPEED_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
+          }
+          else {
+            acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
+          }
+        }
+        // Stop accelerating when we fast
+        else if (velocity.x <= -MOVEMENT_SPEED_MAX) {
+          acceleration.x = 0;
+        }
+
+        // Animaiton
         animation.play("walk");
         // Flip
         if (scale.x > 0) {
@@ -120,9 +155,46 @@ class Player extends Character {
         jump(JUMP_VELOCITY);
       }
       // Idleing
-      if (!FlxG.keys.pressed.A && !FlxG.keys.pressed.D && !isOnLadder) {
-        animation.play("idle");
+      if (!FlxG.keys.pressed.A && !FlxG.keys.pressed.D) {
+        // Stopped
+        if (velocity.x < 5 && velocity.x > -5) {
+          acceleration.x = 0;
+          velocity.x = 0;
+
+          // Resolve animation if we're on a ladder
+          if (!isOnLadder) {
+            animation.play("idle");
+          }
+          else {
+            animation.play("climbing");
+          }
+        }
+
+        // Decelerating
+        else if (velocity.x > 0) {
+          acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
+
+          // Resolve animation if we're on a ladder
+          if (!isOnLadder) {
+            animation.play("walk");
+          }
+          else {
+            animation.play("climbing");
+          }
+        }
+        else if (velocity.x < 0) {
+          acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (MOVEMENT_SPEED_MAX - velocity.x);
+
+          // Resolve animation if we're on a ladder
+          if (!isOnLadder) {
+            animation.play("walk");
+          }
+          else {
+            animation.play("climbing");
+          }
+        }
       }
+
       // Win
       if (hasWon && counter >= DEATH_TIMER) {
         FlxG.sound.music.stop();
@@ -155,6 +227,8 @@ class Player extends Character {
       dead = true;
       FlxG.sound.play(AssetPaths.bell__mp3);
       startTimer();
+      velocity.x = 0;
+      acceleration.x = 0;
     }
   }
 
