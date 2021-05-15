@@ -11,6 +11,7 @@ import flixel.FlxG;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
+import js.html.AbortController;
 
 // Swinging enemies
 class Drone extends Character {
@@ -23,10 +24,11 @@ class Drone extends Character {
   // Pointer to jim
   private var jimPointer:Character;
 
-  // Create enemy
-  public function new(jimPointer:Character) {
+  // Create enemy number 1 (public)
+  public function new(x:Float, y:Float) {
     trace("just end it all");
-    super(jimPointer.getPosition().x, jimPointer.getPosition().y);
+    // I'll control your abort
+    super(x, y);
 
     // Init vars
 
@@ -34,7 +36,6 @@ class Drone extends Character {
     loadGraphic(AssetPaths.drone__png, true, 16, 16);
 
     // Player
-    this.jimPointer = jimPointer;
   }
 
   // Update
@@ -137,7 +138,7 @@ class Drone extends Character {
     super.move(elapsed);
   }
 
-  public function getArrows():FlxGroup {
+  public function getArrows():FlxTypedGroup<Arrow> {
     var bow = Std.downcast(getArm(), Bow);
     if (bow != null) {
       return bow.getArrows();

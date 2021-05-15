@@ -51,7 +51,7 @@ class Player extends Character {
     // Init health
     health = 100;
 
-    drone = new Drone(this); // Images and animations <-- this actually is not Images and aminations
+    drone = new Drone(x, y); // Images and animations <-- this actually is not Images and aminations
     drone.pickupArm(new Bow(600.0, 1.0, 100.0));
     FlxG.state.add(drone);
 
@@ -248,6 +248,7 @@ class Player extends Character {
       }
 
       // Win
+      // no
       if (hasWon && counter >= DEATH_TIMER) {
         FlxG.sound.music.stop();
         counter = 0;
@@ -269,7 +270,7 @@ class Player extends Character {
   // Get arrows
   public function getArrows():FlxTypedGroup<Arrow> {
     var bow = Std.downcast(getArm(), Bow);
-
+    var allArrows = null;
     var droneBow = null;
     if (drone != null) {
       droneBow = Std.downcast(drone.getArm(), Bow);
@@ -302,6 +303,7 @@ class Player extends Character {
   }
 
   // Win
+  // kys
   public function win() {
     if (!hasWon) {
       hasWon = true;
