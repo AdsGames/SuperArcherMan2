@@ -132,10 +132,14 @@ class PlayState extends FlxState {
     powerText.y = FlxG.mouse.y;
 
     var bow = Std.downcast(jim.getArm(), Bow);
-    if (jim.getDrone() != null)
+    var isDrone = jim.getDrone() != null;
+    if (isDrone)
       bow = jim.getDrone().getBow();
     if (bow != null) {
-      powerText.text = "" + bow.getPower() + "%";
+      if (isDrone)
+        powerText.text = "" + bow.getPower() + "%" + " Arrows: " + jim.getDroneAmmo();
+      else
+        powerText.text = "" + bow.getPower() + "%";
     }
 
     // Collide everybuddy

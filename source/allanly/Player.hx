@@ -143,14 +143,15 @@ class Player extends Character {
       trace("drone ammo");
       trace(droneAmmo);
       trace(isDrone);
-      if (!isDrone || droneAmmo == 0)
+      if (!isDrone || droneAmmo > 0)
         bow.pullBack();
     }
     else if (FlxG.mouse.justReleased) {
-      if (isDrone)
-        droneAmmo -= 1;
-
-      bow.release();
+      if (!isDrone || droneAmmo > 0) {
+        if (isDrone)
+          droneAmmo -= 1;
+        bow.release();
+      }
     }
 
     // Move around
@@ -293,6 +294,10 @@ class Player extends Character {
       velocity.x = 0;
       acceleration.x = 0;
     }
+  }
+
+  public function getDroneAmmo() {
+    return droneAmmo;
   }
 
   // Win
