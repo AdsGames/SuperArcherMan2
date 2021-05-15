@@ -7,8 +7,10 @@ package allanly;
  * 31/5/2015
  */
 // Imports
+import flixel.FlxG;
 import flixel.FlxObject;
 import flixel.FlxSprite;
+import flixel.effects.particles.FlxEmitter;
 import flixel.system.FlxSound;
 
 // Realistic arrows
@@ -21,6 +23,9 @@ class Arrow extends FlxSprite {
 
   // Dead arrow
   public var dead:Bool;
+
+  // The emitter
+  public var trailEmitter:FlxEmitter;
 
   // Create arrow
   public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2, mass:Float = 1) {
@@ -47,6 +52,17 @@ class Arrow extends FlxSprite {
       this.velocity.y = 0.01;
     }
 
+    // Create emitter
+    trailEmitter = new FlxEmitter(5, 5, 100);
+    trailEmitter.loadParticles(AssetPaths.particle_star__png, 100);
+    trailEmitter.scale.set(0.6, 0.6, 0.6, 0.6, 0, 0, 0, 0);
+    trailEmitter.launchMode = FlxEmitterMode.CIRCLE;
+    trailEmitter.speed.set(0.01, 0);
+    trailEmitter.lifespan.set(0.6);
+    trailEmitter.start(false, 0.05, 0);
+
+    FlxG.state.add(trailEmitter);
+
     // Load sounds
     arrowHitSound = new FlxSound();
     arrowHitSound.loadEmbedded(AssetPaths.arrow_hit__mp3);
@@ -68,6 +84,9 @@ class Arrow extends FlxSprite {
     // Update sounds
     arrowHitSound.update(elapsed);
 
+    // Move particle emitter to obj
+    trailEmitter.setPosition(this.x, this.y);
+
     // Update unless dead
     if (!dead) {
       // Fall a bit
@@ -77,6 +96,7 @@ class Arrow extends FlxSprite {
         dead = true;
         arrowHitSound.proximity(x, y, parent, 800, true);
         arrowHitSound.play();
+        trailEmitter.emitting = false;
       }
       else {
         // Fall down
