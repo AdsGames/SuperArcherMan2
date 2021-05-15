@@ -10,7 +10,6 @@ import allanly.Crank;
 import allanly.Crown;
 import allanly.Door;
 import allanly.Drawbridge;
-import allanly.Drone;
 import allanly.Enemy;
 import allanly.Ladder;
 import allanly.Painting;
@@ -60,8 +59,6 @@ class PlayState extends FlxState {
   private var gameSpawn:Spawn;
 
   // I have no idea how to use flixel
-  private var drone:Drone;
-
   // Win pointer
   private var winPointer:WinPointer;
 
@@ -86,6 +83,7 @@ class PlayState extends FlxState {
 
   // Creates some stuff
   override public function create() {
+    trace("honestly just kill me");
     // Mouse
     FlxG.mouse.visible = true;
 
@@ -138,22 +136,17 @@ class PlayState extends FlxState {
     FlxG.collide(characters, levelCollide);
     FlxG.collide(jim, levelCollide);
     FlxG.collide(jim.getArrows(), levelCollide);
-    FlxG.overlap(drone.getArrows(), doors, hitDoorArrow);
 
-    FlxG.collide(drone, levelCollide);
     FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
-    FlxG.overlap(drone.getArrows(), doors, hitDoorArrow);
 
     // kill "friends"ß
     FlxG.overlap(jim.getArrows(), characters, hitEnemy);
-    FlxG.overlap(drone.getArrows(), characters, hitEnemy);
 
     // Ladders
     jim.onLadder(FlxG.overlap(jim, ladders, jim.ladderPosition));
 
     // Door action
     FlxG.overlap(jim, doors, collideDoor);
-    FlxG.overlap(drone, doors, collideDoor);
 
     FlxG.overlap(characters, doors, collideDoor);
 
@@ -161,7 +154,6 @@ class PlayState extends FlxState {
     FlxG.collide(jim, gameDrawbridge);
     FlxG.collide(characters, gameDrawbridge);
     FlxG.collide(jim.getArrows(), gameDrawbridge);
-    FlxG.collide(drone.getArrows(), gameDrawbridge);
 
     // Win!
     if (FlxG.overlap(jim, gameSpawn) && gameCrown.isTaken()) {
@@ -169,10 +161,7 @@ class PlayState extends FlxState {
     }
 
     // The drawbridge + crank
-    if (FlxG.overlap(gameCrank, jim.getArrows())
-      && !gameCrank.getActivated()
-      || FlxG.overlap(gameCrank, drone.getArrows())
-      && !gameCrank.getActivated()) {
+    if (FlxG.overlap(gameCrank, jim.getArrows()) && !gameCrank.getActivated()) {
       gameDrawbridge.fall();
       gameCrank.spin();
     }
@@ -315,11 +304,10 @@ class PlayState extends FlxState {
         jim.pickupArm(new Bow(600.0, 1.0, 100.0));
         add(jim);
 
-        drone = new Drone(jim); // Load map :D
+        // drone = new Drone(jim); // Load map :D
         //                                   ^ turn that frown upside down
-        drone.pickupArm(new Bow(600.0, 1.0, 100.0));
 
-        add(drone); // Add ur bum
+        // add(drone); // Add ur bum
 
         gameSpawn = new Spawn(obj.x, obj.y, obj.width, obj.height);
         add(gameSpawn);

@@ -25,6 +25,7 @@ class Drone extends Character {
 
   // Create enemy
   public function new(jimPointer:Character) {
+    trace("just end it all");
     super(jimPointer.getPosition().x, jimPointer.getPosition().y);
 
     // Init vars
@@ -39,6 +40,7 @@ class Drone extends Character {
   // Update
   override public function update(elapsed:Float) {
     super.update(elapsed);
+    trace("please i hate this game");
 
     // Move enemy
     move(elapsed);

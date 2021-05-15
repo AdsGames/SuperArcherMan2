@@ -17,6 +17,8 @@ class Player extends Character {
   // Timers
   private var counter:Int;
 
+  private var drone:Drone;
+
   // Variables
   private var isOnLadder:Bool;
   private var ladderX:Float;
@@ -48,7 +50,9 @@ class Player extends Character {
     // Init health
     health = 100;
 
-    // Images and animations
+    drone = new Drone(this); // Images and animations <-- this actually is not Images and aminations
+    drone.pickupArm(new Bow(600.0, 1.0, 100.0));
+
     loadGraphic(AssetPaths.player__png, true, 14, 30);
     animation.add("walk", [0, 1, 2, 3], 10, true);
     animation.add("idle", [4, 5, 6, 7], 5, true);
@@ -78,10 +82,11 @@ class Player extends Character {
     super.update(elapsed);
 
     // Kill urself
+    // Don't threaten me with a good time
     if (!dead && FlxG.keys.pressed.K) {
       die();
     }
-
+    drone.update(elapsed);
     // Move around
     move(elapsed);
   }
@@ -206,13 +211,18 @@ class Player extends Character {
       FlxG.sound.music.stop();
       FlxG.switchState(new PlayState(PlayState.levelOn));
     }
-
     super.move(elapsed);
   }
 
   // Get arrows
   public function getArrows():FlxGroup {
     var bow = Std.downcast(getArm(), Bow);
+
+    var droneBow = null;
+    if (drone != null) {
+      droneBow = Std.downcast(drone.getArm(), Bow);
+    }
+
     if (bow != null) {
       return bow.getArrows();
     }
