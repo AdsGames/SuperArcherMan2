@@ -59,8 +59,50 @@ class Player extends Character {
     animation.add("climb", [8, 9, 10, 11], 5, true);
     animation.add("die", [12, 13, 14, 15, 16], 5, false);
     animation.play("idle");
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
+    // no u
 
-    // Say a little something on creation
     var randomSaying:Int = Tools.myRandom(0, 4);
     if (randomSaying == 1) {
       FlxG.sound.play(AssetPaths.jim_saying1__mp3);
@@ -92,6 +134,8 @@ class Player extends Character {
   }
 
   // Move character (keep out danny)
+  // more like keep this rope off my neck
+
   override public function move(elapsed:Float) {
     ignoreGravity = isOnLadder;
     if (!dead) {
@@ -132,7 +176,8 @@ class Player extends Character {
             acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (MOVEMENT_SPEED_MAX + velocity.x);
           }
         }
-        // Stop accelerating when we fast
+          // Stop accelerating when we fast
+        // no u
         else if (velocity.x <= -MOVEMENT_SPEED_MAX) {
           acceleration.x = 0;
         }
@@ -216,6 +261,7 @@ class Player extends Character {
 
   // Get arrows
   public function getArrows():FlxGroup {
+    var allArrows = null;
     var bow = Std.downcast(getArm(), Bow);
 
     var droneBow = null;
@@ -224,9 +270,16 @@ class Player extends Character {
     }
 
     if (bow != null) {
-      return bow.getArrows();
+      allArrows = bow.getArrows();
     }
-    return null;
+    if (droneBow != null) {
+      var droneArrows = droneBow.getArrows();
+      for (elem in droneArrows) {
+        allArrows.add(elem);
+      }
+    }
+
+    return allArrows;
   }
 
   // Die

@@ -69,11 +69,11 @@ class Character extends FlxSprite {
       jumping = false;
     }
 
-  // Move health bar above sprite
+    // Move health bar above sprite
     var barX = this.x + this.width / 2 - this.healthBar.barWidth / 2;
     var barY = this.y - this.healthBar.barHeight / 2 - 10;
     this.healthBar.setPosition(barX, barY);
-    
+
     super.update(elapsed);
   }
 
