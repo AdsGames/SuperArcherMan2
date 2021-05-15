@@ -119,6 +119,7 @@ class PlayState extends FlxState {
 
     // Zoom and follow
     FlxG.camera.follow(jim, PLATFORMER, 1);
+    FlxG.camera.zoom = 0.8;
 
     if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
       FlxG.sound.playMusic(AssetPaths.music__mp3, 0.1, true);
