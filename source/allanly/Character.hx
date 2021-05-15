@@ -61,11 +61,6 @@ class Character extends FlxSprite {
       jumping = false;
     }
 
-    // Reduce x velocity
-    if (velocity.x != 0) {
-      velocity.x /= 2;
-    }
-
     super.update(elapsed);
   }
 
