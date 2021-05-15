@@ -9,7 +9,6 @@ package allanly;
 // Imports
 import Math;
 import flixel.FlxG;
-import flixel.addons.display.FlxExtendedSprite.MouseCallback;
 import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.tile.FlxTilemap;
@@ -53,11 +52,14 @@ class Player extends Character {
     // Init health
     health = 100;
 
-    loadGraphic(AssetPaths.player__png, true, 14, 30);
-    animation.add("walk", [0, 1, 2, 3], 10, true);
-    animation.add("idle", [4, 5, 6, 7], 5, true);
-    animation.add("climb", [8, 9, 10, 11], 5, true);
-    animation.add("die", [12, 13, 14, 15, 16], 5, false);
+    // Images and animations
+    loadGraphic(AssetPaths.player__png, true, 23, 30);
+    animation.add("walk", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 20, true);
+    animation.add("idle", [16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31], 5, true);
+    animation.add("climb", [64, 65, 66, 67], 5, true);
+    animation.add("die", [
+      32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62
+    ], 15, false);
     animation.play("idle");
     // no u
     // no u
@@ -103,6 +105,11 @@ class Player extends Character {
     // no u
     // no u
 
+    // BB Offset
+    width = 16;
+    offset.set(3, 0);
+
+    // Say a little something on creation
     var randomSaying:Int = Tools.myRandom(0, 4);
     if (randomSaying == 1) {
       FlxG.sound.play(AssetPaths.jim_saying1__mp3);
@@ -217,7 +224,7 @@ class Player extends Character {
 
         // Decelerating
         else if (velocity.x > 0) {
-          acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax + velocity.x);
+          acceleration.x = -movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax + velocity.x);
 
           // Resolve animation if we're on a ladder
           if (!isOnLadder) {
@@ -228,7 +235,7 @@ class Player extends Character {
           }
         }
         else if (velocity.x < 0) {
-          acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax - velocity.x);
+          acceleration.x = movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax - velocity.x);
 
           // Resolve animation if we're on a ladder
           // ur butt is on a ladder

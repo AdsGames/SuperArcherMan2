@@ -13,6 +13,7 @@ class Sword extends Arm {
   // Variables
   private var idle:Bool;
   private var spinDir:String;
+  private var spinSpeed:Float;
 
   // Parent
   private var parent:FlxObject;
@@ -31,10 +32,10 @@ class Sword extends Arm {
 
     // Spin that sword
     if (spinDir == "right") {
-      angle += 30;
+      angle += spinSpeed;
     }
     else if (spinDir == "left") {
-      angle -= 30;
+      angle -= spinSpeed;
     }
   }
 
@@ -44,7 +45,8 @@ class Sword extends Arm {
   }
 
   // SEt dir of spin
-  public function setSpinDir(spinDir:String) {
+  public function setSpinDir(spinDir:String, spinSpeed:Float) {
     this.spinDir = spinDir;
+    this.spinSpeed = spinSpeed;
   }
 }

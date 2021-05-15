@@ -24,7 +24,8 @@ class EnemySword extends Enemy {
 
     // Init health
     health = 100;
-    movementSpeedMax = 180;
+    movementSpeedMax = 100;
+    movementSpeedChange = 2;
   }
 
   // Update
@@ -35,6 +36,12 @@ class EnemySword extends Enemy {
     move(elapsed);
   }
 
+  override public function detectPlayer() {
+    movementSpeedMax = 180;
+    velocity.x = 0;
+    super.detectPlayer();
+  }
+
   // Move around
   override public function move(elapsed:Float) {
     // Downcast sword
@@ -43,21 +50,20 @@ class EnemySword extends Enemy {
     // Move around
     if ((detected && x < jimPointer.x) || (patrolling && x < patrolPoints[patrolPointIndex].x)) {
       if (sword != null) {
-        sword.setSpinDir("right");
+        sword.setSpinDir("right", velocity.x / 5);
       }
 
       moveRight();
     }
     else if ((detected && x > jimPointer.x) || (patrolling && x > patrolPoints[patrolPointIndex].x)) {
       if (sword != null) {
-        sword.setSpinDir("left");
+        sword.setSpinDir("left", velocity.x / 5);
       }
-
       moveLeft();
     }
     else {
       if (sword != null) {
-        sword.setSpinDir("none");
+        sword.setSpinDir("none", 0);
       }
       animation.play("idle");
     }
