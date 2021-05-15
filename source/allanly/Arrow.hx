@@ -76,6 +76,13 @@ class Arrow extends FlxSprite {
     solid = true;
   }
 
+  // Kill
+  override public function kill() {
+    alive = false;
+    exists = false;
+    trailEmitter.emitting = false;
+  }
+
   // Update arrow
   override public function update(elapsed:Float) {
     super.update(elapsed);

@@ -9,6 +9,7 @@ package allanly;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.effects.particles.FlxEmitter;
+import flixel.system.FlxSound;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import haxe.Log;
@@ -31,6 +32,9 @@ class Character extends FlxSprite {
   // Particle Emitter for blood
   public var bloodEmitter:FlxEmitter;
 
+  // Hit sound
+  public var hitSound:FlxSound;
+
   // Make character
   public function new(x:Float, y:Float) {
     super(x, y);
@@ -49,6 +53,10 @@ class Character extends FlxSprite {
     bloodEmitter.speed.set(50, 80);
     bloodEmitter.lifespan.set(0.3);
     FlxG.state.add(bloodEmitter);
+
+    // Hit sound
+    hitSound = new FlxSound();
+    hitSound.loadEmbedded(AssetPaths.flesh_hit__mp3);
 
     // Gravity
     acceleration.y = GRAVITY;
@@ -101,6 +109,9 @@ class Character extends FlxSprite {
     Log.trace(angleBetween);
     bloodEmitter.launchAngle.set(angleBetween - 25, angleBetween + 25);
     bloodEmitter.start(true, 0, 20);
+
+    hitSound.volume = 0.1;
+    hitSound.play();
   }
 
   // Add arm
