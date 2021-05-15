@@ -27,6 +27,7 @@ class Player extends Character {
   private var dead:Bool;
   private var hasWon:Bool;
   private var droneAlive:Bool;
+  private var droneAmmo:Int;
 
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
@@ -155,7 +156,7 @@ class Player extends Character {
       // Right
       if (FlxG.keys.pressed.F) {
         if (droneAlive && drone == null) {
-          drone = new Drone(getPosition().x, getPosition().y); // Images and animations <-- this actually is not Images and aminations
+          drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
 
           drone.pickupArm(new Bow(600.0, 1.0, 100.0));
 
