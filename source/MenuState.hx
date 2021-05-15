@@ -27,6 +27,8 @@ class MenuState extends FlxState {
     createEmitter();
     createUI();
     startMusic();
+
+    FlxG.switchState(new PlayState(1));
   }
 
   // Create emitter
