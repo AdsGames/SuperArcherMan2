@@ -32,7 +32,7 @@ class Bow extends Arm {
     super();
 
     loadGraphic(AssetPaths.bow_arm__png, true, 47, 24);
-    animation.add("drawback", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 10, true);
+    animation.add("drawback", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 0, false);
     animation.play("drawback");
 
     // Init vars
@@ -81,6 +81,9 @@ class Bow extends Arm {
   private function powerTicker(timer:FlxTimer) {
     power += maxPower / 100.0;
 
+    // Frame for bow power state
+    animation.frameIndex = Std.int((power / maxPower) * 15);
+
     // Keep in bounds
     if (power > maxPower) {
       power = maxPower;
@@ -93,6 +96,7 @@ class Bow extends Arm {
 
   public function pullBack() {
     powerTimer.start(chargeTime / 100.0, powerTicker, 0);
+    animation.play("drawback");
   }
 
   public function release() {
@@ -100,6 +104,7 @@ class Bow extends Arm {
     if (power > minPower) {
       arrowContainer.add(new Arrow(this, x + width / 2, y + height / 2, angle, power, 8));
     }
+    animation.frameIndex = 0;
     power = 0;
     powerTimer.cancel();
   }
