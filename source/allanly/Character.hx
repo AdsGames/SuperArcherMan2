@@ -9,11 +9,11 @@ package allanly;
 import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.effects.particles.FlxEmitter;
+import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 import haxe.Log;
-import js.html.AbortController;
 
 class Character extends FlxSprite {
   // Variables
@@ -101,14 +101,23 @@ class Character extends FlxSprite {
     }
 
     // Move blood emitter to sprite center
-    bloodEmitter.setPosition(x + width / 2, y + height / 2);
+    bloodEmitter.setPosition(x + origin.x, y + origin.y);
 
     // Move health bar above sprite
-    var barX = x + width / 2 - healthBar.barWidth / 2;
-    var barY = y - healthBar.barHeight / 2 - 10;
+    var barX = x + origin.x - healthBar.origin.x;
+    var barY = y - healthBar.origin.y - 10;
     healthBar.setPosition(barX, barY);
 
     super.update(elapsed);
+  }
+
+  // Get arrows
+  public function getArrows():FlxTypedGroup<Arrow> {
+    var bow = Std.downcast(getArm(), Bow);
+    if (bow != null) {
+      return bow.getArrows();
+    }
+    return null;
   }
 
   // On hit

@@ -154,6 +154,12 @@ class PlayState extends FlxState {
     if (jim.getDrone() != null)
       FlxG.overlap(jim, jim.getDrone(), collideDrone);
 
+    for (enemy in enemies) {
+      if (enemy.getArrows() != null) {
+        FlxG.collide(enemy.getArrows(), levelCollide);
+      }
+    }
+
     // kill "friends"
     FlxG.overlap(jim.getArrows(), enemies, hitEnemy);
 
@@ -226,7 +232,7 @@ class PlayState extends FlxState {
   // Arrows through door
   private function hitDoorArrow(arrow:Arrow, door:Door) {
     // Door is closed
-    if (!arrow.dead && (door.scale.x <= 0.2 || door.scale.x >= -0.2)) {
+    if (arrow.alive && (door.scale.x <= 0.2 || door.scale.x >= -0.2)) {
       arrow.velocity.x /= 1.2;
       arrow.velocity.y /= 1.2;
       door.hitDoor(arrow.velocity.x);
@@ -235,7 +241,7 @@ class PlayState extends FlxState {
 
   // Enemy actions
   private function hitEnemy(arrow:Arrow, enemy:Enemy) {
-    if (arrow.velocity.x != 0 && arrow.velocity.y != 0 && !arrow.dead) {
+    if (arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
       var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
       var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
       enemy.getHit(totalVelocity, angleBetween);
@@ -280,6 +286,10 @@ class PlayState extends FlxState {
     else if (levelOn == 3) {
       spritesheet = AssetPaths.level3_tiles__png;
       tmx = new TiledMap(AssetPaths.level3_map__tmx);
+    }
+    else if (levelOn == 4) {
+      spritesheet = AssetPaths.level1_tiles__png;
+      tmx = new TiledMap(AssetPaths.level4_map__tmx);
     }
     else {
       return;
@@ -344,7 +354,6 @@ class PlayState extends FlxState {
         for (enemy in enemies) {
           if (enemy.getName() == enemyName) {
             enemy.addPatrolPoint(new FlxPoint(obj.x, obj.y));
-            return;
           }
         }
 

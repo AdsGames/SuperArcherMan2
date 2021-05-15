@@ -9,6 +9,7 @@ package allanly;
 // Imports
 import flixel.FlxG;
 import flixel.group.FlxGroup;
+import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 
@@ -34,8 +35,7 @@ class Bow extends Arm {
     loadGraphic(AssetPaths.bow_arm__png, true, 47, 24);
     animation.add("drawback", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 0, false);
     animation.play("drawback");
-
-    scale.set(0.75, 0.75);
+    scale.set(0.65, 0.65);
 
     // Init vars
     power = 0;
@@ -61,7 +61,7 @@ class Bow extends Arm {
     super.update(elapsed);
 
     // Rotate
-    angle = new FlxPoint(x + width / 2.0, y + height / 2.0).angleBetween(target);
+    angle = FlxAngle.angleBetweenPoint(this, target, true) + 90;
   }
 
   // Get power
@@ -104,7 +104,7 @@ class Bow extends Arm {
   public function release() {
     // Min velocity
     if (power > minPower) {
-      arrowContainer.add(new Arrow(this, x + width / 2, y + height / 2, angle, power, 8));
+      arrowContainer.add(new Arrow(this, x + origin.x, y + origin.y, angle, power));
     }
     animation.frameIndex = 0;
     power = 0;

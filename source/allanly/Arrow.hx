@@ -17,26 +17,26 @@ import flixel.system.FlxSound;
 class Arrow extends FlxSprite {
   private var parent:FlxObject;
 
+  private static final ANGLE_MULTIPLIER = 180 / Math.PI;
+
   // Sounds
   private var arrowHitSound:FlxSound;
   private var bowReleaseSound:FlxSound;
+  private var yAccelertion:Int;
 
-  // Dead arrow
-  public var dead:Bool;
+  private static inline final ARROW_SPEED_MULTIPLIER:Float = 1.5;
 
   // The emitter
   public var trailEmitter:FlxEmitter;
 
   // Create arrow
-  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2, mass:Float = 1) {
+  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2) {
     super(x, y, AssetPaths.arrow__png);
     this.angle = angle;
-    this.mass = mass;
     this.velocity.x = -Math.cos((angle + 90) * (Math.PI / 180)) * velocity;
     this.velocity.y = -Math.sin((angle + 90) * (Math.PI / 180)) * velocity;
-
+    this.acceleration.y = 300;
     this.parent = parent;
-    dead = false;
 
     // Shrink box
     offset.y = 1;
@@ -94,23 +94,26 @@ class Arrow extends FlxSprite {
     trailEmitter.setPosition(this.x, this.y);
 
     // Update unless dead
-    if (!dead) {
+    if (alive) {
       // Fall a bit
       if (velocity.y == 0 || velocity.x == 0) {
         velocity.y = 0;
         velocity.x = 0;
-        dead = true;
+        acceleration.y = 0;
+        alive = false;
         arrowHitSound.proximity(x, y, parent, 800, true);
         arrowHitSound.play();
         trailEmitter.emitting = false;
+        acceleration.y = 0;
       }
       else {
-        // Fall down
-        velocity.y += mass;
-
         // Point in proper direction
-        angle = Math.atan2(velocity.y, velocity.x) * 180 / Math.PI;
+        angle = Math.atan2(velocity.y, velocity.x) * ANGLE_MULTIPLIER;
       }
+    }
+
+    if (y > FlxG.camera.maxScrollY) {
+      kill();
     }
   }
 }
