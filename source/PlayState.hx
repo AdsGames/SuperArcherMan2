@@ -26,6 +26,7 @@ import allanly.Torch;
 import allanly.Tree;
 import allanly.WinPointer;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
@@ -113,6 +114,10 @@ class PlayState extends FlxState {
 
     loadMap(levelOn);
 
+    // Arrows
+    Character.arrowContainer = new FlxTypedGroup<Arrow>();
+    FlxG.state.add(Character.arrowContainer);
+
     // Power text
     powerText = new FlxText(0, 0, 0, "");
     add(powerText);
@@ -143,45 +148,97 @@ class PlayState extends FlxState {
         powerText.text = "" + bow.getPower() + "%";
     }
 
+    enemies.forEachDead(function(enemy) {
+      if (enemy.exists == false) {
+        enemies.remove(enemy);
+      }
+    });
+
+    // Remove non existant arrows
+    Character.cleanUpArrows();
+
     // Collide everybuddy
     FlxG.collide(enemies, levelCollide);
     FlxG.collide(jim, levelCollide);
-    FlxG.collide(jim.getArrows(), levelCollide);
     if (jim.getDrone() != null)
       FlxG.collide(jim.getDrone(), levelCollide);
 
-    FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
     if (jim.getDrone() != null)
-      FlxG.overlap(jim, jim.getDrone(), collideDrone);
+      FlxG.overlap(jim, jim.getDrone(), function collideDrone(player:Character, drone:Drone) {
+        jim.pickupDrone();
+      });
 
-    for (enemy in enemies) {
-      if (enemy.getArrows() != null) {
-        FlxG.collide(enemy.getArrows(), levelCollide);
+    // Arrow vs door
+    FlxG.overlap(Character.getArrows(), doors, function hitDoorArrow(arrow:Arrow, door:Door) {
+      // Door is closed
+      if (arrow.alive && (door.scale.x <= 0.2 || door.scale.x >= -0.2)) {
+        arrow.velocity.x /= 1.2;
+        arrow.velocity.y /= 1.2;
+        door.hitDoor(arrow.velocity.x);
       }
-    }
+    });
+
+    // Arrow vs world
+    FlxG.collide(Character.getArrows(), levelCollide, function arrowCollideWorld(arrow:Arrow, world:FlxSprite) {
+      if (arrow.alive) {
+        arrow.kill();
+      }
+    });
 
     // kill "friends"
-    FlxG.overlap(jim.getArrows(), enemies, hitEnemy);
+    FlxG.overlap(Character.getArrows(), enemies, function hitEnemy(arrow:Arrow, enemy:Enemy) {
+      if (arrow.getTeam() == 0 && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
+        var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
+        var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
+        enemy.takeDamage(Math.abs(totalVelocity), angleBetween);
+
+        // Spawn stuck arrow
+        var stuckArrow = new StuckArrow(enemy, arrow.x, arrow.y, arrow.angle);
+        add(stuckArrow);
+        arrow.finishKill();
+      }
+    });
+
+    // Arrow vs jim
+    FlxG.overlap(Character.getArrows(), jim, function(arrow:Arrow, player:Player) {
+      if (arrow.getTeam() == 1 && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
+        var angleBetween = FlxAngle.angleBetween(arrow, player, true);
+        var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
+        player.takeDamage(Math.abs(totalVelocity), angleBetween);
+
+        // Spawn stuck arrow
+        var stuckArrow = new StuckArrow(player, arrow.x, arrow.y, arrow.angle);
+        add(stuckArrow);
+        arrow.finishKill();
+      }
+    });
 
     // Ladders
     jim.onLadder(FlxG.overlap(jim, ladders, jim.ladderPosition));
 
     // Door action
-    FlxG.overlap(jim, doors, collideDoor);
     if (jim.getDrone() != null)
-      FlxG.overlap(jim.getDrone(), doors, collideDoor);
+      FlxG.overlap(jim.getDrone(), doors, function collideDoor(player:Character, door:Door) {
+        door.hitDoor(player.velocity.x);
+      });
 
     // Run into draw bridge
     FlxG.collide(jim, gameDrawbridge);
     if (jim.getDrone() != null)
       FlxG.collide(jim.getDrone(), gameDrawbridge);
 
-    FlxG.overlap(enemies, doors, collideDoor);
+    FlxG.overlap(jim, doors, function collideDoor(player:Character, door:Door) {
+      door.hitDoor(player.velocity.x);
+    });
+
+    FlxG.overlap(enemies, doors, function collideDoor(player:Character, door:Door) {
+      door.hitDoor(player.velocity.x);
+    });
 
     // Run into draw bridge
     FlxG.collide(jim, gameDrawbridge);
     FlxG.collide(enemies, gameDrawbridge);
-    FlxG.collide(jim.getArrows(), gameDrawbridge);
+    FlxG.collide(Character.getArrows(), gameDrawbridge);
 
     // Win!
     if (FlxG.overlap(jim, gameSpawn) && gameCrown.isTaken()) {
@@ -189,7 +246,7 @@ class PlayState extends FlxState {
     }
 
     // The drawbridge + crank
-    if (FlxG.overlap(gameCrank, jim.getArrows()) && !gameCrank.getActivated()) {
+    if (FlxG.overlap(gameCrank, Character.getArrows()) && !gameCrank.getActivated()) {
       gameDrawbridge.fall();
       gameCrank.spin();
     }
@@ -201,10 +258,12 @@ class PlayState extends FlxState {
     }
 
     // Die
-    if (FlxG.overlap(jim, enemies)) {
-      jim.die();
-      FlxG.sound.music.stop();
-    }
+    FlxG.overlap(jim, enemies, function(jim:Player, enemy:Enemy) {
+      if (enemy.alive) {
+        jim.takeDamage(20, 0);
+        FlxG.sound.music.stop();
+      }
+    });
 
     // Make some clouds
     if (Tools.myRandom(0, 1000) == 1) {
@@ -218,43 +277,6 @@ class PlayState extends FlxState {
     }
 
     super.update(elapsed);
-  }
-
-  // Door actions
-  private function collideDoor(player:Character, door:Door) {
-    door.hitDoor(player.velocity.x);
-  }
-
-  private function collideDrone(player:Character, drone:Drone) {
-    jim.pickupDrone();
-  }
-
-  // Arrows through door
-  private function hitDoorArrow(arrow:Arrow, door:Door) {
-    // Door is closed
-    if (arrow.alive && (door.scale.x <= 0.2 || door.scale.x >= -0.2)) {
-      arrow.velocity.x /= 1.2;
-      arrow.velocity.y /= 1.2;
-      door.hitDoor(arrow.velocity.x);
-    }
-  }
-
-  // Enemy actions
-  private function hitEnemy(arrow:Arrow, enemy:Enemy) {
-    if (arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
-      var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
-      var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
-      enemy.getHit(totalVelocity, angleBetween);
-
-      // Spawn stuck arrow
-      var stuckArrow = new StuckArrow(enemy, arrow.x, arrow.y, arrow.angle);
-      add(stuckArrow);
-      arrow.kill();
-
-      if (enemy.health <= 0) {
-        enemies.remove(enemy);
-      }
-    }
   }
 
   // Load each layer
@@ -356,9 +378,6 @@ class PlayState extends FlxState {
             enemy.addPatrolPoint(new FlxPoint(obj.x, obj.y));
           }
         }
-
-        // Not found
-        trace("Could not find enemy " + enemyName + " for patrol route");
 
       default:
         trace("Could not load node " + obj.gid);

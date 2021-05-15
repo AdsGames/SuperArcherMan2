@@ -7,10 +7,9 @@ package allanly;
  * 29/5/2015
  */
 // Imports
-import flixel.FlxG;
-import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 
 class Bow extends Arm {
@@ -19,14 +18,13 @@ class Bow extends Arm {
   private var chargeTime:Float;
   private var minPower:Float;
 
-  // Container of arrows
-  private var arrowContainer:FlxTypedGroup<Arrow>;
-
   // Variables
   private var powerTimer:FlxTimer;
   private var power:Float;
 
   private var target:FlxPoint;
+
+  private var bowReleaseSound:FlxSound;
 
   // Create bow
   public function new(maxPower:Float = 100.0, chargeTime:Float = 1.0, minPower:Float = 20.0) {
@@ -48,9 +46,8 @@ class Bow extends Arm {
 
     origin = new FlxPoint(width / 2, 15);
 
-    // Arrow container
-    arrowContainer = new FlxTypedGroup<Arrow>();
-    FlxG.state.add(arrowContainer);
+    bowReleaseSound = new FlxSound();
+    bowReleaseSound.loadEmbedded(AssetPaths.bow_release__mp3);
 
     // Default target
     target = new FlxPoint(0, 0);
@@ -72,11 +69,6 @@ class Bow extends Arm {
   // Change location
   override public function setPosition(x:Float = 0.0, y:Float = 0.0) {
     super.setPosition(x - 10, y - 5);
-  }
-
-  // Return arrows
-  public function getArrows():FlxTypedGroup<Arrow> {
-    return arrowContainer;
   }
 
   // Ticker for bow power
@@ -101,13 +93,19 @@ class Bow extends Arm {
     animation.play("drawback");
   }
 
-  public function release() {
+  public function release(team:Int) {
+    var arrow:Arrow = null;
+
     // Min velocity
     if (power > minPower) {
-      arrowContainer.add(new Arrow(this, x + origin.x, y + origin.y, angle, power));
+      arrow = new Arrow(this, x + origin.x, y + origin.y, angle, power, team);
+      bowReleaseSound.play();
     }
+
     animation.frameIndex = 0;
     power = 0;
     powerTimer.cancel();
+
+    return arrow;
   }
 }

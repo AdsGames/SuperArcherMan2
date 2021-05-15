@@ -50,7 +50,8 @@ class Player extends Character {
     droneAmmo = 1;
 
     // Init health
-    health = 100;
+    health = 10000;
+    healthBar.setRange(0, health);
 
     // Images and animations
     loadGraphic(AssetPaths.player__png, true, 23, 30);
@@ -131,38 +132,46 @@ class Player extends Character {
     super.update(elapsed);
 
     // Kill urself
-    // Don't threaten me with a good time
-    if (!dead && FlxG.keys.pressed.K) {
-      die();
+    if (FlxG.keys.pressed.K) {
+      health = 0;
     }
 
     // Update bow target
-    var bow = Std.downcast(arm, Bow);
-    var isDrone = false;
-    if (drone != null) {
-      bow = drone.getBow();
-      isDrone = true;
-    }
-    bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+    if (!dead) {
+      var bow = Std.downcast(arm, Bow);
+      var isDrone = false;
+      if (drone != null) {
+        bow = drone.getBow();
+        isDrone = true;
+      }
+      bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
-    // Make arrows
-    if (FlxG.mouse.justPressed) {
-      trace("drone ammo");
-      trace(droneAmmo);
-      trace(isDrone);
-      if (!isDrone || droneAmmo > 0)
-        bow.pullBack();
-    }
-    else if (FlxG.mouse.justReleased) {
-      if (!isDrone || droneAmmo > 0) {
-        if (isDrone)
-          droneAmmo -= 1;
-        bow.release();
+      // Make arrows
+      if (FlxG.mouse.justPressed) {
+        trace("drone ammo");
+        trace(droneAmmo);
+        trace(isDrone);
+        if (!isDrone || droneAmmo > 0)
+          bow.pullBack();
+      }
+      else if (FlxG.mouse.justReleased) {
+        if (!isDrone || droneAmmo > 0) {
+          if (isDrone)
+            droneAmmo -= 1;
+          var arrow = bow.release(0);
+          if (arrow != null) {
+            Character.arrowContainer.add(arrow);
+          }
+        }
+      }
+
+      // Move around
+      move(elapsed);
+
+      if (health <= 0) {
+        die();
       }
     }
-
-    // Move around
-    move(elapsed);
   }
 
   // Move character (keep out danny)
@@ -266,28 +275,6 @@ class Player extends Character {
   // ur butt
   public function getDrone():Drone {
     return drone;
-  }
-
-  // Get arrows
-  override public function getArrows():FlxTypedGroup<Arrow> {
-    var bow = Std.downcast(getArm(), Bow);
-    var allArrows = null;
-    var droneBow = null;
-    if (drone != null) {
-      droneBow = Std.downcast(drone.getArm(), Bow);
-    }
-
-    if (bow != null) {
-      allArrows = bow.getArrows();
-    }
-    if (droneBow != null) {
-      var droneArrows = droneBow.getArrows();
-      for (elem in droneArrows) {
-        allArrows.add(elem);
-      }
-    }
-
-    return allArrows;
   }
 
   // Die

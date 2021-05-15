@@ -13,7 +13,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
-import haxe.Log;
 
 class Character extends FlxSprite {
   // Variables
@@ -43,6 +42,9 @@ class Character extends FlxSprite {
   private final MOVEMENT_SPEED_JUMPING_CHANGE:Float = 0.2;
   private final MOVEMENT_SPEED_DECELERATION_CHANGE:Float = 0.2;
 
+  // Container of arrows
+  public static var arrowContainer:FlxTypedGroup<Arrow> = null;
+
   // Make character
   public function new(x:Float, y:Float) {
     super(x, y);
@@ -70,7 +72,7 @@ class Character extends FlxSprite {
     acceleration.y = GRAVITY;
 
     // Health bar
-    healthBar = new FlxBar(x, y, LEFT_TO_RIGHT, 26, 4, this, "health", 0, 100);
+    healthBar = new FlxBar(x, y, LEFT_TO_RIGHT, 26, 4, this, "health", 0, health);
     FlxG.state.add(healthBar);
   }
 
@@ -79,9 +81,6 @@ class Character extends FlxSprite {
     // Put back in place
     if (x < 0) {
       x = 0;
-    }
-    if (y < 0) {
-      y = 0;
     }
 
     // Move bow to player
@@ -111,23 +110,34 @@ class Character extends FlxSprite {
     super.update(elapsed);
   }
 
-  // Get arrows
-  public function getArrows():FlxTypedGroup<Arrow> {
-    var bow = Std.downcast(getArm(), Bow);
-    if (bow != null) {
-      return bow.getArrows();
+  // Kill stuff
+  public override function kill() {
+    if (arm != null) {
+      arm.kill();
     }
-    return null;
+    healthBar.kill();
+    bloodEmitter.kill();
+  }
+
+  // Get arrows
+  public static function getArrows():FlxTypedGroup<Arrow> {
+    return arrowContainer;
+  }
+
+  // Clean up arrows
+  public static function cleanUpArrows() {
+    arrowContainer.forEachDead(function(arrow) {
+      if (arrow.exists == false) {
+        arrowContainer.remove(arrow);
+      }
+    });
   }
 
   // On hit
-  public function takeDamage(amount:Float, angleBetween:Float) {
-    health -= amount;
-    Log.trace(angleBetween);
+  public function takeDamage(damage:Float, angleBetween:Float) {
+    health -= damage;
     bloodEmitter.launchAngle.set(angleBetween - 25, angleBetween + 25);
     bloodEmitter.start(true, 0, 20);
-
-    hitSound.volume = 0.1;
     hitSound.play();
   }
 

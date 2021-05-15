@@ -24,24 +24,42 @@ class EnemyArcher extends Enemy {
     animation.play("idle");
 
     // Init health
-    health = 100;
+    health = 2000;
+    healthBar.setRange(0, health);
   }
 
   // Update
   override public function update(elapsed:Float) {
+    if (!alive) {
+      return;
+    }
+
     super.update(elapsed);
 
     // Move enemy
     move(elapsed);
+
+    // Downcast sword
+    var bow = Std.downcast(arm, Bow);
+    bow.setTarget(jimPointer.getPosition());
+
+    // Shoot
+    if (bow.getPower() == 0 && detected) {
+      bow.pullBack();
+    }
+    if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
+      var arrow = bow.release(1);
+      if (arrow != null) {
+        Character.arrowContainer.add(arrow);
+      }
+    }
+
+    // Move sword to self
+    arm.setPosition(x, y);
   }
 
   // Move around
   override public function move(elapsed:Float) {
-    // Downcast sword
-    var bow = Std.downcast(arm, Bow);
-
-    bow.setTarget(jimPointer.getPosition());
-
     // Move around
     if ((detected && x < jimPointer.x) || (patrolling && x < patrolPoints[patrolPointIndex].x)) {
       moveRight();
@@ -52,16 +70,6 @@ class EnemyArcher extends Enemy {
     else {
       animation.play("idle");
     }
-
-    if (bow.getPower() == 0) {
-      bow.pullBack();
-    }
-    if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
-      bow.release();
-    }
-
-    // Move sword to self
-    arm.setPosition(x, y);
 
     // Parent move
     super.move(elapsed);

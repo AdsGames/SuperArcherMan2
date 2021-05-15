@@ -144,14 +144,6 @@ class Drone extends Character {
     super.kill();
   }
 
-  override public function getArrows():FlxTypedGroup<Arrow> {
-    var bow = Std.downcast(getArm(), Bow);
-    if (bow != null) {
-      return bow.getArrows();
-    }
-    return null;
-  }
-
   public function getBow():Bow {
     return Std.downcast(getArm(), Bow);
   }

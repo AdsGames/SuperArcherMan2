@@ -9,6 +9,8 @@ package allanly;
 // Libraries
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 
 // Swinging enemies
 class Enemy extends Character {
@@ -70,6 +72,11 @@ class Enemy extends Character {
 
     // Move enemy
     move(elapsed);
+
+    // Die
+    if (health <= 0) {
+      kill();
+    }
   }
 
   public function detectPlayer() {
@@ -77,8 +84,21 @@ class Enemy extends Character {
     patrolling = false;
 
     // Hey! sound
-    heySound.proximity(x, y, jimPointer, 800, true);
     heySound.play();
+  }
+
+  // Kill
+  override function kill() {
+    alive = false;
+    velocity.y = 0;
+    velocity.x = 0;
+    acceleration.y = 0;
+    FlxTween.tween(this, {alpha: 0}, 2, {ease: FlxEase.circOut, onComplete: finishKill});
+    super.kill();
+  }
+
+  function finishKill(_) {
+    exists = false;
   }
 
   // Move around
@@ -99,8 +119,8 @@ class Enemy extends Character {
   }
 
   // Get hit
-  public function getHit(velocity:Float, angleBetween:Float) {
-    takeDamage(Math.abs(velocity / 10.0), angleBetween);
+  public override function takeDamage(damage:Float, angleBetween:Float) {
+    super.takeDamage(damage, angleBetween);
     detectPlayer();
   }
 
