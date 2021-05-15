@@ -38,7 +38,7 @@
   <object id="13" type="door" x="1503" y="176" width="16" height="32"/>
   <object id="14" type="door" x="1424" y="288" width="16" height="32"/>
   <object id="15" type="door" x="400" y="304" width="16" height="32"/>
-  <object id="16" type="enemy" x="399.636" y="202" width="7.81818" height="3.81818"/>
+  <object id="16" type="enemy_bow" x="399.636" y="202" width="7.81818" height="3.81818"/>
   <object id="18" type="enemy" x="467.909" y="202.455" width="7.81818" height="3.81818"/>
   <object id="19" type="enemy" x="932.273" y="195.364" width="7.81818" height="3.81818"/>
   <object id="20" type="enemy" x="933.545" y="251.909" width="7.81818" height="3.81818"/>

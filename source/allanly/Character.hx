@@ -35,6 +35,14 @@ class Character extends FlxSprite {
   // Hit sound
   public var hitSound:FlxSound;
 
+  // Movement vars
+  private var movementSpeedMax:Float = 200;
+
+  // Movement consts
+  private final MOVEMENT_SPEED_JUMPING_CHANGE:Float = 0.2;
+  private final MOVEMENT_SPEED_CHANGE:Float = 10;
+  private final MOVEMENT_SPEED_DECELERATION_CHANGE:Float = 0.2;
+
   // Make character
   public function new(x:Float, y:Float) {
     super(x, y);
@@ -132,6 +140,54 @@ class Character extends FlxSprite {
       y -= 4;
       velocity.y = -magnitude;
       jumping = true;
+    }
+  }
+
+  public function moveLeft() {
+    // Movement
+    if (velocity.x > -movementSpeedMax) {
+      // Less movement acceleration when jumping
+      if (!jumping) {
+        acceleration.x = -MOVEMENT_SPEED_CHANGE * (movementSpeedMax + velocity.x);
+      }
+      else {
+        acceleration.x = -MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (movementSpeedMax + velocity.x);
+      }
+    }
+    // Stop accelerating when we fast
+    else if (velocity.x <= -movementSpeedMax) {
+      acceleration.x = 0;
+    }
+
+    // Animaiton
+    animation.play("walk");
+    // Flip
+    if (scale.x > 0) {
+      scale.x *= -1;
+    }
+  }
+
+  public function moveRight() {
+    // Movement
+    if (velocity.x < movementSpeedMax) {
+      // Less movement acceleration when jumping
+      if (!jumping) {
+        acceleration.x = MOVEMENT_SPEED_CHANGE * (movementSpeedMax - velocity.x);
+      }
+      else {
+        acceleration.x = MOVEMENT_SPEED_CHANGE * MOVEMENT_SPEED_JUMPING_CHANGE * (movementSpeedMax + velocity.x);
+      }
+    }
+    // Stop accelerating when we fast
+    else if (velocity.x >= movementSpeedMax) {
+      acceleration.x = 0;
+    }
+    // Animation
+    animation.play("walk");
+
+    // Flip
+    if (scale.x < 0) {
+      scale.x *= -1;
     }
   }
 }

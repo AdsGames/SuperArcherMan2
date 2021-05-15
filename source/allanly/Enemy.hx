@@ -12,6 +12,9 @@ import flixel.system.FlxSound;
 
 // Swinging enemies
 class Enemy extends Character {
+  // Constants
+  private static inline final JUMP_VELOCITY:Float = 250.0;
+
   private var heySound:FlxSound;
 
   // Variables
@@ -19,9 +22,6 @@ class Enemy extends Character {
 
   // Pointer to jim
   private var jimPointer:Character;
-
-  // Constants
-  private static inline final MOVEMENT_SPEED:Int = 200;
 
   // Global identifier from tiled
   private var name:String;
@@ -46,12 +46,6 @@ class Enemy extends Character {
     detected = false;
     patrolling = false;
     patrolPointIndex = 0;
-
-    // Images and animations
-    loadGraphic(AssetPaths.enemy__png, true, 14, 30);
-    animation.add("walk", [0, 1, 2, 3], 10, true);
-    animation.add("idle", [4, 5, 6, 7], 5, true);
-    animation.play("idle");
 
     // Player
     this.jimPointer = jimPointer;
@@ -95,47 +89,10 @@ class Enemy extends Character {
       detectPlayer();
     }
 
-    // Downcast sword
-    var sword = Std.downcast(arm, Sword);
-
     // Change patrol point
     if (patrolling && Math.abs(x - patrolPoints[patrolPointIndex].x) < 4) {
       patrolPointIndex = (patrolPointIndex + 1) % patrolPoints.length;
     }
-
-    // Move around
-    if ((detected && x < jimPointer.x) || (patrolling && x < patrolPoints[patrolPointIndex].x)) {
-      if (sword != null) {
-        sword.setSpinDir("right");
-      }
-      velocity.x = MOVEMENT_SPEED;
-      animation.play("walk");
-
-      // Flip
-      if (scale.x < 0) {
-        scale.x *= -1;
-      }
-    }
-    else if ((detected && x > jimPointer.x) || (patrolling && x > patrolPoints[patrolPointIndex].x)) {
-      if (sword != null) {
-        sword.setSpinDir("left");
-      }
-      velocity.x = -MOVEMENT_SPEED;
-      animation.play("walk");
-      // Flip
-      if (scale.x > 0) {
-        scale.x *= -1;
-      }
-    }
-    else {
-      if (sword != null) {
-        sword.setSpinDir("none");
-      }
-      animation.play("idle");
-    }
-
-    // Move sword to self
-    arm.setPosition(x, y);
 
     // Parent move
     super.move(elapsed);

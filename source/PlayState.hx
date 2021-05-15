@@ -11,6 +11,8 @@ import allanly.Crown;
 import allanly.Door;
 import allanly.Drawbridge;
 import allanly.Enemy;
+import allanly.EnemyArcher;
+import allanly.EnemySword;
 import allanly.Ladder;
 import allanly.Painting;
 import allanly.Player;
@@ -358,8 +360,14 @@ class PlayState extends FlxState {
 
         return;
       case "enemy":
-        var enemy = new Enemy(jim, obj.name, obj.x, obj.y);
+        var enemy = new EnemySword(jim, obj.name, obj.x, obj.y);
         enemy.pickupArm(new Sword());
+        enemies.add(enemy);
+        add(enemy);
+        return;
+      case "enemy_bow":
+        var enemy = new EnemyArcher(jim, obj.name, obj.x, obj.y);
+        enemy.pickupArm(new Bow(1000.0, 1.0, 100.0));
         enemies.add(enemy);
         add(enemy);
         return;
