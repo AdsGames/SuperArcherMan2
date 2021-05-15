@@ -22,12 +22,15 @@ class Arrow extends FlxSprite {
   // Sounds
   private var arrowHitSound:FlxSound;
   private var bowReleaseSound:FlxSound;
+  private var yAccelertion:Int;
+
+  private static inline final ARROW_SPEED_MULTIPLIER:Float = 1.5;
 
   // The emitter
   public var trailEmitter:FlxEmitter;
 
   // Create arrow
-  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2, mass:Float = 1) {
+  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2) {
     super(x, y, AssetPaths.arrow__png);
     this.angle = angle;
     this.velocity.x = -Math.cos((angle + 90) * (Math.PI / 180)) * velocity;
@@ -101,6 +104,7 @@ class Arrow extends FlxSprite {
         arrowHitSound.proximity(x, y, parent, 800, true);
         arrowHitSound.play();
         trailEmitter.emitting = false;
+        acceleration.y = 0;
       }
       else {
         // Point in proper direction
