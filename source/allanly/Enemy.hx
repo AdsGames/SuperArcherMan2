@@ -84,7 +84,6 @@ class Enemy extends Character {
     patrolling = false;
 
     // Hey! sound
-    heySound.proximity(x, y, jimPointer, 800, true);
     heySound.play();
   }
 
@@ -120,8 +119,8 @@ class Enemy extends Character {
   }
 
   // Get hit
-  public function getHit(velocity:Float, angleBetween:Float) {
-    takeDamage(Math.abs(velocity / 10.0), angleBetween);
+  public override function takeDamage(damage:Float, angleBetween:Float) {
+    super.takeDamage(damage, angleBetween);
     detectPlayer();
   }
 

@@ -23,13 +23,18 @@ class EnemySword extends Enemy {
     animation.play("idle");
 
     // Init health
-    health = 100;
+    health = 1000;
     movementSpeedMax = 100;
     movementSpeedChange = 2;
+    healthBar.setRange(0, health);
   }
 
   // Update
   override public function update(elapsed:Float) {
+    if (!alive) {
+      return;
+    }
+
     super.update(elapsed);
 
     // Move enemy
@@ -52,7 +57,6 @@ class EnemySword extends Enemy {
       if (sword != null) {
         sword.setSpinDir("right", velocity.x / 5);
       }
-
       moveRight();
     }
     else if ((detected && x > jimPointer.x) || (patrolling && x > patrolPoints[patrolPointIndex].x)) {

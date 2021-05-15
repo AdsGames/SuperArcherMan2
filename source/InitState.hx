@@ -17,6 +17,6 @@ class InitState extends FlxGame {
     // Load custom cursor and then hide hardware cursor
     FlxG.mouse.load(AssetPaths.cursor__png, 1, -7, -7);
     FlxG.mouse.visible = false;
-    FlxG.sound.volume = 0;
+    // FlxG.sound.volume = 0;
   }
 }

@@ -13,7 +13,6 @@ import flixel.group.FlxGroup.FlxTypedGroup;
 import flixel.system.FlxSound;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
-import haxe.Log;
 
 class Character extends FlxSprite {
   // Variables
@@ -44,17 +43,11 @@ class Character extends FlxSprite {
   private final MOVEMENT_SPEED_DECELERATION_CHANGE:Float = 0.2;
 
   // Container of arrows
-  private static var arrowContainer:FlxTypedGroup<Arrow> = null;
+  public static var arrowContainer:FlxTypedGroup<Arrow> = null;
 
   // Make character
   public function new(x:Float, y:Float) {
     super(x, y);
-
-    // No arrow container
-    if (arrowContainer == null) {
-      arrowContainer = new FlxTypedGroup<Arrow>();
-      FlxG.state.add(arrowContainer);
-    }
 
     // Init vars
     jumping = false;
@@ -79,7 +72,7 @@ class Character extends FlxSprite {
     acceleration.y = GRAVITY;
 
     // Health bar
-    healthBar = new FlxBar(x, y, LEFT_TO_RIGHT, 26, 4, this, "health", 0, 100);
+    healthBar = new FlxBar(x, y, LEFT_TO_RIGHT, 26, 4, this, "health", 0, health);
     FlxG.state.add(healthBar);
   }
 
@@ -88,9 +81,6 @@ class Character extends FlxSprite {
     // Put back in place
     if (x < 0) {
       x = 0;
-    }
-    if (y < 0) {
-      y = 0;
     }
 
     // Move bow to player
@@ -125,8 +115,8 @@ class Character extends FlxSprite {
     if (arm != null) {
       arm.kill();
     }
-    bloodEmitter.kill();
     healthBar.kill();
+    bloodEmitter.kill();
   }
 
   // Get arrows
@@ -144,11 +134,10 @@ class Character extends FlxSprite {
   }
 
   // On hit
-  public function takeDamage(amount:Float, angleBetween:Float) {
-    health -= amount;
+  public function takeDamage(damage:Float, angleBetween:Float) {
+    health -= damage;
     bloodEmitter.launchAngle.set(angleBetween - 25, angleBetween + 25);
     bloodEmitter.start(true, 0, 20);
-    hitSound.volume = 0.1;
     hitSound.play();
   }
 

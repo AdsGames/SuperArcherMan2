@@ -43,7 +43,8 @@ class Player extends Character {
     hasWon = false;
 
     // Init health
-    health = 100;
+    health = 10000;
+    healthBar.setRange(0, health);
 
     // Images and animations
     loadGraphic(AssetPaths.player__png, true, 23, 30);
@@ -81,27 +82,33 @@ class Player extends Character {
     super.update(elapsed);
 
     // Kill urself
-    if (!dead && FlxG.keys.pressed.K) {
-      die();
+    if (FlxG.keys.pressed.K) {
+      health = 0;
     }
 
     // Update bow target
-    var bow = Std.downcast(arm, Bow);
-    bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+    if (!dead) {
+      var bow = Std.downcast(arm, Bow);
+      bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
-    // Make arrows
-    if (FlxG.mouse.justPressed) {
-      bow.pullBack();
-    }
-    else if (FlxG.mouse.justReleased) {
-      var arrow = bow.release(0);
-      if (arrow != null) {
-        Character.arrowContainer.add(arrow);
+      // Make arrows
+      if (FlxG.mouse.justPressed) {
+        bow.pullBack();
+      }
+      else if (FlxG.mouse.justReleased) {
+        var arrow = bow.release(0);
+        if (arrow != null) {
+          Character.arrowContainer.add(arrow);
+        }
+      }
+
+      // Move around
+      move(elapsed);
+
+      if (health <= 0) {
+        die();
       }
     }
-
-    // Move around
-    move(elapsed);
   }
 
   // Move character (keep out danny)

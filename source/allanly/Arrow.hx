@@ -21,7 +21,6 @@ class Arrow extends FlxSprite {
 
   // Sounds
   private var arrowHitSound:FlxSound;
-  private var bowReleaseSound:FlxSound;
   private var yAccelertion:Int;
   private var team:Int;
   private var timeDead:Float;
@@ -65,29 +64,26 @@ class Arrow extends FlxSprite {
     arrowHitSound = new FlxSound();
     arrowHitSound.loadEmbedded(AssetPaths.arrow_hit__mp3);
 
-    bowReleaseSound = new FlxSound();
-    bowReleaseSound.loadEmbedded(AssetPaths.bow_release__mp3);
-
-    // Init sound
-    bowReleaseSound.proximity(x, y, parent, 400, true);
-    bowReleaseSound.play();
-
     solid = true;
   }
 
   // Kill
   override function kill() {
-    arrowHitSound.proximity(x, y, parent, 800, true);
     arrowHitSound.play();
     alive = false;
     trailEmitter.emitting = false;
     velocity.y = 0;
     velocity.x = 0;
     acceleration.y = 0;
-    FlxTween.tween(this, {alpha: 0}, 10, {ease: FlxEase.elasticIn, onComplete: finishKill});
+    FlxTween.tween(this, {alpha: 0}, 10, {
+      ease: FlxEase.elasticIn,
+      onComplete: function(_) {
+        finishKill();
+      }
+    });
   }
 
-  function finishKill(_) {
+  public function finishKill() {
     exists = false;
     trailEmitter.kill();
   }
@@ -95,9 +91,6 @@ class Arrow extends FlxSprite {
   // Update arrow
   override public function update(elapsed:Float) {
     super.update(elapsed);
-
-    // Update sounds
-    arrowHitSound.update(elapsed);
 
     // Move particle emitter to obj
     trailEmitter.setPosition(x, y);

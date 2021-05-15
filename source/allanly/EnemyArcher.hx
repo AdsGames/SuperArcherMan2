@@ -24,36 +24,27 @@ class EnemyArcher extends Enemy {
     animation.play("idle");
 
     // Init health
-    health = 100;
+    health = 2000;
+    healthBar.setRange(0, health);
   }
 
   // Update
   override public function update(elapsed:Float) {
+    if (!alive) {
+      return;
+    }
+
     super.update(elapsed);
 
     // Move enemy
     move(elapsed);
-  }
 
-  // Move around
-  override public function move(elapsed:Float) {
     // Downcast sword
     var bow = Std.downcast(arm, Bow);
-
     bow.setTarget(jimPointer.getPosition());
 
-    // Move around
-    if ((detected && x < jimPointer.x) || (patrolling && x < patrolPoints[patrolPointIndex].x)) {
-      moveRight();
-    }
-    else if ((detected && x > jimPointer.x) || (patrolling && x > patrolPoints[patrolPointIndex].x)) {
-      moveLeft();
-    }
-    else {
-      animation.play("idle");
-    }
-
-    if (bow.getPower() == 0) {
+    // Shoot
+    if (bow.getPower() == 0 && detected) {
       bow.pullBack();
     }
     if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
@@ -65,6 +56,20 @@ class EnemyArcher extends Enemy {
 
     // Move sword to self
     arm.setPosition(x, y);
+  }
+
+  // Move around
+  override public function move(elapsed:Float) {
+    // Move around
+    if ((detected && x < jimPointer.x) || (patrolling && x < patrolPoints[patrolPointIndex].x)) {
+      moveRight();
+    }
+    else if ((detected && x > jimPointer.x) || (patrolling && x > patrolPoints[patrolPointIndex].x)) {
+      moveLeft();
+    }
+    else {
+      animation.play("idle");
+    }
 
     // Parent move
     super.move(elapsed);

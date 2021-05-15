@@ -9,6 +9,7 @@ package allanly;
 // Imports
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
+import flixel.system.FlxSound;
 import flixel.util.FlxTimer;
 
 class Bow extends Arm {
@@ -22,6 +23,8 @@ class Bow extends Arm {
   private var power:Float;
 
   private var target:FlxPoint;
+
+  private var bowReleaseSound:FlxSound;
 
   // Create bow
   public function new(maxPower:Float = 100.0, chargeTime:Float = 1.0, minPower:Float = 20.0) {
@@ -42,6 +45,9 @@ class Bow extends Arm {
     this.minPower = minPower;
 
     origin = new FlxPoint(width / 2, 15);
+
+    bowReleaseSound = new FlxSound();
+    bowReleaseSound.loadEmbedded(AssetPaths.bow_release__mp3);
 
     // Default target
     target = new FlxPoint(0, 0);
@@ -93,6 +99,7 @@ class Bow extends Arm {
     // Min velocity
     if (power > minPower) {
       arrow = new Arrow(this, x + origin.x, y + origin.y, angle, power, team);
+      bowReleaseSound.play();
     }
 
     animation.frameIndex = 0;

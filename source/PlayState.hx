@@ -113,6 +113,10 @@ class PlayState extends FlxState {
     // Load map :D
     loadMap(levelOn);
 
+    // Arrows
+    Character.arrowContainer = new FlxTypedGroup<Arrow>();
+    FlxG.state.add(Character.arrowContainer);
+
     // Power text
     powerText = new FlxText(0, 0, 0, "");
     add(powerText);
@@ -148,18 +152,63 @@ class PlayState extends FlxState {
     // Collide everybuddy
     FlxG.collide(enemies, levelCollide);
     FlxG.collide(jim, levelCollide);
-    FlxG.overlap(Character.getArrows(), doors, hitDoorArrow);
-    FlxG.collide(Character.getArrows(), levelCollide, arrowCollideWorld);
+
+    // Arrow vs door
+    FlxG.overlap(Character.getArrows(), doors, function hitDoorArrow(arrow:Arrow, door:Door) {
+      // Door is closed
+      if (arrow.alive && (door.scale.x <= 0.2 || door.scale.x >= -0.2)) {
+        arrow.velocity.x /= 1.2;
+        arrow.velocity.y /= 1.2;
+        door.hitDoor(arrow.velocity.x);
+      }
+    });
+
+    // Arrow vs world
+    FlxG.collide(Character.getArrows(), levelCollide, function arrowCollideWorld(arrow:Arrow, world:FlxSprite) {
+      if (arrow.alive) {
+        arrow.kill();
+      }
+    });
 
     // kill "friends"
-    FlxG.overlap(Character.getArrows(), enemies, hitEnemy);
+    FlxG.overlap(Character.getArrows(), enemies, function hitEnemy(arrow:Arrow, enemy:Enemy) {
+      if (arrow.getTeam() == 0 && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
+        var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
+        var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
+        enemy.takeDamage(Math.abs(totalVelocity), angleBetween);
+
+        // Spawn stuck arrow
+        var stuckArrow = new StuckArrow(enemy, arrow.x, arrow.y, arrow.angle);
+        add(stuckArrow);
+        arrow.finishKill();
+      }
+    });
+
+    // Arrow vs jim
+    FlxG.overlap(Character.getArrows(), jim, function(arrow:Arrow, player:Player) {
+      if (arrow.getTeam() == 1 && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
+        var angleBetween = FlxAngle.angleBetween(arrow, player, true);
+        var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
+        player.takeDamage(Math.abs(totalVelocity), angleBetween);
+
+        // Spawn stuck arrow
+        var stuckArrow = new StuckArrow(player, arrow.x, arrow.y, arrow.angle);
+        add(stuckArrow);
+        arrow.finishKill();
+      }
+    });
 
     // Ladders
     jim.onLadder(FlxG.overlap(jim, ladders, jim.ladderPosition));
 
     // Door action
-    FlxG.overlap(jim, doors, collideDoor);
-    FlxG.overlap(enemies, doors, collideDoor);
+    FlxG.overlap(jim, doors, function collideDoor(player:Character, door:Door) {
+      door.hitDoor(player.velocity.x);
+    });
+
+    FlxG.overlap(enemies, doors, function collideDoor(player:Character, door:Door) {
+      door.hitDoor(player.velocity.x);
+    });
 
     // Run into draw bridge
     FlxG.collide(jim, gameDrawbridge);
@@ -184,10 +233,12 @@ class PlayState extends FlxState {
     }
 
     // Die
-    if (FlxG.overlap(jim, enemies)) {
-      jim.die();
-      FlxG.sound.music.stop();
-    }
+    FlxG.overlap(jim, enemies, function(jim:Player, enemy:Enemy) {
+      if (enemy.alive) {
+        jim.takeDamage(20, 0);
+        FlxG.sound.music.stop();
+      }
+    });
 
     // Make some clouds
     if (Tools.myRandom(0, 1000) == 1) {
@@ -201,41 +252,6 @@ class PlayState extends FlxState {
     }
 
     super.update(elapsed);
-  }
-
-  // Door actions
-  private function collideDoor(player:Character, door:Door) {
-    door.hitDoor(player.velocity.x);
-  }
-
-  // Arrows through door
-  private function hitDoorArrow(arrow:Arrow, door:Door) {
-    // Door is closed
-    if (arrow.alive && (door.scale.x <= 0.2 || door.scale.x >= -0.2)) {
-      arrow.velocity.x /= 1.2;
-      arrow.velocity.y /= 1.2;
-      door.hitDoor(arrow.velocity.x);
-    }
-  }
-
-  private function arrowCollideWorld(arrow:Arrow, world:FlxSprite) {
-    if (arrow.alive) {
-      arrow.kill();
-    }
-  }
-
-  // Enemy actions
-  private function hitEnemy(arrow:Arrow, enemy:Enemy) {
-    if (arrow.getTeam() == 0 && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
-      var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
-      var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
-      enemy.getHit(totalVelocity, angleBetween);
-
-      // Spawn stuck arrow
-      var stuckArrow = new StuckArrow(enemy, arrow.x, arrow.y, arrow.angle);
-      add(stuckArrow);
-      arrow.kill();
-    }
   }
 
   // Load each layer
