@@ -48,6 +48,7 @@ class Player extends Character {
     dead = false;
     hasWon = false;
     droneAlive = true;
+    droneAmmo = 1;
 
     // Init health
     health = 100;
@@ -130,15 +131,25 @@ class Player extends Character {
 
     // Update bow target
     var bow = Std.downcast(arm, Bow);
-    if (drone != null)
+    var isDrone = false;
+    if (drone != null) {
       bow = drone.getBow();
+      isDrone = true;
+    }
     bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
     // Make arrows
     if (FlxG.mouse.justPressed) {
-      bow.pullBack();
+      trace("drone ammo");
+      trace(droneAmmo);
+      trace(isDrone);
+      if (!isDrone || droneAmmo == 0)
+        bow.pullBack();
     }
     else if (FlxG.mouse.justReleased) {
+      if (isDrone)
+        droneAmmo -= 1;
+
       bow.release();
     }
 

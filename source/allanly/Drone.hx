@@ -26,7 +26,6 @@ class Drone extends Character {
 
   // Create enemy number 1 (public)
   public function new(x:Float, y:Float, jimPointer:Character) {
-    trace("just end it all");
     // I'll control your abort
     super(x, y);
 
@@ -41,7 +40,6 @@ class Drone extends Character {
   // Update
   override public function update(elapsed:Float) {
     super.update(elapsed);
-    trace("please i hate this game");
 
     // Move enemy
     move(elapsed);

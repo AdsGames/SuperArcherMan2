@@ -89,7 +89,6 @@ class PlayState extends FlxState {
 
   // Creates some stuff
   override public function create() {
-    trace("honestly just kill me");
     // Mouse
     FlxG.mouse.visible = true;
 
@@ -128,7 +127,7 @@ class PlayState extends FlxState {
   // HINT: THIS UPDATES
   // THANKS TIPS
   override public function update(elapsed:Float) {
-    trace("kill me right now"); // Move power text to mouse
+    // trace("kill me right now"); // Move power text to mouse
     powerText.x = FlxG.mouse.x + 15;
     powerText.y = FlxG.mouse.y;
 
