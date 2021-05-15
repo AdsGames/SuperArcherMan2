@@ -15,6 +15,7 @@ import allanly.Ladder;
 import allanly.Painting;
 import allanly.Player;
 import allanly.Spawn;
+import allanly.StuckArrow;
 import allanly.Sword;
 import allanly.Throne;
 import allanly.Tools;
@@ -28,8 +29,11 @@ import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.group.FlxGroup;
+import flixel.math.FlxAngle;
+import flixel.math.FlxPoint;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
+import helpers.VelocityHelpers;
 
 // THE GAME!
 class PlayState extends FlxState {
@@ -40,13 +44,13 @@ class PlayState extends FlxState {
   private var sceneBackground:Background;
 
   // Group to hold all the guys
-  private var characters:FlxGroup;
+  private var enemies:FlxTypedGroup<Enemy>;
 
   // Hold ladders
-  private var ladders:FlxGroup;
+  private var ladders:FlxTypedGroup<Ladder>;
 
   // Hold doors
-  private var doors:FlxGroup;
+  private var doors:FlxTypedGroup<Door>;
 
   // Cranks/drawbridges
   private var gameCrank:Crank;
@@ -88,13 +92,13 @@ class PlayState extends FlxState {
     FlxG.mouse.visible = true;
 
     // Group to store players
-    characters = new FlxGroup();
+    enemies = new FlxTypedGroup<Enemy>();
 
     // Ladders
-    ladders = new FlxGroup();
+    ladders = new FlxTypedGroup<Ladder>();
 
     // Doors
-    doors = new FlxGroup();
+    doors = new FlxTypedGroup<Door>();
 
     // Background
     sceneBackground = new Background(5000);
@@ -113,7 +117,6 @@ class PlayState extends FlxState {
 
     // Zoom and follow
     FlxG.camera.follow(jim, PLATFORMER, 1);
-    FlxG.camera.zoom = 0.8;
 
     if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
       FlxG.sound.playMusic(AssetPaths.music__mp3, 0.1, true);
@@ -133,15 +136,15 @@ class PlayState extends FlxState {
     }
 
     // Collide everybuddy
-    FlxG.collide(characters, levelCollide);
+    FlxG.collide(enemies, levelCollide);
     FlxG.collide(jim, levelCollide);
     FlxG.collide(jim.getArrows(), levelCollide);
     FlxG.collide(jim.getDrone(), levelCollide);
 
     FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
 
-    // kill "friends"ß
-    FlxG.overlap(jim.getArrows(), characters, hitEnemy);
+    // kill "friends"
+    FlxG.overlap(jim.getArrows(), enemies, hitEnemy);
 
     // Ladders
     jim.onLadder(FlxG.overlap(jim, ladders, jim.ladderPosition));
@@ -150,13 +153,15 @@ class PlayState extends FlxState {
     FlxG.overlap(jim, doors, collideDoor);
     FlxG.overlap(jim.getDrone(), doors, collideDoor);
 
-    FlxG.overlap(characters, doors, collideDoor);
-
     // Run into draw bridge
     FlxG.collide(jim, gameDrawbridge);
     FlxG.collide(jim.getDrone(), gameDrawbridge);
 
-    FlxG.collide(characters, gameDrawbridge);
+    FlxG.overlap(enemies, doors, collideDoor);
+
+    // Run into draw bridge
+    FlxG.collide(jim, gameDrawbridge);
+    FlxG.collide(enemies, gameDrawbridge);
     FlxG.collide(jim.getArrows(), gameDrawbridge);
 
     // Win!
@@ -177,7 +182,7 @@ class PlayState extends FlxState {
     }
 
     // Die
-    if (FlxG.overlap(jim, characters)) {
+    if (FlxG.overlap(jim, enemies)) {
       jim.die();
       FlxG.sound.music.stop();
     }
@@ -213,12 +218,18 @@ class PlayState extends FlxState {
 
   // Enemy actions
   private function hitEnemy(arrow:Arrow, enemy:Enemy) {
-    if (arrow.velocity.x != 0 && arrow.velocity.y != 0) {
-      enemy.getHit(arrow.velocity.x / Math.cos(arrow.angle));
-      arrow.velocity.x *= -0.1;
+    if (arrow.velocity.x != 0 && arrow.velocity.y != 0 && !arrow.dead) {
+      var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
+      var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
+      enemy.getHit(totalVelocity, angleBetween);
+
+      // Spawn stuck arrow
+      var stuckArrow = new StuckArrow(enemy, arrow.x, arrow.y, arrow.angle);
+      add(stuckArrow);
+      arrow.kill();
 
       if (enemy.health <= 0) {
-        characters.remove(enemy);
+        enemies.remove(enemy);
       }
     }
   }
@@ -282,9 +293,50 @@ class PlayState extends FlxState {
         }
       }
       else if (layer.type == OBJECT) {
-        var objLayer:TiledObjectLayer = cast(layer, TiledObjectLayer);
-        spawnObjects(objLayer);
+        if (layer.name == "objects") {
+          var objLayer:TiledObjectLayer = cast(layer, TiledObjectLayer);
+          spawnObjects(objLayer);
+        }
+        else if (layer.name == "nodes") {
+          var objLayer:TiledObjectLayer = cast(layer, TiledObjectLayer);
+          loadNodes(objLayer);
+        }
       }
+    }
+  }
+
+  // Load nodes from tiled obj layer
+  private function loadNodes(group:TiledObjectLayer) {
+    for (obj in group.objects) {
+      loadNode(obj);
+    }
+  }
+
+  // Single node load
+  private function loadNode(obj:TiledObject) {
+    // No type, we use name
+    switch (obj.name) {
+      case "patrol":
+        var enemyName = obj.properties.get("enemy_name");
+        if (enemyName.length == 0) {
+          trace("Patrol point " + obj.gid + " has no enemy_name");
+          return;
+        }
+
+        // Find paired enemy
+        for (enemy in enemies) {
+          if (enemy.getName() == enemyName) {
+            enemy.addPatrolPoint(new FlxPoint(obj.x, obj.y));
+            return;
+          }
+        }
+
+        // Not found
+        trace("Could not find enemy " + enemyName + " for patrol route");
+
+      default:
+        trace("Could not load node " + obj.gid);
+        return;
     }
   }
 
@@ -297,8 +349,6 @@ class PlayState extends FlxState {
   }
 
   private function spawnObject(obj:TiledObject) {
-    // trace("Adding " + obj.type + " at x:" + obj.x + " y:" + obj.y + " width:" + obj.width + " height:" + obj.height);
-
     // Add game objects based on the 'type' property
     switch (obj.type) {
       case "player":
@@ -322,10 +372,10 @@ class PlayState extends FlxState {
 
         return;
       case "enemy":
-        var enemy = new Enemy(jim, obj.x, obj.y);
-        characters.add(enemy);
-        add(enemy);
+        var enemy = new Enemy(jim, obj.name, obj.x, obj.y);
         enemy.pickupArm(new Sword());
+        enemies.add(enemy);
+        add(enemy);
         return;
       case "door":
         var door = new Door(obj.x, obj.y);
@@ -363,6 +413,7 @@ class PlayState extends FlxState {
         // var water = new Water(obj.x, obj.y, obj.width, obj.height);
         return;
       default:
+        trace("Unknown map object type: " + obj.type + " id:" + obj.gid);
         return;
     }
   }
