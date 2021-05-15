@@ -60,7 +60,6 @@ class Arrow extends FlxSprite {
     trailEmitter.speed.set(0.01, 0);
     trailEmitter.lifespan.set(0.6);
     trailEmitter.start(false, 0.05, 0);
-
     FlxG.state.add(trailEmitter);
 
     // Load sounds
@@ -75,6 +74,13 @@ class Arrow extends FlxSprite {
     bowReleaseSound.play();
 
     solid = true;
+  }
+
+  // Kill
+  override public function kill() {
+    alive = false;
+    exists = false;
+    trailEmitter.emitting = false;
   }
 
   // Update arrow

@@ -58,16 +58,20 @@ class Enemy extends Character {
     move(elapsed);
   }
 
+  public function detectPlayer() {
+    detected = true;
+
+    // Hey! sound
+    heySound.proximity(x, y, jimPointer, 800, true);
+    heySound.play();
+  }
+
   // Move around
   override public function move(elapsed:Float) {
     // Detection
     var distance = Tools.getDistance(new FlxPoint(x, y), new FlxPoint(jimPointer.x, jimPointer.y));
     if (!detected && distance < 50 && health > 0) {
-      detected = true;
-
-      // Hey! sound
-      heySound.proximity(x, y, jimPointer, 800, true);
-      heySound.play();
+      detectPlayer();
     }
 
     // Downcast sword
@@ -111,7 +115,8 @@ class Enemy extends Character {
   }
 
   // Get hit
-  public function getHit(velocity:Float) {
-    health -= Math.abs(velocity / 10.0);
+  public function getHit(velocity:Float, angleBetween:Float) {
+    takeDamage(Math.abs(velocity / 10.0), angleBetween);
+    detectPlayer();
   }
 }

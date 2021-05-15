@@ -15,6 +15,7 @@ import allanly.Ladder;
 import allanly.Painting;
 import allanly.Player;
 import allanly.Spawn;
+import allanly.StuckArrow;
 import allanly.Sword;
 import allanly.Throne;
 import allanly.Tools;
@@ -28,8 +29,10 @@ import flixel.addons.editors.tiled.TiledObject;
 import flixel.addons.editors.tiled.TiledObjectLayer;
 import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.group.FlxGroup;
+import flixel.math.FlxAngle;
 import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
+import helpers.VelocityHelpers;
 
 // THE GAME!
 class PlayState extends FlxState {
@@ -205,9 +208,15 @@ class PlayState extends FlxState {
 
   // Enemy actions
   private function hitEnemy(arrow:Arrow, enemy:Enemy) {
-    if (arrow.velocity.x != 0 && arrow.velocity.y != 0) {
-      enemy.getHit(arrow.velocity.x / Math.cos(arrow.angle));
-      arrow.velocity.x *= -0.1;
+    if (arrow.velocity.x != 0 && arrow.velocity.y != 0 && !arrow.dead) {
+      var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
+      var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
+      enemy.getHit(totalVelocity, angleBetween);
+
+      // Spawn stuck arrow
+      var stuckArrow = new StuckArrow(enemy, arrow.x, arrow.y, arrow.angle);
+      add(stuckArrow);
+      arrow.kill();
 
       if (enemy.health <= 0) {
         characters.remove(enemy);
