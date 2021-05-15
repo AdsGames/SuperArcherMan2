@@ -10,6 +10,7 @@ import allanly.Crank;
 import allanly.Crown;
 import allanly.Door;
 import allanly.Drawbridge;
+import allanly.Drone;
 import allanly.Enemy;
 import allanly.EnemyArcher;
 import allanly.EnemySword;
@@ -150,6 +151,8 @@ class PlayState extends FlxState {
       FlxG.collide(jim.getDrone(), levelCollide);
 
     FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
+    if (jim.getDrone() != null)
+      FlxG.overlap(jim, jim.getDrone(), collideDrone);
 
     // kill "friends"
     FlxG.overlap(jim.getArrows(), enemies, hitEnemy);
@@ -214,6 +217,10 @@ class PlayState extends FlxState {
   // Door actions
   private function collideDoor(player:Character, door:Door) {
     door.hitDoor(player.velocity.x);
+  }
+
+  private function collideDrone(player:Character, drone:Drone) {
+    jim.pickupDrone();
   }
 
   // Arrows through door

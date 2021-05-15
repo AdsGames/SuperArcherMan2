@@ -328,7 +328,15 @@ class Player extends Character {
     }
   }
 
-  // Ready to climb
+  public function pickupDrone() {
+    trace("yo");
+    if (FlxG.keys.justPressed.G && drone != null) {
+      drone.kill();
+      drone = null;
+      droneAmmo = 1;
+    }
+  } // Ready to climb
+
   public function ladderPosition(player:Player, ladder:Ladder) {
     ladderX = ladder.x;
   }

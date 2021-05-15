@@ -136,6 +136,13 @@ class Drone extends Character {
     super.move(elapsed);
   }
 
+  // Kill
+  override public function kill() {
+    healthBar.kill();
+    arm.kill();
+    super.kill();
+  }
+
   public function getArrows():FlxTypedGroup<Arrow> {
     var bow = Std.downcast(getArm(), Bow);
     if (bow != null) {
