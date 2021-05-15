@@ -129,20 +129,16 @@ class Player extends Character {
 
     // Update bow target
     var bow = Std.downcast(arm, Bow);
+    if (drone != null)
+      bow = drone.getBow();
     bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
     // Make arrows
     if (FlxG.mouse.justPressed) {
-      if (drone == null)
-        bow.pullBack();
-      else
-        drone.getBow().pullBack();
+      bow.pullBack();
     }
     else if (FlxG.mouse.justReleased) {
-      if (drone == null)
-        bow.release();
-      else
-        drone.getBow().release();
+      bow.release();
     }
 
     // Move around

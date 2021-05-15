@@ -133,6 +133,8 @@ class PlayState extends FlxState {
     powerText.y = FlxG.mouse.y;
 
     var bow = Std.downcast(jim.getArm(), Bow);
+    if (jim.getDrone() != null)
+      bow = jim.getDrone().getBow();
     if (bow != null) {
       powerText.text = "" + bow.getPower() + "%";
     }
