@@ -138,23 +138,30 @@ class PlayState extends FlxState {
     FlxG.collide(characters, levelCollide);
     FlxG.collide(jim, levelCollide);
     FlxG.collide(jim.getArrows(), levelCollide);
+    FlxG.overlap(drone.getArrows(), doors, hitDoorArrow);
+
     FlxG.collide(drone, levelCollide);
     FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
+    FlxG.overlap(drone.getArrows(), doors, hitDoorArrow);
 
     // kill "friends"ß
     FlxG.overlap(jim.getArrows(), characters, hitEnemy);
+    FlxG.overlap(drone.getArrows(), characters, hitEnemy);
 
     // Ladders
     jim.onLadder(FlxG.overlap(jim, ladders, jim.ladderPosition));
 
     // Door action
     FlxG.overlap(jim, doors, collideDoor);
+    FlxG.overlap(drone, doors, collideDoor);
+
     FlxG.overlap(characters, doors, collideDoor);
 
     // Run into draw bridge
     FlxG.collide(jim, gameDrawbridge);
     FlxG.collide(characters, gameDrawbridge);
     FlxG.collide(jim.getArrows(), gameDrawbridge);
+    FlxG.collide(drone.getArrows(), gameDrawbridge);
 
     // Win!
     if (FlxG.overlap(jim, gameSpawn) && gameCrown.isTaken()) {
@@ -162,7 +169,10 @@ class PlayState extends FlxState {
     }
 
     // The drawbridge + crank
-    if (FlxG.overlap(gameCrank, jim.getArrows()) && !gameCrank.getActivated()) {
+    if (FlxG.overlap(gameCrank, jim.getArrows())
+      && !gameCrank.getActivated()
+      || FlxG.overlap(gameCrank, drone.getArrows())
+      && !gameCrank.getActivated()) {
       gameDrawbridge.fall();
       gameCrank.spin();
     }
@@ -307,7 +317,9 @@ class PlayState extends FlxState {
 
         drone = new Drone(jim); // Load map :D
         //                                   ^ turn that frown upside down
-        add(drone); // Add spawn
+        drone.pickupArm(new Bow(600.0, 1.0, 100.0));
+
+        add(drone); // Add ur bum
 
         gameSpawn = new Spawn(obj.x, obj.y, obj.width, obj.height);
         add(gameSpawn);

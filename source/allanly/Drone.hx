@@ -8,6 +8,7 @@ package allanly;
  */
 // Libraries
 import flixel.FlxG;
+import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
 
@@ -29,9 +30,7 @@ class Drone extends Character {
     // Init vars
 
     // Images and animations
-    loadGraphic(AssetPaths.enemy__png, true, 14, 30);
-    animation.add("idle", [4, 5, 6, 7], 5, true);
-    animation.play("idle");
+    loadGraphic(AssetPaths.drone__png, true, 16, 16);
 
     // Player
     this.jimPointer = jimPointer;
@@ -58,6 +57,9 @@ class Drone extends Character {
       else if (velocity.x <= -MOVEMENT_SPEED_MAX) {
         acceleration.x = 0;
       }
+      if (scale.x < 0) {
+        scale.x *= -1;
+      }
     }
 
     if (FlxG.keys.pressed.RIGHT) {
@@ -70,6 +72,9 @@ class Drone extends Character {
       // Stop accelerating when we fast
       else if (velocity.x >= MOVEMENT_SPEED_MAX) {
         acceleration.x = 0;
+      }
+      if (scale.x > 0) {
+        scale.x *= -1;
       }
     }
     if (FlxG.keys.pressed.DOWN) {
@@ -127,6 +132,14 @@ class Drone extends Character {
       }
     }
     super.move(elapsed);
+  }
+
+  public function getArrows():FlxGroup {
+    var bow = Std.downcast(getArm(), Bow);
+    if (bow != null) {
+      return bow.getArrows();
+    }
+    return null;
   }
 
   // Get hit
