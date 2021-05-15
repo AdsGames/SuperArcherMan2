@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#0094fe" nextlayerid="6" nextobjectid="44">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="100" height="30" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#0094fe" nextlayerid="7" nextobjectid="49">
  <tileset firstgid="1" name="tilemapflat" tilewidth="16" tileheight="16" tilecount="61" columns="61">
   <image source="level1_tiles.png" width="976" height="16"/>
  </tileset>
@@ -63,5 +63,20 @@
   <object id="41" type="water" x="688" y="352" width="128" height="16"/>
   <object id="42" type="tree" x="39" y="288" width="48" height="64"/>
   <object id="43" type="tree" x="81" y="288" width="48" height="64"/>
+  <object id="46" name="enemy_1" type="enemy" x="560" y="288" width="7.81818" height="3.81818"/>
+ </objectgroup>
+ <objectgroup id="6" name="nodes">
+  <object id="47" name="patrol" x="656" y="336">
+   <properties>
+    <property name="enemy_name" value="enemy_1"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="48" name="patrol" x="496" y="336">
+   <properties>
+    <property name="enemy_name" value="enemy_1"/>
+   </properties>
+   <point/>
+  </object>
  </objectgroup>
 </map>

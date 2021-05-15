@@ -19,7 +19,7 @@ class Bow extends Arm {
   private var minPower:Float;
 
   // Container of arrows
-  private var arrowContainer:FlxGroup;
+  private var arrowContainer:FlxTypedGroup<Arrow>;
 
   // Variables
   private var powerTimer:FlxTimer;
@@ -39,7 +39,7 @@ class Bow extends Arm {
     this.minPower = minPower;
 
     // Arrow container
-    arrowContainer = new FlxGroup();
+    arrowContainer = new FlxTypedGroup<Arrow>();
     FlxG.state.add(arrowContainer);
   }
 
@@ -75,7 +75,7 @@ class Bow extends Arm {
   }
 
   // Return arrows
-  public function getArrows():FlxGroup {
+  public function getArrows():FlxTypedGroup<Arrow> {
     return arrowContainer;
   }
 
