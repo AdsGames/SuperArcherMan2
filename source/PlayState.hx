@@ -25,6 +25,7 @@ import allanly.Torch;
 import allanly.Tree;
 import allanly.WinPointer;
 import flixel.FlxG;
+import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.addons.editors.tiled.TiledMap;
 import flixel.addons.editors.tiled.TiledObject;
@@ -135,20 +136,23 @@ class PlayState extends FlxState {
       powerText.text = "" + bow.getPower() + "%";
     }
 
+    enemies.forEachDead(function(enemy) {
+      if (enemy.exists == false) {
+        enemies.remove(enemy);
+      }
+    });
+
+    // Remove non existant arrows
+    Character.cleanUpArrows();
+
     // Collide everybuddy
     FlxG.collide(enemies, levelCollide);
     FlxG.collide(jim, levelCollide);
-    FlxG.collide(jim.getArrows(), levelCollide);
-    FlxG.overlap(jim.getArrows(), doors, hitDoorArrow);
-
-    for (enemy in enemies) {
-      if (enemy.getArrows() != null) {
-        FlxG.collide(enemy.getArrows(), levelCollide);
-      }
-    }
+    FlxG.overlap(Character.getArrows(), doors, hitDoorArrow);
+    FlxG.collide(Character.getArrows(), levelCollide, arrowCollideWorld);
 
     // kill "friends"
-    FlxG.overlap(jim.getArrows(), enemies, hitEnemy);
+    FlxG.overlap(Character.getArrows(), enemies, hitEnemy);
 
     // Ladders
     jim.onLadder(FlxG.overlap(jim, ladders, jim.ladderPosition));
@@ -160,7 +164,7 @@ class PlayState extends FlxState {
     // Run into draw bridge
     FlxG.collide(jim, gameDrawbridge);
     FlxG.collide(enemies, gameDrawbridge);
-    FlxG.collide(jim.getArrows(), gameDrawbridge);
+    FlxG.collide(Character.getArrows(), gameDrawbridge);
 
     // Win!
     if (FlxG.overlap(jim, gameSpawn) && gameCrown.isTaken()) {
@@ -168,7 +172,7 @@ class PlayState extends FlxState {
     }
 
     // The drawbridge + crank
-    if (FlxG.overlap(gameCrank, jim.getArrows()) && !gameCrank.getActivated()) {
+    if (FlxG.overlap(gameCrank, Character.getArrows()) && !gameCrank.getActivated()) {
       gameDrawbridge.fall();
       gameCrank.spin();
     }
@@ -214,9 +218,15 @@ class PlayState extends FlxState {
     }
   }
 
+  private function arrowCollideWorld(arrow:Arrow, world:FlxSprite) {
+    if (arrow.alive) {
+      arrow.kill();
+    }
+  }
+
   // Enemy actions
   private function hitEnemy(arrow:Arrow, enemy:Enemy) {
-    if (arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
+    if (arrow.getTeam() == 0 && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
       var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
       var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
       enemy.getHit(totalVelocity, angleBetween);
@@ -225,10 +235,6 @@ class PlayState extends FlxState {
       var stuckArrow = new StuckArrow(enemy, arrow.x, arrow.y, arrow.angle);
       add(stuckArrow);
       arrow.kill();
-
-      if (enemy.health <= 0) {
-        enemies.remove(enemy);
-      }
     }
   }
 
@@ -331,9 +337,6 @@ class PlayState extends FlxState {
             enemy.addPatrolPoint(new FlxPoint(obj.x, obj.y));
           }
         }
-
-        // Not found
-        trace("Could not find enemy " + enemyName + " for patrol route");
 
       default:
         trace("Could not load node " + obj.gid);

@@ -12,37 +12,36 @@ import flixel.FlxObject;
 import flixel.FlxSprite;
 import flixel.effects.particles.FlxEmitter;
 import flixel.system.FlxSound;
+import flixel.tweens.FlxEase;
+import flixel.tweens.FlxTween;
 
 // Realistic arrows
 class Arrow extends FlxSprite {
   private var parent:FlxObject;
 
-  private static final ANGLE_MULTIPLIER = 180 / Math.PI;
-
   // Sounds
   private var arrowHitSound:FlxSound;
   private var bowReleaseSound:FlxSound;
   private var yAccelertion:Int;
+  private var team:Int;
+  private var timeDead:Float;
 
   private static inline final ARROW_SPEED_MULTIPLIER:Float = 1.5;
+  private static inline final ARROW_LIFESPAN:Float = 4000.0;
+  private static final ANGLE_MULTIPLIER = 180 / Math.PI;
 
   // The emitter
   public var trailEmitter:FlxEmitter;
 
   // Create arrow
-  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2) {
+  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2, team:Int = 0) {
     super(x, y, AssetPaths.arrow__png);
     this.angle = angle;
     this.velocity.x = -Math.cos((angle + 90) * (Math.PI / 180)) * velocity;
     this.velocity.y = -Math.sin((angle + 90) * (Math.PI / 180)) * velocity;
     this.acceleration.y = 300;
     this.parent = parent;
-
-    // Shrink box
-    offset.y = 1;
-    height -= 2;
-    offset.x = 7;
-    width -= 13;
+    this.team = team;
 
     // Make sure x/y velocity is never 0 to help below scripts
     if (this.velocity.x == 0) {
@@ -59,7 +58,7 @@ class Arrow extends FlxSprite {
     trailEmitter.launchMode = FlxEmitterMode.CIRCLE;
     trailEmitter.speed.set(0.01, 0);
     trailEmitter.lifespan.set(0.6);
-    trailEmitter.start(false, 0.05, 0);
+    trailEmitter.start(false, 0.07, 0);
     FlxG.state.add(trailEmitter);
 
     // Load sounds
@@ -77,10 +76,20 @@ class Arrow extends FlxSprite {
   }
 
   // Kill
-  override public function kill() {
+  override function kill() {
+    arrowHitSound.proximity(x, y, parent, 800, true);
+    arrowHitSound.play();
     alive = false;
-    exists = false;
     trailEmitter.emitting = false;
+    velocity.y = 0;
+    velocity.x = 0;
+    acceleration.y = 0;
+    FlxTween.tween(this, {alpha: 0}, 10, {ease: FlxEase.elasticIn, onComplete: finishKill});
+  }
+
+  function finishKill(_) {
+    exists = false;
+    trailEmitter.kill();
   }
 
   // Update arrow
@@ -91,29 +100,15 @@ class Arrow extends FlxSprite {
     arrowHitSound.update(elapsed);
 
     // Move particle emitter to obj
-    trailEmitter.setPosition(this.x, this.y);
+    trailEmitter.setPosition(x, y);
 
     // Update unless dead
     if (alive) {
-      // Fall a bit
-      if (velocity.y == 0 || velocity.x == 0) {
-        velocity.y = 0;
-        velocity.x = 0;
-        acceleration.y = 0;
-        alive = false;
-        arrowHitSound.proximity(x, y, parent, 800, true);
-        arrowHitSound.play();
-        trailEmitter.emitting = false;
-        acceleration.y = 0;
-      }
-      else {
-        // Point in proper direction
-        angle = Math.atan2(velocity.y, velocity.x) * ANGLE_MULTIPLIER;
-      }
+      angle = Math.atan2(velocity.y, velocity.x) * ANGLE_MULTIPLIER;
     }
+  }
 
-    if (y > FlxG.camera.maxScrollY) {
-      kill();
-    }
+  public function getTeam() {
+    return team;
   }
 }

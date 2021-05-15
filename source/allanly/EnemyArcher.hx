@@ -57,7 +57,10 @@ class EnemyArcher extends Enemy {
       bow.pullBack();
     }
     if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
-      bow.release();
+      var arrow = bow.release(1);
+      if (arrow != null) {
+        Character.arrowContainer.add(arrow);
+      }
     }
 
     // Move sword to self

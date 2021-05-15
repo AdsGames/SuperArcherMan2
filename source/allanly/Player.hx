@@ -94,7 +94,10 @@ class Player extends Character {
       bow.pullBack();
     }
     else if (FlxG.mouse.justReleased) {
-      bow.release();
+      var arrow = bow.release(0);
+      if (arrow != null) {
+        Character.arrowContainer.add(arrow);
+      }
     }
 
     // Move around
