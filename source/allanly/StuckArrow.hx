@@ -27,17 +27,17 @@ class StuckArrow extends FlxSprite {
     // Calc offset
     offsetX = x - parent.x;
     offsetY = y - parent.y;
-
-    // Shrink box
-    offset.y = 1;
-    height -= 2;
-    offset.x = 7;
-    width -= 13;
   }
 
   // Update arrow
   override public function update(elapsed:Float) {
     super.update(elapsed);
-    setPosition(parent.x + offsetX, parent.y + offsetY);
+
+    if (parent == null || !parent.alive) {
+      kill();
+    }
+    else {
+      setPosition(parent.x + offsetX, parent.y + offsetY);
+    }
   }
 }
