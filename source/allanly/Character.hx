@@ -8,6 +8,7 @@ package allanly;
  */
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.ui.FlxBar;
 
 class Character extends FlxSprite {
   // Variables
@@ -16,6 +17,9 @@ class Character extends FlxSprite {
 
   // Weapon
   private var arm:Arm;
+
+  // Health bar
+  private var healthBar:FlxBar;
 
   // Acceleration (1m = 16px, gravity acceleration = 9.8m/s)
   private static inline final GRAVITY:Float = 9.8 * 16 * 4;
@@ -33,6 +37,10 @@ class Character extends FlxSprite {
 
     // Gravity
     acceleration.y = GRAVITY;
+
+    // Health bar
+    healthBar = new FlxBar(this.x, this.y, LEFT_TO_RIGHT, 26, 4, this, "health", 0, 100);
+    FlxG.state.add(healthBar);
   }
 
   // Move character
@@ -61,6 +69,11 @@ class Character extends FlxSprite {
       jumping = false;
     }
 
+  // Move health bar above sprite
+    var barX = this.x + this.width / 2 - this.healthBar.barWidth / 2;
+    var barY = this.y - this.healthBar.barHeight / 2 - 10;
+    this.healthBar.setPosition(barX, barY);
+    
     super.update(elapsed);
   }
 

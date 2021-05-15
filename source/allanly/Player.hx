@@ -45,6 +45,9 @@ class Player extends Character {
     dead = false;
     hasWon = false;
 
+    // Init health
+    health = 100;
+
     // Images and animations
     loadGraphic(AssetPaths.player__png, true, 14, 30);
     animation.add("walk", [0, 1, 2, 3], 10, true);

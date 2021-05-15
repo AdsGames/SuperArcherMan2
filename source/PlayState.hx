@@ -85,9 +85,6 @@ class PlayState extends FlxState {
     // Mouse
     FlxG.mouse.visible = true;
 
-    // Make jim
-    jim = new Player(0, 0);
-
     // Group to store players
     characters = new FlxGroup();
 
@@ -112,10 +109,6 @@ class PlayState extends FlxState {
     // Power text
     powerText = new FlxText(0, 0, 0, "");
     add(powerText);
-
-    // Win pointer
-    winPointer = new WinPointer(gameSpawn, jim);
-    add(winPointer);
 
     // Zoom and follow
     FlxG.camera.follow(jim, PLATFORMER, 1);
@@ -300,11 +293,20 @@ class PlayState extends FlxState {
     // Add game objects based on the 'type' property
     switch (obj.type) {
       case "player":
+        // Add player
+        jim = new Player(0, 0);
         jim.setPosition(obj.x, obj.y);
-        add(jim);
         jim.pickupArm(new Bow(600.0, 1.0, 100.0));
+        add(jim);
+
+        // Add spawn
         gameSpawn = new Spawn(obj.x, obj.y, obj.width, obj.height);
         add(gameSpawn);
+
+        // Win pointer
+        winPointer = new WinPointer(gameSpawn, jim);
+        add(winPointer);
+
         return;
       case "enemy":
         var enemy = new Enemy(jim, obj.x, obj.y);
