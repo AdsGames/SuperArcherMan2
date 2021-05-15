@@ -10,6 +10,7 @@ import allanly.Crank;
 import allanly.Crown;
 import allanly.Door;
 import allanly.Drawbridge;
+import allanly.Drone;
 import allanly.Enemy;
 import allanly.Ladder;
 import allanly.Painting;
@@ -58,6 +59,9 @@ class PlayState extends FlxState {
   // Spawn point
   private var gameSpawn:Spawn;
 
+  // I have no idea how to use flixel
+  private var drone:Drone;
+
   // Win pointer
   private var winPointer:WinPointer;
 
@@ -103,7 +107,6 @@ class PlayState extends FlxState {
     gameDrawbridge = new Drawbridge(-100, -100, 0, 0);
     gameSpawn = new Spawn(-100, -100, 0, 0);
 
-    // Load map :D
     loadMap(levelOn);
 
     // Power text
@@ -300,7 +303,10 @@ class PlayState extends FlxState {
         jim.pickupArm(new Bow(600.0, 1.0, 100.0));
         add(jim);
 
-        // Add spawn
+        drone = new Drone(jim); // Load map :D
+        //                                   ^ turn that frown upside down
+        add(drone); // Add spawn
+
         gameSpawn = new Spawn(obj.x, obj.y, obj.width, obj.height);
         add(gameSpawn);
 
@@ -355,3 +361,4 @@ class PlayState extends FlxState {
     }
   }
 }
+// I literally want to die
