@@ -60,7 +60,6 @@ class Arrow extends FlxSprite {
     trailEmitter.speed.set(0.01, 0);
     trailEmitter.lifespan.set(0.6);
     trailEmitter.start(false, 0.05, 0);
-
     FlxG.state.add(trailEmitter);
 
     // Load sounds

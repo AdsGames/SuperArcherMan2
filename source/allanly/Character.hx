@@ -8,7 +8,11 @@ package allanly;
  */
 import flixel.FlxG;
 import flixel.FlxSprite;
+import flixel.effects.particles.FlxEmitter;
 import flixel.ui.FlxBar;
+import flixel.util.FlxColor;
+import haxe.Log;
+import js.html.AbortController;
 
 class Character extends FlxSprite {
   // Variables
@@ -24,6 +28,9 @@ class Character extends FlxSprite {
   // Acceleration (1m = 16px, gravity acceleration = 9.8m/s)
   private static inline final GRAVITY:Float = 9.8 * 16 * 4;
 
+  // Particle Emitter for blood
+  public var bloodEmitter:FlxEmitter;
+
   // Make character
   public function new(x:Float, y:Float) {
     super(x, y);
@@ -35,11 +42,19 @@ class Character extends FlxSprite {
     // Add blank arm
     arm = new Arm();
 
+    // Create emitter
+    bloodEmitter = new FlxEmitter(5, 5, 100);
+    bloodEmitter.makeParticles(2, 2, FlxColor.fromRGB(100, 0, 0, 255), 100);
+    bloodEmitter.launchMode = FlxEmitterMode.CIRCLE;
+    bloodEmitter.speed.set(50, 80);
+    bloodEmitter.lifespan.set(0.3);
+    FlxG.state.add(bloodEmitter);
+
     // Gravity
     acceleration.y = GRAVITY;
 
     // Health bar
-    healthBar = new FlxBar(this.x, this.y, LEFT_TO_RIGHT, 26, 4, this, "health", 0, 100);
+    healthBar = new FlxBar(x, y, LEFT_TO_RIGHT, 26, 4, this, "health", 0, 100);
     FlxG.state.add(healthBar);
   }
 
@@ -69,12 +84,23 @@ class Character extends FlxSprite {
       jumping = false;
     }
 
-  // Move health bar above sprite
-    var barX = this.x + this.width / 2 - this.healthBar.barWidth / 2;
-    var barY = this.y - this.healthBar.barHeight / 2 - 10;
-    this.healthBar.setPosition(barX, barY);
-    
+    // Move blood emitter to sprite center
+    bloodEmitter.setPosition(x + width / 2, y + height / 2);
+
+    // Move health bar above sprite
+    var barX = x + width / 2 - healthBar.barWidth / 2;
+    var barY = y - healthBar.barHeight / 2 - 10;
+    healthBar.setPosition(barX, barY);
+
     super.update(elapsed);
+  }
+
+  // On hit
+  public function takeDamage(amount:Float, angleBetween:Float) {
+    health -= amount;
+    Log.trace(angleBetween);
+    bloodEmitter.launchAngle.set(angleBetween - 25, angleBetween + 25);
+    bloodEmitter.start(true, 0, 20);
   }
 
   // Add arm
