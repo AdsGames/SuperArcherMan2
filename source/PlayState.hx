@@ -120,7 +120,7 @@ class PlayState extends FlxState {
     FlxG.camera.zoom = 1;
 
     if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
-      FlxG.sound.playMusic(AssetPaths.music__mp3, 0.1, true);
+      FlxG.sound.playMusic(AssetPaths.menu__mp3, 0.6, true);
     }
 
     arrowUi = new ArrowUi(jim);

@@ -33,7 +33,9 @@ class BowAutomatic extends Bow {
   public override function update(elapsed:Float) {
     if (power >= maxPower) {
       release();
-      powerTimer.start(0.01, powerTicker, 0);
+      if (ammo > 0) {
+        powerTimer.start(0.01, powerTicker, 0);
+      }
     }
     super.update(elapsed);
   }

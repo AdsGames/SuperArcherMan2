@@ -46,6 +46,8 @@ class ArrowUi extends FlxSprite {
     for (tile in bowTiles) {
       FlxG.state.add(tile);
     }
+
+    setBow(0);
   }
 
   // Update bow
