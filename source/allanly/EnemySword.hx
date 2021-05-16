@@ -86,7 +86,7 @@ class EnemySword extends Enemy {
   }
 
   override public function detectPlayer() {
-    movementSpeedMax = 180;
+    movementSpeedMax = 240;
     velocity.x = 0;
     super.detectPlayer();
   }
