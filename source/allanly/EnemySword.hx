@@ -41,7 +41,7 @@ class EnemySword extends Enemy {
     chainSawCount = 0;
 
     // Init health
-    health = 1000;
+    health = 2000;
     movementSpeedMax = 100;
     movementSpeedChange = 2;
     healthBar.setRange(0, health);
