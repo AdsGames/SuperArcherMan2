@@ -61,7 +61,7 @@ class Character extends FlxSprite {
     bloodEmitter.makeParticles(2, 2, FlxColor.fromRGB(100, 0, 0, 255), 100);
     bloodEmitter.launchMode = FlxEmitterMode.CIRCLE;
     bloodEmitter.speed.set(50 + velocity.x, 80 + velocity.y);
-    bloodEmitter.lifespan.set(0.3);
+    bloodEmitter.lifespan.set(0.5);
     FlxG.state.add(bloodEmitter);
 
     // Hit sound
@@ -132,7 +132,7 @@ class Character extends FlxSprite {
   public function takeDamage(damage:Float, angleBetween:Float) {
     health -= damage;
     bloodEmitter.launchAngle.set(angleBetween - 25, angleBetween + 25);
-    bloodEmitter.start(true, 0, 20);
+    bloodEmitter.start(true, 0, 30);
     hitSound.play();
   }
 

@@ -8,7 +8,7 @@
   <property name="offset" value="20"/>
  </properties>
  <tileset firstgid="1" name="tilemapflat" tilewidth="16" tileheight="16" tilecount="1024" columns="64">
-  <image source="level1/level1_tiles.png" width="1024" height="256"/>
+  <image source="level1_tiles.png" width="1024" height="256"/>
  </tileset>
  <layer id="1" name="back" width="203" height="50">
   <data encoding="base64" compression="zlib">
