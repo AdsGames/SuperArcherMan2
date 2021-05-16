@@ -88,7 +88,7 @@ class Player extends Character {
     bows = [
       new BowBasic(600.0, 0.6, 100.0, Team.PLAYER, 1000),
       new BowTriple(600, 1, 100, Team.PLAYER, 20),
-      new BowAutomatic(400, 0.01, 100, Team.PLAYER, 100),
+      new BowAutomatic(400, 0.1, 100, Team.PLAYER, 100),
       new BowShotgun(400, 2, 20, Team.PLAYER, 10)
     ];
 
@@ -126,7 +126,7 @@ class Player extends Character {
       bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
       // Make arrows
-      if (FlxG.mouse.pressed) {
+      if (FlxG.mouse.justPressed) {
         bow.pullBack();
       }
       else if (FlxG.mouse.justReleased) {

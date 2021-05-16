@@ -21,8 +21,6 @@ class BowShotgun extends Bow {
 
     name = "Shotbow";
 
-    name = "Shotbow";
-
     origin = new FlxPoint(origin.x, 15);
   }
 
@@ -34,7 +32,7 @@ class BowShotgun extends Bow {
   public override function release() {
     // Min velocity
     if (power > minPower) {
-      for (_ in 0...15) {
+      for (_ in 0...10) {
         Character.arrowContainer.add(new Arrow(this, x + origin.x, y + origin.y, angle + Tools.myRandom(-10, 10), power, team));
       }
 
