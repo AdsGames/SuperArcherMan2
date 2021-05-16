@@ -31,11 +31,8 @@ class Sword extends Arm {
     super.update(elapsed);
 
     // Spin that sword
-    if (spinDir == "right") {
+    if (spinDir == "right" || spinDir == "left") {
       angle += spinSpeed;
-    }
-    else if (spinDir == "left") {
-      angle -= spinSpeed;
     }
   }
 
