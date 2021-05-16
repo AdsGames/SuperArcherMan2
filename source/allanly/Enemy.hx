@@ -42,6 +42,9 @@ class Enemy extends Character {
   // Is patrolling
   private var patrolling:Bool;
 
+  // Detection distance
+  private var detectDistance:Int;
+
   // Create enemy
   public function new(jimPointer:Character, name:String, x:Float = 0, y:Float = 0) {
     super(x, y - 40);
@@ -51,6 +54,7 @@ class Enemy extends Character {
 
     // Init vars
     detected = false;
+    detectDistance = 70;
     patrolling = false;
     patrolPointIndex = 0;
 
@@ -118,7 +122,7 @@ class Enemy extends Character {
   override public function move(elapsed:Float) {
     // Detection
     var distance = Tools.getDistance(new FlxPoint(x, y), new FlxPoint(jimPointer.x, jimPointer.y));
-    if (!detected && distance < 50 && health > 0) {
+    if (!detected && distance < detectDistance && health > 0) {
       detectPlayer();
     }
 

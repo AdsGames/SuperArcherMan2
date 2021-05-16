@@ -24,6 +24,7 @@ class Sword extends Arm {
 
     idle = false;
     spinDir = "none";
+    name = "Sword";
   }
 
   // Update bow

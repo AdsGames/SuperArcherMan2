@@ -19,6 +19,8 @@ class BowBasic extends Bow {
     animation.play("drawback");
     scale.set(0.65, 0.65);
 
+    name = "Bow";
+
     origin = new FlxPoint(origin.x, 15);
   }
 

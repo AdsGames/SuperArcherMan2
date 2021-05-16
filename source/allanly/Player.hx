@@ -7,9 +7,11 @@ package allanly;
  * 29/5/2015
  */
 // Imports
+import filters.TiltShift;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
+import openfl.filters.ShaderFilter;
 
 class Player extends Character {
   // Timers
@@ -23,11 +25,13 @@ class Player extends Character {
   private var dead:Bool;
   private var hasWon:Bool;
   private var droneAmmo:Int;
+  private var ammo:Array<Int>;
+  private var currentBow:Int;
 
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
   private static inline final DEATH_TIMER:Float = 3;
-  private static inline final DRONE_AMMO:Int = 1000;
+  private static inline final DRONE_AMMO:Int = 100;
 
   // Make character
   public function new(x:Float = 0, y:Float = 0) {
@@ -44,10 +48,12 @@ class Player extends Character {
     dead = false;
     hasWon = false;
     droneAmmo = DRONE_AMMO;
+    currentBow = 0;
 
     // Init health
     health = 10000;
     healthBar.setRange(0, health);
+    ammo = [1000, 20, 100, 10];
 
     // Images and animations
     loadGraphic(AssetPaths.player__png, true, 23, 30);
@@ -77,6 +83,8 @@ class Player extends Character {
     else if (randomSaying == 4) {
       FlxG.sound.play(AssetPaths.jim_saying4__mp3);
     }
+
+    pickupArm(new BowBasic(600.0, 0.6, 100.0, Team.PLAYER));
   }
 
   // Update
@@ -98,6 +106,7 @@ class Player extends Character {
           drone = null;
           droneAmmo = DRONE_AMMO;
           FlxG.camera.follow(this, PLATFORMER, 1);
+          FlxG.camera.setFilters([]);
           FlxG.camera.zoom = 1;
         });
       }
@@ -111,14 +120,17 @@ class Player extends Character {
 
       // Make arrows
       if (FlxG.mouse.pressed && bow.getPower() == 0) {
-        if (!isDrone || droneAmmo > 0) {
-          bow.pullBack();
+        if (!isDrone) {
+          bow.pullBack(ammo[currentBow]);
         }
       }
       else if (FlxG.mouse.justReleased) {
-        if (!isDrone || droneAmmo > 0) {
+        if (!isDrone) {
           if (isDrone) {
             droneAmmo -= 1;
+          }
+          else {
+            ammo[currentBow] -= 1;
           }
 
           bow.release();
@@ -160,7 +172,8 @@ class Player extends Character {
         drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
         drone.pickupArm(new BowAutomatic(400, 0.01, 100, Team.PLAYER));
         FlxG.state.add(drone);
-        FlxG.camera.follow(drone, PLATFORMER, 1);
+        FlxG.camera.follow(drone, LOCKON, 1);
+        FlxG.camera.setFilters([new ShaderFilter(new Tiltshift())]);
         FlxG.camera.zoom = 2;
       }
     }
@@ -168,15 +181,19 @@ class Player extends Character {
     // Switch bow
     if (FlxG.keys.pressed.ONE) {
       pickupArm(new BowBasic(600, 1, 100, Team.PLAYER));
+      currentBow = 0;
     }
     else if (FlxG.keys.pressed.TWO) {
       pickupArm(new BowTriple(600, 1, 100, Team.PLAYER));
+      currentBow = 1;
     }
     else if (FlxG.keys.pressed.THREE) {
       pickupArm(new BowAutomatic(400, 0.01, 100, Team.PLAYER));
+      currentBow = 2;
     }
     else if (FlxG.keys.pressed.FOUR) {
-      pickupArm(new BowShotgun(400, 3, 20, Team.PLAYER));
+      pickupArm(new BowShotgun(400, 2, 20, Team.PLAYER));
+      currentBow = 3;
     }
 
     if (FlxG.keys.pressed.D) {
@@ -265,8 +282,11 @@ class Player extends Character {
     }
   }
 
-  public function getDroneAmmo() {
-    return droneAmmo;
+  public function getAmmo() {
+    if (drone != null) {
+      return droneAmmo;
+    }
+    return ammo[currentBow];
   }
 
   // Win
