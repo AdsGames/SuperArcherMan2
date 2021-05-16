@@ -23,6 +23,8 @@ class Arrow extends FlxSprite {
   private var arrowHitSound:FlxSound;
   private var arrowFlySound:FlxSound;
 
+  private var startPos:FlxObject;
+
   private var yAccelertion:Int;
   private var team:Team;
   private var timeDead:Float;
@@ -43,6 +45,9 @@ class Arrow extends FlxSprite {
     this.acceleration.y = 300;
     this.parent = parent;
     this.team = team;
+
+    // This is a crap solution and is probably quite expensive. Too bad!
+    this.startPos = new FlxObject(x, y, 0, 0);
 
     // Make sure x/y velocity is never 0 to help below scripts
     if (this.velocity.x == 0) {
@@ -65,6 +70,8 @@ class Arrow extends FlxSprite {
     // Load sounds
     arrowHitSound = new FlxSound();
     arrowHitSound.loadEmbedded(AssetPaths.arrow_hit__mp3);
+    arrowFlySound = new FlxSound();
+    arrowFlySound.loadEmbedded(AssetPaths.arrow_fly__wav);
 
     solid = true;
   }
@@ -100,7 +107,14 @@ class Arrow extends FlxSprite {
     // Update unless dead
     if (alive) {
       angle = Math.atan2(velocity.y, velocity.x) * ANGLE_MULTIPLIER;
+      arrowFlySound.play();
+      arrowFlySound.update(elapsed);
+
+      // Yep, that's right. This is how we're doing this.
+      arrowFlySound.proximity(x, y, startPos, 500, true);
     }
+    else
+      arrowFlySound.stop();
   }
 
   public function getTeam() {
