@@ -29,7 +29,14 @@ class Drone extends Character {
     health = 1000;
 
     // Images and animations
-    loadGraphic(AssetPaths.drone__png, true, 16, 16);
+    loadGraphic(AssetPaths.birbfly__png, true, 16, 16);
+    animation.add("fly", [0, 1, 2, 3, 4, 5], 22, true);
+    animation.add("idle", [0, 1, 2, 3, 4, 5], 5, true);
+    animation.add("glide", [3], 0, true);
+
+    animation.play("idle");
+
+    // Player
   }
 
   // Update
@@ -45,6 +52,7 @@ class Drone extends Character {
     ignoreGravity = true;
 
     if (FlxG.keys.pressed.LEFT) {
+      animation.play("fly");
       // Movement
       if (velocity.x > -MOVEMENT_SPEED_MAX) {
         // Less movement acceleration when jumping
@@ -60,6 +68,7 @@ class Drone extends Character {
     }
 
     if (FlxG.keys.pressed.RIGHT) {
+      animation.play("fly");
       // Movement
       if (velocity.x < MOVEMENT_SPEED_MAX) {
         // Less movement acceleration when jumping
@@ -73,20 +82,8 @@ class Drone extends Character {
         scale.x *= -1;
       }
     }
-
-    if (FlxG.keys.pressed.DOWN) {
-      // Movement
-      if (velocity.y < MOVEMENT_SPEED_Y_MAX) {
-        // Less movement acceleration when jumping
-        acceleration.y = MOVEMENT_SPEED_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX - velocity.y);
-      }
-      // Stop accelerating when we fast
-      else if (velocity.y >= MOVEMENT_SPEED_Y_MAX) {
-        acceleration.y = 0;
-      }
-    }
-
     if (FlxG.keys.pressed.UP) {
+      animation.play("fly");
       // Movement
       if (velocity.y > -MOVEMENT_SPEED_Y_MAX) {
         // Less movement acceleration when jumping
@@ -97,7 +94,21 @@ class Drone extends Character {
         acceleration.y = 0;
       }
     }
+    if (FlxG.keys.pressed.DOWN) {
+      animation.play("glide");
+      // Movement
+      if (velocity.y < MOVEMENT_SPEED_Y_MAX) {
+        // Less movement acceleration when jumping
 
+        acceleration.y = MOVEMENT_SPEED_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX - velocity.y);
+      }
+      // Stop accelerating when we fast
+      else if (velocity.y >= MOVEMENT_SPEED_Y_MAX) {
+        acceleration.y = 0;
+      }
+    }
+    if (!FlxG.keys.pressed.LEFT && !FlxG.keys.pressed.RIGHT && !FlxG.keys.pressed.UP && !FlxG.keys.pressed.DOWN)
+      animation.play("idle");
     if (!FlxG.keys.pressed.LEFT && !FlxG.keys.pressed.RIGHT) {
       // Stopped
       // just like my heart should be
