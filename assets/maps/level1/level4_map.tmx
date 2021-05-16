@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="203" height="30" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#0094fe" nextlayerid="7" nextobjectid="82">
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="203" height="30" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#0094fe" nextlayerid="7" nextobjectid="91">
  <properties>
   <property name="background" value="assets/images/backdrop_spooky.png"/>
   <property name="base_offset" value="100"/>
@@ -25,9 +25,9 @@
    eJzt2E0KgzAQBlAh9z9aq5veR4Ru2gbxp0lG8x4MEnA1mS8GhwEAAAAAAAAAAAAAiOSZPtePlH8PerdkZXznY3lOsgJZ398VWYE8WYFtamfllX4L7iw381sK7sbM0xvnP5j51vQ6PvvTzlrv7Uks9qK+vWeTzLSl/2WVuMe6I9elp+VEmFn5+Y9e+nb0X93ZiqpVP65cAMB+M8aotfY=
   </data>
  </layer>
- <layer id="4" name="front" width="203" height="30" visible="0">
+ <layer id="4" name="front" width="203" height="30">
   <data encoding="base64" compression="zlib">
-   eJztmcdu20AQQAnzV9Kr0/NB6XGcXj4nvVenfogvvhjpce/tmMdDgCBZcpcKJFHKe8ADqMVwIEAz3OEqy0RERERERERERERERERERERERERE+o/ZgSybw3lcwEVcGuj2txLpHL96INYLu/Ms24N7cRD34f68e99b5F9YprZXcBXXcB03As/+bdT4dtyBO3FXHu+Fc1wP43m8gBfxkr0iDSK1/gsOULsH8RAexiN4NFDPp1g7jWfwLA7l8V54xvVzfIEv8RWO2CvSIFLrv+Ay61fwKl7D63gjEPuQtUf4GJ/g0zzeC7Ncz+E8LuAiLvVor0zwrJnEKZzGGd+7+oLU+i94zfobfIvv8D1+CMROsDaJUziNM3l/9UKM0AwqvU9q/Rcss76Cq7iG67hhHfxFaAaV3idW/6P/8e/c6iwVmkGl+RS1HlLitDpLhWbQ39nE5824Bbf6W3QN+yBMaI+I7RvtmqWOkec4nsCTFTmreir1/DIWl5KnLKbOGar0DqE9IrZvtGuWukuee3gfH1TkrOqp1PPLWFxKnrKYOmeoTcG5Kk5oj4jtG7FZqlW+kucbfscfFTmreir1/DIWl5KnLKbOGWoTsEfSCO0RTX8Hr+qp1PPLWFxKnrKYOmeoVdzknlt4G+8k3t/KPZJGaI9o177RCVLP72NxKXnKYur8hzCWhz8Xz/qP+Ak/45eS+8f/WA/d43wlIiIiIp3mJ5UEKp8=
+   eJztmdeO00AUQK31r7C0pfcPoteFpX0OvddlF/gQXniDpWzv9ZHjByQkxp5xUBInnCMdyRldX0XyvZ6bSZaJiIiIiIiIiIiIiIiIiIiIiIiIiPQf8wNZtoCLuITLuDLQ7W8l0jl+90CsF/bmWbYP9+MBPIiH8u59b5F/YZXaXsN13MBN3Aq8+3dS47twNw7hnjzeC5e4voxXcBiv4jV7RRpEav0XHKZ2j+BRPIbH8USgns+ydg7P4wW8mMd74SXXr/A1vsG3OGqvSINIrf+CEdav4w28ibfwdiD2CWtP8Rk+xxd5vBfmuV7ARVzCZVzp0V6Z4l0zjTM4i3P+7uoLUuu/4B3rYziO7/EDfgzETrE2jTM4i3N5f/VCjNAMKr1Pav0XrLK+huu4gZu4ZR38RWgGld4nVv+f/uPn3OosFZpBpfkUtR5S4rQ6S4Vm0D/ZxudB3I47fBZdwz4IE9ojYvtGu2apk+Q5hafxTEXOqp5KPb+MxaXkKYupc4YqvUNoj4jtG+2apR6Q5yE+wscVOat6KvX8MhaXkqcsps4ZalNwrooT2iNi+0ZslmqV7+T5gT9xsiJnVU+lnl/G4lLylMXUOUNtAvZIGqE9oum/wat6KvX8MhaXkqcsps4ZahV3uOcu3sP7ife3co+kEdoj2rVvdILU8/tYXEqespg6/yF8zsOfi3f9F/yKE/gt8RmE7nG+EhEREZFO8ws22Cm+
   </data>
  </layer>
  <objectgroup id="5" name="objects">
@@ -51,8 +51,11 @@
   <object id="79" type="enemy_bow" x="2768" y="192" width="16" height="32"/>
   <object id="80" type="enemy_bow" x="2736" y="192" width="16" height="32"/>
   <object id="81" type="crown" x="2768" y="288" width="16" height="32"/>
+  <object id="84" name="tirefire" type="tirefire" x="1517.07" y="400.519" width="7.81818" height="3.81818"/>
+  <object id="89" name="campfire" type="campfire" x="2101.75" y="417.428" width="7.81818" height="3.81818"/>
+  <object id="90" name="tirefire" type="tirefire" x="1400.63" y="400.519" width="7.81818" height="3.81818"/>
  </objectgroup>
- <objectgroup id="6" name="nodes" visible="0">
+ <objectgroup id="6" name="nodes">
   <object id="47" name="patrol" x="1776" y="432">
    <properties>
     <property name="enemy_name" value="enemy_1"/>
