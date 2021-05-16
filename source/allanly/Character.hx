@@ -143,7 +143,10 @@ class Character extends FlxSprite {
 
   // Add arm
   public function pickupArm(arm:Arm) {
-    FlxG.state.remove(this.arm);
+    if (this.arm != null) {
+      this.arm.kill();
+      FlxG.state.remove(this.arm);
+    }
     this.arm = arm;
     FlxG.state.add(arm);
   }

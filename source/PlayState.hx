@@ -3,7 +3,6 @@ package;
 // Imports
 import allanly.Arrow;
 import allanly.Background;
-import allanly.Bow;
 import allanly.BowBasic;
 import allanly.Character;
 import allanly.Cloud;
@@ -11,7 +10,6 @@ import allanly.Crank;
 import allanly.Crown;
 import allanly.Door;
 import allanly.Drawbridge;
-import allanly.Drone;
 import allanly.Enemy;
 import allanly.EnemyArcher;
 import allanly.EnemySword;
@@ -126,6 +124,7 @@ class PlayState extends FlxState {
 
     // Zoom and follow
     FlxG.camera.follow(jim, PLATFORMER, 1);
+    FlxG.camera.zoom = 1;
 
     if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
       FlxG.sound.playMusic(AssetPaths.music__mp3, 0.1, true);
@@ -418,7 +417,7 @@ class PlayState extends FlxState {
         add(enemy);
         return;
       case "door":
-        var door = new Door(obj.x, obj.y);
+        var door = new Door(obj.x, obj.y, obj.height);
         add(door);
         doors.add(door);
         return;

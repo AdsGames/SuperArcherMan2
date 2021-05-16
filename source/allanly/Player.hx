@@ -98,6 +98,7 @@ class Player extends Character {
           drone = null;
           droneAmmo = DRONE_AMMO;
           FlxG.camera.follow(this, PLATFORMER, 1);
+          FlxG.camera.zoom = 1;
         });
       }
 
@@ -160,6 +161,7 @@ class Player extends Character {
         drone.pickupArm(new BowAutomatic(400, 0.01, 100, Team.PLAYER));
         FlxG.state.add(drone);
         FlxG.camera.follow(drone, PLATFORMER, 1);
+        FlxG.camera.zoom = 2;
       }
     }
 

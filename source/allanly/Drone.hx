@@ -12,7 +12,7 @@ import flixel.FlxG;
 // Swinging enemies
 class Drone extends Character {
   private static inline final MOVEMENT_SPEED_MAX:Float = 200;
-  private static inline final MOVEMENT_SPEED_Y_MAX:Float = 2500;
+  private static inline final MOVEMENT_SPEED_Y_MAX:Float = 200;
   private static inline final MOVEMENT_SPEED_CHANGE_2:Float = 10;
   private static inline final MOVEMENT_SPEED_DECELERATION_CHANGE_2:Float = 0.2;
   private static inline final MOVEMENT_SPEED:Int = 200;
@@ -36,7 +36,7 @@ class Drone extends Character {
 
     animation.play("idle");
 
-    // Player
+    this.acceleration.y = 0;
   }
 
   // Update
@@ -49,8 +49,6 @@ class Drone extends Character {
 
   // Move around
   override public function move(elapsed:Float) {
-    ignoreGravity = true;
-
     if (FlxG.keys.pressed.LEFT) {
       animation.play("fly");
       // Movement

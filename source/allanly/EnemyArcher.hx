@@ -32,12 +32,6 @@ class EnemyArcher extends Enemy {
   override public function update(elapsed:Float) {
     var bow = Std.downcast(arm, Bow);
 
-    if (!alive) {
-      bow.trailEmitter.kill();
-      bow.stopSound();
-      return;
-    }
-
     super.update(elapsed);
 
     // Move enemy

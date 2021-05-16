@@ -16,7 +16,7 @@ class Door extends FlxSprite {
   private var open:Bool;
 
   // Create a nice one
-  public function new(x:Float, y:Float) {
+  public function new(x:Float, y:Float, height:Float) {
     super(x, y, AssetPaths.door__png);
 
     // Init vars
@@ -30,6 +30,7 @@ class Door extends FlxSprite {
 
     // Close the door
     scale.x = 0.2;
+    scale.y = height / this.height;
 
     // Cant move
     immovable = true;
