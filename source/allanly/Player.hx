@@ -7,11 +7,8 @@ package allanly;
  * 29/5/2015
  */
 // Imports
-import Math;
 import flixel.FlxG;
-import flixel.group.FlxGroup;
 import flixel.math.FlxPoint;
-import flixel.tile.FlxTilemap;
 import flixel.util.FlxTimer;
 
 class Player extends Character {
@@ -25,12 +22,12 @@ class Player extends Character {
   private var ladderX:Float;
   private var dead:Bool;
   private var hasWon:Bool;
-  private var droneAlive:Bool;
   private var droneAmmo:Int;
 
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
   private static inline final DEATH_TIMER:Float = 3;
+  private static inline final DRONE_AMMO:Int = 1000;
 
   // Make character
   public function new(x:Float = 0, y:Float = 0) {
@@ -46,8 +43,7 @@ class Player extends Character {
     ladderX = 0;
     dead = false;
     hasWon = false;
-    droneAlive = true;
-    droneAmmo = 1;
+    droneAmmo = DRONE_AMMO;
 
     // Init health
     health = 10000;
@@ -62,49 +58,6 @@ class Player extends Character {
       32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62
     ], 15, false);
     animation.play("idle");
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
-    // no u
 
     // BB Offset
     width = 16;
@@ -138,30 +91,36 @@ class Player extends Character {
 
     // Update bow target
     if (!dead) {
+      // Pickup drone
+      if (FlxG.keys.justPressed.G && drone != null) {
+        FlxG.overlap(this, drone, function collideDrone(_, _drone:Drone) {
+          _drone.kill();
+          drone = null;
+          droneAmmo = DRONE_AMMO;
+          FlxG.camera.follow(this, PLATFORMER, 1);
+        });
+      }
+
       var bow = Std.downcast(arm, Bow);
-      var isDrone = false;
+      var isDrone = drone != null;
       if (drone != null) {
         bow = drone.getBow();
-        isDrone = true;
       }
       bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
       // Make arrows
-      if (FlxG.mouse.justPressed) {
-        trace("drone ammo");
-        trace(droneAmmo);
-        trace(isDrone);
-        if (!isDrone || droneAmmo > 0)
+      if (FlxG.mouse.pressed && bow.getPower() == 0) {
+        if (!isDrone || droneAmmo > 0) {
           bow.pullBack();
+        }
       }
       else if (FlxG.mouse.justReleased) {
         if (!isDrone || droneAmmo > 0) {
-          if (isDrone)
+          if (isDrone) {
             droneAmmo -= 1;
-          var arrow = bow.release(0);
-          if (arrow != null) {
-            Character.arrowContainer.add(arrow);
           }
+
+          bow.release();
         }
       }
 
@@ -172,6 +131,19 @@ class Player extends Character {
         die();
       }
     }
+
+    // Win
+    // no
+    if (hasWon && counter >= DEATH_TIMER) {
+      FlxG.sound.music.stop();
+      counter = 0;
+      FlxG.switchState(new MenuState());
+    }
+
+    if (dead && counter >= DEATH_TIMER) {
+      FlxG.sound.music.stop();
+      FlxG.switchState(new PlayState(PlayState.levelOn));
+    }
   }
 
   // Move character (keep out danny)
@@ -179,96 +151,97 @@ class Player extends Character {
 
   override public function move(elapsed:Float) {
     ignoreGravity = isOnLadder;
-    if (!dead) {
-      // Move that character
-      // Right
-      if (FlxG.keys.pressed.F) {
-        if (droneAlive && drone == null) {
-          drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
 
-          drone.pickupArm(new Bow(600.0, 1.0, 100.0));
-
-          FlxG.state.add(drone);
-        }
-      }
-
-      if (FlxG.keys.pressed.D) {
-        moveRight();
-      }
-      // Left
-      if (FlxG.keys.pressed.A) {
-        moveLeft();
-      }
-      // Ladder
-      if (isOnLadder) {
-        if (FlxG.keys.pressed.W) {
-          animation.play("climb");
-          y -= 1;
-        }
-        else if (FlxG.keys.pressed.S) {
-          animation.play("climb");
-          y += 1;
-        }
-      }
-      // Jump Jump!
-      // me on the edge of the building
-      if (FlxG.keys.pressed.SPACE) {
-        jump(JUMP_VELOCITY);
-      }
-      // Idleing
-      if (!FlxG.keys.pressed.A && !FlxG.keys.pressed.D) {
-        // Stopped
-        if (velocity.x < 5 && velocity.x > -5) {
-          acceleration.x = 0;
-          velocity.x = 0;
-
-          // Resolve animation if we're on a ladder
-          if (!isOnLadder) {
-            animation.play("idle");
-          }
-          else {
-            animation.play("climbing");
-          }
-        }
-
-        // Decelerating
-        else if (velocity.x > 0) {
-          acceleration.x = -movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax + velocity.x);
-
-          // Resolve animation if we're on a ladder
-          if (!isOnLadder) {
-            animation.play("walk");
-          }
-          else {
-            animation.play("climbing");
-          }
-        }
-        else if (velocity.x < 0) {
-          acceleration.x = movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax - velocity.x);
-
-          // Resolve animation if we're on a ladder
-          // ur butt is on a ladder
-          if (!isOnLadder) {
-            animation.play("walk");
-          }
-          else {
-            animation.play("climbing");
-          }
-        }
-      }
-
-      // Win
-      // no
-      if (hasWon && counter >= DEATH_TIMER) {
-        FlxG.sound.music.stop();
-        counter = 0;
-        FlxG.switchState(new MenuState());
+    // Move that character
+    // Right
+    if (FlxG.keys.pressed.F) {
+      if (drone == null) {
+        drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
+        drone.pickupArm(new BowAutomatic(400, 0.01, 100, Team.PLAYER));
+        FlxG.state.add(drone);
+        FlxG.camera.follow(drone, PLATFORMER, 1);
       }
     }
-    else if (dead && counter >= DEATH_TIMER) {
-      FlxG.sound.music.stop();
-      FlxG.switchState(new PlayState(PlayState.levelOn));
+
+    // Switch bow
+    if (FlxG.keys.pressed.ONE) {
+      pickupArm(new BowBasic(600, 1, 100, Team.PLAYER));
     }
+    else if (FlxG.keys.pressed.TWO) {
+      pickupArm(new BowTriple(600, 1, 100, Team.PLAYER));
+    }
+    else if (FlxG.keys.pressed.THREE) {
+      pickupArm(new BowAutomatic(400, 0.01, 100, Team.PLAYER));
+    }
+    else if (FlxG.keys.pressed.FOUR) {
+      pickupArm(new BowShotgun(400, 3, 20, Team.PLAYER));
+    }
+
+    if (FlxG.keys.pressed.D) {
+      moveRight();
+    }
+    // Left
+    if (FlxG.keys.pressed.A) {
+      moveLeft();
+    }
+    // Ladder
+    if (isOnLadder) {
+      if (FlxG.keys.pressed.W) {
+        animation.play("climb");
+        y -= 1;
+      }
+      else if (FlxG.keys.pressed.S) {
+        animation.play("climb");
+        y += 1;
+      }
+    }
+    // Jump Jump!
+    // me on the edge of the building
+    if (FlxG.keys.pressed.SPACE) {
+      jump(JUMP_VELOCITY);
+    }
+    // Idleing
+    if (!FlxG.keys.pressed.A && !FlxG.keys.pressed.D) {
+      // Stopped
+      if (velocity.x < 5 && velocity.x > -5) {
+        acceleration.x = 0;
+        velocity.x = 0;
+
+        // Resolve animation if we're on a ladder
+        if (!isOnLadder) {
+          animation.play("idle");
+        }
+        else {
+          animation.play("climbing");
+        }
+      }
+
+      // Decelerating
+      else if (velocity.x > 0) {
+        acceleration.x = -movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax + velocity.x);
+
+        // Resolve animation if we're on a ladder
+        if (!isOnLadder) {
+          animation.play("walk");
+        }
+        else {
+          animation.play("climbing");
+        }
+      }
+      else if (velocity.x < 0) {
+        acceleration.x = movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax - velocity.x);
+
+        // Resolve animation if we're on a ladder
+        // ur butt is on a ladder
+        if (!isOnLadder) {
+          animation.play("walk");
+        }
+        else {
+          animation.play("climbing");
+        }
+      }
+    }
+
     super.move(elapsed);
   }
 
@@ -315,15 +288,7 @@ class Player extends Character {
     }
   }
 
-  public function pickupDrone() {
-    trace("yo");
-    if (FlxG.keys.justPressed.G && drone != null) {
-      drone.kill();
-      drone = null;
-      droneAmmo = 1;
-    }
-  } // Ready to climb
-
+  // Ready to climb
   public function ladderPosition(player:Player, ladder:Ladder) {
     ladderX = ladder.x;
   }
