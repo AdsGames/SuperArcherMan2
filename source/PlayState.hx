@@ -238,7 +238,7 @@ class PlayState extends FlxState {
     // Die
     FlxG.overlap(jim, enemies, function(jim:Player, enemy:Enemy) {
       if (enemy.alive) {
-        jim.takeDamage(20, 0);
+        jim.takeDamage(100, 0);
         FlxG.sound.music.stop();
       }
     });
