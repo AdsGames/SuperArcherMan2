@@ -2,6 +2,7 @@ package;
 
 // Imports
 import allanly.Arrow;
+import allanly.ArrowUi;
 import allanly.Background;
 import allanly.BowBasic;
 import allanly.Campfire;
@@ -19,7 +20,6 @@ import allanly.Painting;
 import allanly.Player;
 import allanly.Spawn;
 import allanly.StuckArrow;
-import allanly.Sword;
 import allanly.Team;
 import allanly.Throne;
 import allanly.Tirefire;
@@ -75,15 +75,12 @@ class PlayState extends FlxState {
   // Player
   private var jim:Player;
 
-  // Power text
-  private var powerText:FlxText;
-  private var bowText:FlxText;
-
   // Level
   private var levelFront:FlxTilemap;
   private var levelMid:FlxTilemap;
   private var levelBack:FlxTilemap;
   private var levelCollide:FlxTilemap;
+  private var arrowUi:ArrowUi;
 
   // Our class constructor
   public function new(levelOn:Int) {
@@ -118,13 +115,6 @@ class PlayState extends FlxState {
     Character.arrowContainer = new FlxTypedGroup<Arrow>();
     FlxG.state.add(Character.arrowContainer);
 
-    // Power text
-    powerText = new FlxText(0, 0, 0, "");
-    add(powerText);
-
-    bowText = new FlxText(10, 10, 0, "");
-    add(bowText);
-
     // Zoom and follow
     FlxG.camera.follow(jim, PLATFORMER, 1);
     FlxG.camera.zoom = 1;
@@ -132,19 +122,14 @@ class PlayState extends FlxState {
     if (FlxG.sound.music == null || !FlxG.sound.music.playing) {
       FlxG.sound.playMusic(AssetPaths.music__mp3, 0.1, true);
     }
+
+    arrowUi = new ArrowUi(jim);
+    add(arrowUi);
   }
 
   // HINT: THIS UPDATES
   // THANKS TIPS
   override public function update(elapsed:Float) {
-    powerText.x = FlxG.mouse.x + 15;
-    powerText.y = FlxG.mouse.y;
-    powerText.text = "Arrows: " + jim.getAmmo();
-
-    bowText.x = FlxG.camera.scroll.x + 10;
-    bowText.y = FlxG.camera.scroll.y + 10;
-    bowText.text = jim.getArm().getName();
-
     enemies.forEachDead(function(enemy) {
       if (enemy.exists == false) {
         enemies.remove(enemy);

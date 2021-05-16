@@ -78,11 +78,6 @@ class Character extends FlxSprite {
 
   // Move character
   public function move(elapsed:Float) {
-    // Put back in place
-    if (x < 0) {
-      x = 0;
-    }
-
     // Move bow to player
     arm.setPosition(x, y);
   }
@@ -148,6 +143,7 @@ class Character extends FlxSprite {
       FlxG.state.remove(this.arm);
     }
     this.arm = arm;
+    arm.revive();
     FlxG.state.add(arm);
   }
 
