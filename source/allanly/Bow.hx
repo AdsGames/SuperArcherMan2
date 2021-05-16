@@ -52,6 +52,8 @@ class Bow extends Arm {
 
     name = "Abstract";
 
+    name = "Abstract";
+
     bowReleaseSound = new FlxSound();
     bowReleaseSound.loadEmbedded(AssetPaths.bow_release__wav);
 

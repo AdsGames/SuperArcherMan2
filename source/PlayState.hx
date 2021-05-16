@@ -4,6 +4,8 @@ package;
 import allanly.Arrow;
 import allanly.ArrowUi;
 import allanly.Background;
+import allanly.BowBasic;
+import allanly.Campfire;
 import allanly.Character;
 import allanly.Cloud;
 import allanly.Crank;
@@ -20,6 +22,7 @@ import allanly.Spawn;
 import allanly.StuckArrow;
 import allanly.Team;
 import allanly.Throne;
+import allanly.Tirefire;
 import allanly.Tools;
 import allanly.Torch;
 import allanly.Tree;
@@ -430,6 +433,12 @@ class PlayState extends FlxState {
         return;
       case "painting":
         add(new Painting(obj.x, obj.y));
+        return;
+      case "tirefire":
+        add(new Tirefire(obj.x, obj.y));
+        return;
+      case "campfire":
+        add(new Campfire(obj.x, obj.y));
         return;
       case "throne":
         add(new Throne(obj.x, obj.y));

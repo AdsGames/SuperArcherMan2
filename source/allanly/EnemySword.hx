@@ -18,6 +18,7 @@ class EnemySword extends Enemy {
   private var chainSawTimer:Float;
   private var chainSawCount:Int;
   private var chainSawRand:Int;
+  private var jumpRand:Int;
 
   // Create enemy
   public function new(jimPointer:Character, name:String, x:Float = 0, y:Float = 0) {
@@ -126,6 +127,12 @@ class EnemySword extends Enemy {
         sword.setSpinDir("none", 0);
       }
       animation.play("idle");
+    }
+
+    jumpRand = Tools.myRandom(0, 100);
+
+    if (detected && Math.abs(velocity.x) < 15 || detected && jumpRand == 0) {
+      jump(250.0);
     }
 
     // Move sword to self

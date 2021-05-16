@@ -26,6 +26,7 @@ class Player extends Character {
   private var hasWon:Bool;
   private var bows:Array<Bow>;
   private var currentBow:Int;
+  private var droneFollower:Follower;
 
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
@@ -46,6 +47,10 @@ class Player extends Character {
     ladderX = 0;
     dead = false;
     hasWon = false;
+
+    // Follower
+    droneFollower = new Follower(x, y, this);
+    FlxG.state.add(droneFollower);
 
     // Init health
     health = 10000;
@@ -94,8 +99,9 @@ class Player extends Character {
   override public function update(elapsed:Float) {
     // Update parent
     super.update(elapsed);
-
+    droneFollower.setVisible(drone == null);
     // Kill urself
+    // Don't threaten me with a good time
     if (FlxG.keys.pressed.K) {
       health = 0;
     }
@@ -120,7 +126,7 @@ class Player extends Character {
       bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
       // Make arrows
-      if (FlxG.mouse.justPressed) {
+      if (FlxG.mouse.pressed) {
         bow.pullBack();
       }
       else if (FlxG.mouse.justReleased) {

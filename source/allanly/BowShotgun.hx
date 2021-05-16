@@ -21,6 +21,8 @@ class BowShotgun extends Bow {
 
     name = "Shotbow";
 
+    name = "Shotbow";
+
     origin = new FlxPoint(origin.x, 15);
   }
 
