@@ -25,10 +25,10 @@ class LevelSelect extends FlxState {
     backgroundImage = new FlxSprite(0, 0, AssetPaths.level__png);
     add(backgroundImage);
 
-    level1Button = new FlxButton(175, 245, "Enter", launchLevel1);
-    level2Button = new FlxButton(400, 245, "Enter", launchLevel2);
-    level3Button = new FlxButton(285, 450, "Enter", launchLevel3);
-    backButton = new FlxButton(550, 450, "Back", backMenu);
+    level1Button = new FlxButton(370, 270, "Enter", launchLevel1);
+    level2Button = new FlxButton(130, 510, "Enter", launchLevel2);
+    level3Button = new FlxButton(600, 510, "Enter", launchLevel3);
+    backButton = new FlxButton(370, 550, "Back", backMenu);
 
     add(level1Button);
     add(level2Button);

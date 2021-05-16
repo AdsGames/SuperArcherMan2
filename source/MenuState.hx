@@ -49,9 +49,9 @@ class MenuState extends FlxState {
 
   // Create UI
   private function createUI() {
-    add(new FlxSprite(0, 0, AssetPaths.menu__png));
-    add(new FlxButton(280, 380, "Start Game", startGame));
-    add(new FlxButton(280, 420, "Instructions", showHelp));
+    add(new FlxSprite(150, 50, AssetPaths.title__png));
+    add(new FlxButton(650, 380, "Start Game", startGame));
+    add(new FlxButton(650, 420, "Instructions", showHelp));
   }
 
   // Start music
