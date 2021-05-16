@@ -293,7 +293,7 @@ class Player extends Character {
   public function win() {
     if (!hasWon) {
       hasWon = true;
-      FlxG.sound.play(AssetPaths.win__mp3);
+      FlxG.sound.play(AssetPaths.win__wav);
       startTimer();
     }
   }
