@@ -24,14 +24,13 @@ class Player extends Character {
   private var ladderX:Float;
   private var dead:Bool;
   private var hasWon:Bool;
-  private var droneAmmo:Int;
-  private var ammo:Array<Int>;
+  private var bows:Array<Bow>;
   private var currentBow:Int;
 
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
   private static inline final DEATH_TIMER:Float = 3;
-  private static inline final DRONE_AMMO:Int = 100;
+  private static inline final DRONE_AMMO:Int = 1;
 
   // Make character
   public function new(x:Float = 0, y:Float = 0) {
@@ -47,13 +46,10 @@ class Player extends Character {
     ladderX = 0;
     dead = false;
     hasWon = false;
-    droneAmmo = DRONE_AMMO;
-    currentBow = 0;
 
     // Init health
     health = 10000;
     healthBar.setRange(0, health);
-    ammo = [1000, 20, 100, 10];
 
     // Images and animations
     loadGraphic(AssetPaths.player__png, true, 23, 30);
@@ -84,7 +80,14 @@ class Player extends Character {
       FlxG.sound.play(AssetPaths.jim_saying4__mp3);
     }
 
-    pickupArm(new BowBasic(600.0, 0.6, 100.0, Team.PLAYER));
+    bows = [
+      new BowBasic(600.0, 0.6, 100.0, Team.PLAYER, 1000),
+      new BowTriple(600, 1, 100, Team.PLAYER, 20),
+      new BowAutomatic(400, 0.01, 100, Team.PLAYER, 100),
+      new BowShotgun(400, 2, 20, Team.PLAYER, 10)
+    ];
+
+    pickupArm(bows[0]);
   }
 
   // Update
@@ -104,7 +107,6 @@ class Player extends Character {
         FlxG.overlap(this, drone, function collideDrone(_, _drone:Drone) {
           _drone.kill();
           drone = null;
-          droneAmmo = DRONE_AMMO;
           FlxG.camera.follow(this, PLATFORMER, 1);
           FlxG.camera.setFilters([]);
           FlxG.camera.zoom = 1;
@@ -112,29 +114,17 @@ class Player extends Character {
       }
 
       var bow = Std.downcast(arm, Bow);
-      var isDrone = drone != null;
       if (drone != null) {
         bow = drone.getBow();
       }
       bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
 
       // Make arrows
-      if (FlxG.mouse.pressed && bow.getPower() == 0) {
-        if (!isDrone) {
-          bow.pullBack(ammo[currentBow]);
-        }
+      if (FlxG.mouse.justPressed) {
+        bow.pullBack();
       }
       else if (FlxG.mouse.justReleased) {
-        if (!isDrone) {
-          if (isDrone) {
-            droneAmmo -= 1;
-          }
-          else {
-            ammo[currentBow] -= 1;
-          }
-
-          bow.release();
-        }
+        bow.release();
       }
 
       // Move around
@@ -170,7 +160,7 @@ class Player extends Character {
     if (FlxG.keys.pressed.F) {
       if (drone == null) {
         drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
-        drone.pickupArm(new BowAutomatic(400, 0.01, 100, Team.PLAYER));
+        drone.pickupArm(new BowBasic(1000, 0.5, 100, Team.PLAYER, DRONE_AMMO));
         FlxG.state.add(drone);
         FlxG.camera.follow(drone, LOCKON, 1);
         FlxG.camera.setFilters([new ShaderFilter(new Tiltshift())]);
@@ -180,20 +170,24 @@ class Player extends Character {
 
     // Switch bow
     if (FlxG.keys.pressed.ONE) {
-      pickupArm(new BowBasic(600, 1, 100, Team.PLAYER));
       currentBow = 0;
+      pickupArm(bows[currentBow]);
+      ArrowUi.setBow(currentBow);
     }
     else if (FlxG.keys.pressed.TWO) {
-      pickupArm(new BowTriple(600, 1, 100, Team.PLAYER));
       currentBow = 1;
+      pickupArm(bows[currentBow]);
+      ArrowUi.setBow(currentBow);
     }
     else if (FlxG.keys.pressed.THREE) {
-      pickupArm(new BowAutomatic(400, 0.01, 100, Team.PLAYER));
       currentBow = 2;
+      pickupArm(bows[currentBow]);
+      ArrowUi.setBow(currentBow);
     }
     else if (FlxG.keys.pressed.FOUR) {
-      pickupArm(new BowShotgun(400, 2, 20, Team.PLAYER));
       currentBow = 3;
+      pickupArm(bows[currentBow]);
+      ArrowUi.setBow(currentBow);
     }
 
     if (FlxG.keys.pressed.D) {
@@ -284,9 +278,9 @@ class Player extends Character {
 
   public function getAmmo() {
     if (drone != null) {
-      return droneAmmo;
+      return drone.getBow().getAmmo();
     }
-    return ammo[currentBow];
+    return Std.downcast(arm, Bow).getAmmo();
   }
 
   // Win

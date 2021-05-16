@@ -11,8 +11,8 @@ import flixel.math.FlxPoint;
 
 class BowAutomatic extends Bow {
   // Create bow
-  public function new(maxPower:Float, chargeTime:Float, minPower:Float, team:Team) {
-    super(maxPower, chargeTime, minPower, team);
+  public function new(maxPower:Float, chargeTime:Float, minPower:Float, team:Team, ammo:Int) {
+    super(maxPower, chargeTime, minPower, team, ammo);
 
     loadGraphic(AssetPaths.bow_arm_automatic__png, true, 47, 24);
     animation.add("drawback", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 0, false);
@@ -42,6 +42,7 @@ class BowAutomatic extends Bow {
     if (power > minPower) {
       Character.arrowContainer.add(new Arrow(this, x + origin.x, y + origin.y, angle - 5, power, team));
       bowReleaseSound.play();
+      ammo -= 1;
     }
 
     super.release();

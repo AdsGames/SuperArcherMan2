@@ -29,7 +29,7 @@ class EnemyArcher extends Enemy {
     // Init health
     health = 2000;
     healthBar.setRange(0, health);
-    pickupArm(new BowBasic(1000.0, 1.0, 100.0, Team.ENEMY));
+    pickupArm(new BowBasic(1000.0, 1.0, 100.0, Team.ENEMY, 1000));
   }
 
   // Update
@@ -48,7 +48,7 @@ class EnemyArcher extends Enemy {
     // Shoot
     if (alive) {
       if (bow.getPower() == 0 && detected) {
-        bow.pullBack(1);
+        bow.pullBack();
       }
       if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
         bow.release();

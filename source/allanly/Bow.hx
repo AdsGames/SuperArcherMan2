@@ -33,9 +33,10 @@ class Bow extends Arm {
 
   // Emitter for charge VFX
   private var trailEmitter:FlxEmitter;
+  private var ammo:Int;
 
   // Create bow
-  public function new(maxPower:Float, chargeTime:Float, minPower:Float, team:Team) {
+  public function new(maxPower:Float, chargeTime:Float, minPower:Float, team:Team, ammo:Int) {
     super();
 
     // Init vars
@@ -47,6 +48,7 @@ class Bow extends Arm {
     this.chargeTime = chargeTime;
     this.minPower = minPower;
     this.team = team;
+    this.ammo = ammo;
 
     name = "Abstract";
 
@@ -132,13 +134,13 @@ class Bow extends Arm {
     target = point;
   }
 
-  public function pullBack(ammo:Int) {
+  public function pullBack() {
     if (ammo > 0) {
       powerTimer.start(0.01, powerTicker, 0);
       animation.play("drawback");
     }
     else {
-      // dead bow sound
+      FlxG.sound.play(AssetPaths.click__wav);
     }
   }
 
@@ -146,7 +148,6 @@ class Bow extends Arm {
     animation.frameIndex = 0;
     trailEmitter.emitting = false;
     stopSound();
-
     power = 0;
     powerTimer.cancel();
   }
@@ -155,5 +156,9 @@ class Bow extends Arm {
     charge1.stop();
     charge2.stop();
     charge3.stop();
+  }
+
+  public function getAmmo() {
+    return ammo;
   }
 }
