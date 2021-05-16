@@ -11,17 +11,17 @@ import flixel.FlxSprite;
 import flixel.math.FlxAngle;
 
 class WinPointer extends FlxSprite {
-  private var spawn:Spawn;
+  private var spriteToPoint:FlxSprite;
   private var player:Character;
 
   private static inline final ARROW_DIST:Int = 30;
 
   // Create
-  public function new(spawn:Spawn, player:Character) {
+  public function new(spriteToPoint:FlxSprite, player:Character) {
     // Construct parent
     super(0, 0);
 
-    this.spawn = spawn;
+    this.spriteToPoint = spriteToPoint;
     this.player = player;
 
     // Images and animations
@@ -37,11 +37,15 @@ class WinPointer extends FlxSprite {
     visible = true;
   }
 
+  public function setEnabled(newEnabled:Bool) {
+    visible = newEnabled;
+  }
+
   // Update
   override public function update(elapsed:Float) {
     super.update(elapsed);
 
-    angle = FlxAngle.angleBetween(player, spawn, true);
+    angle = FlxAngle.angleBetween(player, spriteToPoint, true);
     var angleRad = angle * FlxAngle.TO_RAD;
     x = player.x + ARROW_DIST * Math.cos(angleRad);
     y = player.y + ARROW_DIST * Math.sin(angleRad);
