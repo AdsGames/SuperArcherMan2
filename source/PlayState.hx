@@ -262,24 +262,17 @@ class PlayState extends FlxState {
     // trace("Loading Map!");
 
     // Tiles for level
-    var spritesheet:String = "";
+    var spritesheet:String = AssetPaths.level1_tiles__png;
     var tmx:TiledMap;
 
     if (levelOn == 1) {
-      spritesheet = AssetPaths.level1_tiles__png;
       tmx = new TiledMap(AssetPaths.level1_map__tmx);
     }
     else if (levelOn == 2) {
-      spritesheet = AssetPaths.level2_tiles__png;
       tmx = new TiledMap(AssetPaths.level2_map__tmx);
     }
     else if (levelOn == 3) {
-      spritesheet = AssetPaths.level3_tiles__png;
       tmx = new TiledMap(AssetPaths.level3_map__tmx);
-    }
-    else if (levelOn == 4) {
-      spritesheet = AssetPaths.level1_tiles__png;
-      tmx = new TiledMap(AssetPaths.level4_map__tmx);
     }
     else {
       return;
