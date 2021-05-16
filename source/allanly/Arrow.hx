@@ -21,6 +21,8 @@ class Arrow extends FlxSprite {
 
   // Sounds
   private var arrowHitSound:FlxSound;
+  private var arrowFlySound:FlxSound;
+
   private var yAccelertion:Int;
   private var team:Team;
   private var timeDead:Float;

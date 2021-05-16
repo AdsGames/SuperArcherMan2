@@ -49,7 +49,7 @@ class Bow extends Arm {
     this.team = team;
 
     bowReleaseSound = new FlxSound();
-    bowReleaseSound.loadEmbedded(AssetPaths.bow_release__mp3);
+    bowReleaseSound.loadEmbedded(AssetPaths.bow_release__wav);
 
     charge1 = new FlxSound();
     charge1.loadEmbedded(AssetPaths.charge1__wav);
