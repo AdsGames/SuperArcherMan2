@@ -20,6 +20,8 @@ class Drone extends Character {
   // Pointer to jim
   private var jimPointer:Character;
 
+  private var dronePointer:WinPointer;
+
   // Create enemy number 1 (public)
   public function new(x:Float, y:Float, jimPointer:Character) {
     // I'll control your abort
@@ -37,6 +39,10 @@ class Drone extends Character {
     animation.play("idle");
 
     this.acceleration.y = 0;
+
+    dronePointer = new WinPointer(jimPointer, this);
+    dronePointer.enable();
+    FlxG.state.add(dronePointer);
   }
 
   // Update
@@ -145,6 +151,7 @@ class Drone extends Character {
 
   // Kill
   override public function kill() {
+    dronePointer.kill();
     super.kill();
     alive = false;
     exists = false;
