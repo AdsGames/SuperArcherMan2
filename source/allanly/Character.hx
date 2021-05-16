@@ -60,7 +60,7 @@ class Character extends FlxSprite {
     bloodEmitter = new FlxEmitter(5, 5, 100);
     bloodEmitter.makeParticles(2, 2, FlxColor.fromRGB(100, 0, 0, 255), 100);
     bloodEmitter.launchMode = FlxEmitterMode.CIRCLE;
-    bloodEmitter.speed.set(50, 80);
+    bloodEmitter.speed.set(50 + velocity.x, 80 + velocity.y);
     bloodEmitter.lifespan.set(0.3);
     FlxG.state.add(bloodEmitter);
 
