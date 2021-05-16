@@ -19,6 +19,8 @@ class BowAutomatic extends Bow {
     animation.play("drawback");
     scale.set(0.70, 0.70);
 
+    name = "Bowtomatic";
+
     origin = new FlxPoint(origin.x, 15);
   }
 

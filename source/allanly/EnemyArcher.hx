@@ -23,9 +23,13 @@ class EnemyArcher extends Enemy {
     animation.add("idle", [4, 5, 6, 7], 5, true);
     animation.play("idle");
 
+    // Long detect distance
+    detectDistance = 200;
+
     // Init health
     health = 2000;
     healthBar.setRange(0, health);
+    pickupArm(new BowBasic(1000.0, 1.0, 100.0, Team.ENEMY));
   }
 
   // Update
@@ -43,7 +47,7 @@ class EnemyArcher extends Enemy {
 
     // Shoot
     if (bow.getPower() == 0 && detected) {
-      bow.pullBack();
+      bow.pullBack(1);
     }
     if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
       bow.release();

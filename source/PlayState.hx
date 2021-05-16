@@ -75,6 +75,7 @@ class PlayState extends FlxState {
 
   // Power text
   private var powerText:FlxText;
+  private var bowText:FlxText;
 
   // Level
   private var levelFront:FlxTilemap;
@@ -103,9 +104,6 @@ class PlayState extends FlxState {
     // Doors
     doors = new FlxTypedGroup<Door>();
 
-    // Background
-    sceneBackground = new Background(5000);
-
     // Create location for pointer so no crashing
     gameCrank = new Crank(-100, -100);
     gameCrown = new Crown(-100, -100);
@@ -122,6 +120,9 @@ class PlayState extends FlxState {
     powerText = new FlxText(0, 0, 0, "");
     add(powerText);
 
+    bowText = new FlxText(10, 10, 0, "");
+    add(bowText);
+
     // Zoom and follow
     FlxG.camera.follow(jim, PLATFORMER, 1);
     FlxG.camera.zoom = 1;
@@ -136,14 +137,11 @@ class PlayState extends FlxState {
   override public function update(elapsed:Float) {
     powerText.x = FlxG.mouse.x + 15;
     powerText.y = FlxG.mouse.y;
+    powerText.text = "Arrows: " + jim.getAmmo();
 
-    var isDrone = jim.getDrone() != null;
-    if (isDrone) {
-      powerText.text = "Arrows: " + jim.getDroneAmmo();
-    }
-    else {
-      powerText.text = "";
-    }
+    bowText.x = FlxG.camera.scroll.x + 10;
+    bowText.y = FlxG.camera.scroll.y + 10;
+    bowText.text = jim.getArm().getName();
 
     enemies.forEachDead(function(enemy) {
       if (enemy.exists == false) {
@@ -276,16 +274,6 @@ class PlayState extends FlxState {
   private function loadMap(levelOn:Int) {
     // trace("Loading Map!");
 
-    levelFront = new FlxTilemap();
-    levelMid = new FlxTilemap();
-    levelBack = new FlxTilemap();
-    levelCollide = new FlxTilemap();
-
-    add(levelBack);
-    add(levelMid);
-    add(levelFront);
-    add(levelCollide);
-
     // Tiles for level
     var spritesheet:String = "";
     var tmx:TiledMap;
@@ -312,6 +300,31 @@ class PlayState extends FlxState {
 
     // Set background color
     bgColor = tmx.backgroundColor;
+
+    // Background
+    var background = tmx.properties.get("background");
+    var offset = Std.parseInt(tmx.properties.get("offset"));
+    var baseOffset = Std.parseInt(tmx.properties.get("base_offset"));
+    var gradient1 = tmx.properties.get("gradient_1");
+    var gradient2 = tmx.properties.get("gradient_2");
+
+    if (background.length > 0 && offset != null && baseOffset != null && gradient1 != null && gradient2 != null) {
+      sceneBackground = new Background(background, offset, baseOffset, gradient1, gradient2);
+      trace("Background loaded " + background + " offset:" + offset + " base offset:" + baseOffset);
+    }
+    else {
+      trace("Background load failed");
+    }
+
+    levelFront = new FlxTilemap();
+    levelMid = new FlxTilemap();
+    levelBack = new FlxTilemap();
+    levelCollide = new FlxTilemap();
+
+    add(levelBack);
+    add(levelMid);
+    add(levelFront);
+    add(levelCollide);
 
     // Parse layers
     for (layer in tmx.layers) {
@@ -393,7 +406,6 @@ class PlayState extends FlxState {
         // Add player
         jim = new Player(0, 0);
         jim.setPosition(obj.x, obj.y);
-        jim.pickupArm(new BowBasic(600.0, 0.6, 100.0, Team.PLAYER));
         add(jim);
 
         gameSpawn = new Spawn(obj.x, obj.y, obj.width, obj.height);
@@ -406,13 +418,11 @@ class PlayState extends FlxState {
         return;
       case "enemy":
         var enemy = new EnemySword(jim, obj.name, obj.x, obj.y);
-        enemy.pickupArm(new Sword());
         enemies.add(enemy);
         add(enemy);
         return;
       case "enemy_bow":
         var enemy = new EnemyArcher(jim, obj.name, obj.x, obj.y);
-        enemy.pickupArm(new BowBasic(1000.0, 1.0, 100.0, Team.ENEMY));
         enemies.add(enemy);
         add(enemy);
         return;

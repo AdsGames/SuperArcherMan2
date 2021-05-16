@@ -44,6 +44,7 @@ class EnemySword extends Enemy {
     movementSpeedMax = 100;
     movementSpeedChange = 2;
     healthBar.setRange(0, health);
+    pickupArm(new Sword());
   }
 
   // Update

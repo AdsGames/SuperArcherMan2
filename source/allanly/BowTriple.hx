@@ -19,6 +19,8 @@ class BowTriple extends Bow {
     animation.play("drawback");
     scale.set(0.70, 0.70);
 
+    name = "Bow Triple";
+
     origin = new FlxPoint(origin.x, 15);
   }
 

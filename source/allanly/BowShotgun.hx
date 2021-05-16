@@ -20,6 +20,8 @@ class BowShotgun extends Bow {
     animation.play("drawback");
     scale.set(0.70, 0.70);
 
+    name = "Shotbow";
+
     origin = new FlxPoint(origin.x, 15);
   }
 

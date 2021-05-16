@@ -48,6 +48,8 @@ class Bow extends Arm {
     this.minPower = minPower;
     this.team = team;
 
+    name = "Abstract";
+
     bowReleaseSound = new FlxSound();
     bowReleaseSound.loadEmbedded(AssetPaths.bow_release__wav);
 
@@ -130,9 +132,14 @@ class Bow extends Arm {
     target = point;
   }
 
-  public function pullBack() {
-    powerTimer.start(0.01, powerTicker, 0);
-    animation.play("drawback");
+  public function pullBack(ammo:Int) {
+    if (ammo > 0) {
+      powerTimer.start(0.01, powerTicker, 0);
+      animation.play("drawback");
+    }
+    else {
+      // dead bow sound
+    }
   }
 
   public function release() {
