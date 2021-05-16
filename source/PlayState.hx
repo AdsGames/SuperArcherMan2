@@ -21,6 +21,7 @@ import allanly.StuckArrow;
 import allanly.Sword;
 import allanly.Team;
 import allanly.Throne;
+import allanly.Tirefire;
 import allanly.Tools;
 import allanly.Torch;
 import allanly.Tree;
@@ -446,6 +447,9 @@ class PlayState extends FlxState {
         return;
       case "painting":
         add(new Painting(obj.x, obj.y));
+        return;
+      case "tirefire":
+        add(new Tirefire(obj.x, obj.y));
         return;
       case "throne":
         add(new Throne(obj.x, obj.y));
