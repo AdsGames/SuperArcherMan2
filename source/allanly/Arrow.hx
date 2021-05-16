@@ -22,7 +22,7 @@ class Arrow extends FlxSprite {
   // Sounds
   private var arrowHitSound:FlxSound;
   private var yAccelertion:Int;
-  private var team:Int;
+  private var team:Team;
   private var timeDead:Float;
 
   private static inline final ARROW_SPEED_MULTIPLIER:Float = 1.5;
@@ -33,7 +33,7 @@ class Arrow extends FlxSprite {
   public var trailEmitter:FlxEmitter;
 
   // Create arrow
-  public function new(parent:FlxObject, x:Float = 0, y:Float = 0, angle:Float = 0, velocity:Float = 2, team:Int = 0) {
+  public function new(parent:FlxObject, x:Float, y:Float, angle:Float, velocity:Float, team:Team) {
     super(x, y, AssetPaths.arrow__png);
     this.angle = angle;
     this.velocity.x = -Math.cos((angle + 90) * (Math.PI / 180)) * velocity;
@@ -75,7 +75,7 @@ class Arrow extends FlxSprite {
     velocity.y = 0;
     velocity.x = 0;
     acceleration.y = 0;
-    FlxTween.tween(this, {alpha: 0}, 10, {
+    FlxTween.tween(this, {alpha: 0}, 5, {
       ease: FlxEase.elasticIn,
       onComplete: function(_) {
         finishKill();
@@ -93,7 +93,7 @@ class Arrow extends FlxSprite {
     super.update(elapsed);
 
     // Move particle emitter to obj
-    trailEmitter.setPosition(x, y);
+    trailEmitter.setPosition(x + origin.x, y + origin.y);
 
     // Update unless dead
     if (alive) {

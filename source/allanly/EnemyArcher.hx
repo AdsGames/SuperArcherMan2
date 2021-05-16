@@ -30,7 +30,11 @@ class EnemyArcher extends Enemy {
 
   // Update
   override public function update(elapsed:Float) {
+    var bow = Std.downcast(arm, Bow);
+
     if (!alive) {
+      bow.trailEmitter.kill();
+      bow.stopSound();
       return;
     }
 
@@ -48,10 +52,7 @@ class EnemyArcher extends Enemy {
       bow.pullBack();
     }
     if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
-      var arrow = bow.release(1);
-      if (arrow != null) {
-        Character.arrowContainer.add(arrow);
-      }
+      bow.release();
     }
 
     // Move sword to self
