@@ -12,15 +12,25 @@ import flixel.system.FlxSound;
 
 // Swinging enemies
 class EnemySword extends Enemy {
+  private var chainSaw:FlxSound;
+  private var chainSawTimer:Float;
+  private var chainSawCount:Int;
+
   // Create enemy
   public function new(jimPointer:Character, name:String, x:Float = 0, y:Float = 0) {
     super(jimPointer, name, x, y);
+
+    chainSaw = new FlxSound();
+    chainSaw.loadEmbedded(AssetPaths.chainSaw__wav);
 
     // Images and animations
     loadGraphic(AssetPaths.enemy__png, true, 14, 30);
     animation.add("walk", [0, 1, 2, 3], 10, true);
     animation.add("idle", [4, 5, 6, 7], 5, true);
     animation.play("idle");
+
+    chainSawTimer = 100;
+    chainSawCount = 0;
 
     // Init health
     health = 1000;
@@ -37,6 +47,14 @@ class EnemySword extends Enemy {
 
     super.update(elapsed);
 
+    // Play chainsaws noise
+    if (chainSawCount >= chainSawTimer) {
+      chainSaw.stop();
+      chainSaw.play();
+      chainSawCount = 0;
+    }
+    chainSawCount++;
+
     // Move enemy
     move(elapsed);
   }
@@ -52,16 +70,24 @@ class EnemySword extends Enemy {
     // Downcast sword
     var sword = Std.downcast(arm, Sword);
 
+    chainSawTimer = 1000 * (1 / (Math.abs(velocity.x) + 100));
+
     // Move around
     if ((detected && x < jimPointer.x) || (patrolling && x < patrolPoints[patrolPointIndex].x)) {
       if (sword != null) {
-        sword.setSpinDir("right", velocity.x / 5);
+        sword.setSpinDir("right", velocity.x / 25);
+        if (detected) {
+          sword.setSpinDir("right", velocity.x / 5);
+        }
       }
       moveRight();
     }
     else if ((detected && x > jimPointer.x) || (patrolling && x > patrolPoints[patrolPointIndex].x)) {
       if (sword != null) {
-        sword.setSpinDir("left", velocity.x / 5);
+        sword.setSpinDir("left", velocity.x / 25);
+        if (detected) {
+          sword.setSpinDir("left", velocity.x / 5);
+        }
       }
       moveLeft();
     }
