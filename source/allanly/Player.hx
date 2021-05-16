@@ -24,6 +24,8 @@ class Player extends Character {
   private var hasWon:Bool;
   private var droneAmmo:Int;
 
+  private var droneFollower:Follower;
+
   // Constants
   private static inline final JUMP_VELOCITY:Float = 250.0;
   private static inline final DEATH_TIMER:Float = 3;
@@ -44,6 +46,11 @@ class Player extends Character {
     dead = false;
     hasWon = false;
     droneAmmo = DRONE_AMMO;
+
+    trace("i hate this game");
+
+    droneFollower = new Follower(x, y, this);
+    FlxG.state.add(droneFollower);
 
     // Init health
     health = 10000;
@@ -83,8 +90,9 @@ class Player extends Character {
   override public function update(elapsed:Float) {
     // Update parent
     super.update(elapsed);
-
+    droneFollower.setVisible(drone == null);
     // Kill urself
+    // Don't threaten me with a good time
     if (FlxG.keys.pressed.K) {
       health = 0;
     }
