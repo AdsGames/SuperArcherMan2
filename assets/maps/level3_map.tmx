@@ -8,7 +8,7 @@
   <property name="offset" value="20"/>
  </properties>
  <tileset firstgid="1" name="tilemapflat" tilewidth="16" tileheight="16" tilecount="1024" columns="64">
-  <image source="level1_tiles.png" width="1024" height="256"/>
+  <image source="level1/level1_tiles.png" width="1024" height="256"/>
  </tileset>
  <layer id="1" name="back" width="203" height="50">
   <data encoding="base64" compression="zlib">
@@ -22,16 +22,16 @@
  </layer>
  <layer id="3" name="collide" width="203" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt3EFuwjAQRmGk3P9QpYKG7tuucpdilUiWFaMA9nj+6fskLyulZV5DgsPhgNbeptFHAGigFWAfWgH2oRVgH1oBts3XNi639UEnQNUx6+OTVoBN5+lvrWgF2IdWMMpynb2vF9e34fzSCizlfbTyam+1NRfHmF/nP7reDRYtx/Ij9HqureTz6Bn36fT1OJdYKM8r3tGKtkX49aMVWFHuJJknnfdfCa1oUu8k4byCnhbB65IaWkEvEc4luZPRvd5W94ZpRUO0TpKz2O9EK/5F7CTx3kq5X41WfIvaSeK9lRKt+NWqk/X/Y7lG83AMj6AVn1p0cq+LWj/Wy7v8MyBa8aXVPWGFOfTuVPwNaWWcrT3zLdBJH7TyvL17z2s/1wOdtHPhvGIq7ZHfWj3QSRvlPjWuV2Khk/5oRR+d2KAVbXTSRv6+q4ZWdNFJe6mV2jP9tKIraiv3Prv0uP8Y/kVrRenzfGiJNFM0gp4izBbnElhQni8agSXFOaMRjKA0bzSCkRTmjkbggef5oxF44mEOlZ95xP9hOY80AWXPzmnUZ+OBmsjfCQEAAAAAAAAAan4BCm9EKw==
+   eJzt3EFOwzAQQNFKuf+hALWk7IFV79JaEMmy4iqd2OOZyX+Sl0gB5pMmcTid0NrbNPoIAB9oBdiGVoBtaAXYhlaAdfOjjev/+qQToOo96+OLVoBVl+lvLWgF2IZWMMrtMXvfO9eP4vzSCjTlfbSyt7famotjzK/zX10fCouWY/l19PtcWsnn0TLu0/nX41yioTyvWEcrchaem90MHIMUrRzH6FY8d5LMk5/PXwmtyI1sxXsnCeeV4xjRys3hdUkNrRyHdisRziW5s9K93lb3hmlFTrOVaJ0kF2ffE63IabUSsZPEeivlfjVakdNoJWonifVWSrQi17uVVp0sfx/LNZqFY3gFrcj1bKVFJ8+6qPWjvazLnwHRilyPVlrdE/Ywh9adi58hrcjtbWVtz3wLdNIHrcht3Xte+7oe6KSdK+cVVWmP/NrqgU7aKPepcb0SC530Ryv+0YkOWvGNTtrIP3fV0IpfdNJeaqX2Tj+t+BW1lWfPLi3uP4Z90Vrx9DwfvkSaKRpBTxFmi3MJNHieLxqBJo9zRiMYwdO80QhG8jB3NAILLM8fjcASC3Po+Z1HHIfmPNIEPJPOadR344GayP8TAgAAAAAAAAC8uQM19U1b
   </data>
  </layer>
  <layer id="4" name="front" width="203" height="50">
   <data encoding="base64" compression="zlib">
-   eJzt2rlOQlEYhdE/3OcBlR7eyAF7fSMHqByib8RYKUTD7m9CQwwY1kq+6uYkpzi7u1UAAAAAwKkYNFXD5tC3gL/3knf+usdbv8vZe1vhBHzlnX/v8dY/cvZzx/m3fHu3Jaif7OB3xxbW+baxFQAAAAAAAACAozHtVM3SPC3SMq06h74VHJ9uU9VLZ+k8XaS+f6Gg5TK7uErX6SaN0q2tQMtDdvGYntJzGqeJrUDLNLuYpXlapGVa2QoAAAAAAAAAAAAAAAAAAAAAAAAAwL+yBXtUH04=
+   eJzt20lOAkEYhuEKfR7Hvd7Ica83clxpjJ6CDYdAhpUuNH4LSEwnBId06IbnSd4AoUh68ReLoikFAAAAANgUB1Uph9WqrwKa95A5f/zHrF/ks5f2Ch03yAz3FzT3lufvs9ff3x/8cP6fs+5lydone4kW6jc0l/W9Nt9LH3n8rJavA6A7fHcDAABt0NQ5FwAAAFDKsFfKaxqlcZqkaW/VVwXts1WVsp120m7aS/t/OLfyOzzr7igzfpxO0mk6S+e/mHvnwWyKq8z6dbpJt+ku3S+Y//q98bDO6v8HGc7uQR+lcZqkqf0AAAAAAAAAAAAAAAAAAAAAAAAAANApX5p2Nqg=
   </data>
  </layer>
  <objectgroup id="5" name="objects">
-  <object id="2" type="player" x="5.45455" y="369.091" width="58.6987" height="31.1837"/>
+  <object id="2" type="player" x="33.0909" y="369.091" width="58.6987" height="31.1837"/>
   <object id="46" name="enemy_1" type="enemy_bow" x="1312" y="64" width="7.81818" height="3.81818"/>
   <object id="58" name="enemy_1" type="enemy" x="1968" y="320" width="7.81818" height="3.81818"/>
   <object id="59" name="enemy_1" type="enemy_bow" x="1904" y="448" width="7.81818" height="3.81818"/>
