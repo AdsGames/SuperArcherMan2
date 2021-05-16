@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="200" height="100" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#0094fe" nextlayerid="7" nextobjectid="63">
+<map version="1.4" tiledversion="1.4.3" orientation="orthogonal" renderorder="right-down" width="200" height="100" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#0094fe" nextlayerid="7" nextobjectid="70">
  <tileset firstgid="1" name="tilemapflat" tilewidth="16" tileheight="16" tilecount="61" columns="61">
   <image source="level1_tiles.png" width="976" height="16"/>
  </tileset>
@@ -26,7 +26,6 @@
  <objectgroup id="5" name="objects">
   <object id="2" type="player" x="80" y="1424" width="64" height="34"/>
   <object id="15" type="door" x="1792" y="1408.02" width="16" height="47.9767"/>
-  <object id="31" type="drawBridge" x="1776" y="1408.31" width="16" height="47.6927"/>
   <object id="38" type="tree" x="1081" y="1408" width="48" height="64"/>
   <object id="39" type="tree" x="1201" y="1408" width="48" height="64"/>
   <object id="40" type="tree" x="1537" y="1392" width="48" height="64"/>
@@ -47,6 +46,13 @@
   <object id="60" name="enemy_1" type="enemy_bow" x="1968" y="1296" width="7.81818" height="3.81818"/>
   <object id="61" name="enemy_1" type="enemy_bow" x="2048" y="1296" width="7.81818" height="3.81818"/>
   <object id="62" name="enemy_1" type="enemy_bow" x="2016" y="1296" width="7.81818" height="3.81818"/>
+  <object id="63" name="enemy_1" type="enemy" x="2112" y="1296" width="7.81818" height="3.81818"/>
+  <object id="64" name="enemy_1" type="enemy_bow" x="2160" y="1296" width="7.81818" height="3.81818"/>
+  <object id="65" name="enemy_1" type="enemy_bow" x="2208" y="1296" width="7.81818" height="3.81818"/>
+  <object id="66" name="enemy_1" type="enemy_bow" x="2288" y="1296" width="7.81818" height="3.81818"/>
+  <object id="67" name="enemy_1" type="enemy_bow" x="2256" y="1296" width="7.81818" height="3.81818"/>
+  <object id="68" type="door" x="1680" y="1185.87" width="16" height="270.111"/>
+  <object id="69" type="door" x="1632" y="1361.25" width="16" height="92.8584"/>
  </objectgroup>
  <objectgroup id="6" name="nodes">
   <object id="47" name="patrol" x="1792" y="1328">

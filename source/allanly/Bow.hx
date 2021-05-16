@@ -32,7 +32,7 @@ class Bow extends Arm {
   private var charge3:FlxSound;
 
   // Emitter for charge VFX
-  public var trailEmitter:FlxEmitter;
+  private var trailEmitter:FlxEmitter;
 
   // Create bow
   public function new(maxPower:Float, chargeTime:Float, minPower:Float, team:Team) {
@@ -73,6 +73,12 @@ class Bow extends Arm {
     target = new FlxPoint(0, 0);
   }
 
+  override public function kill() {
+    trailEmitter.kill();
+    stopSound();
+    super.kill();
+  }
+
   // Update bow
   override public function update(elapsed:Float) {
     super.update(elapsed);
@@ -96,20 +102,22 @@ class Bow extends Arm {
     animation.frameIndex = Std.int((power / maxPower) * 15);
 
     // VFX for charge stats
-    if (power / maxPower > 0.3 && power / maxPower < 0.40) {
-      trailEmitter.emitting = true;
-      charge1.play();
-    }
-    else if (power / maxPower > 0.6 && power / maxPower < 0.70) {
-      trailEmitter.emitting = true;
-      charge2.play();
-    }
-    else if (power / maxPower > 0.9) {
-      trailEmitter.emitting = true;
-      charge3.play();
-    }
-    else {
-      trailEmitter.emitting = false;
+    if (this.team == Team.PLAYER) {
+      if (power / maxPower > 0.3 && power / maxPower < 0.40) {
+        trailEmitter.emitting = true;
+        charge1.play();
+      }
+      else if (power / maxPower > 0.6 && power / maxPower < 0.70) {
+        trailEmitter.emitting = true;
+        charge2.play();
+      }
+      else if (power / maxPower > 0.9) {
+        trailEmitter.emitting = true;
+        charge3.play();
+      }
+      else {
+        trailEmitter.emitting = false;
+      }
     }
 
     // Keep in bounds
@@ -136,7 +144,7 @@ class Bow extends Arm {
     powerTimer.cancel();
   }
 
-  public function stopSound() {
+  private function stopSound() {
     charge1.stop();
     charge2.stop();
     charge3.stop();
