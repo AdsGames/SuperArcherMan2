@@ -17,7 +17,7 @@ class BowAutomatic extends Bow {
     loadGraphic(AssetPaths.bow_arm_automatic__png, true, 47, 24);
     animation.add("drawback", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 0, false);
     animation.play("drawback");
-    scale.set(0.60, 0.60);
+    scale.set(0.30, 0.30);
 
     name = "Bowtomatic";
 

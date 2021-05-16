@@ -7,11 +7,9 @@ package allanly;
  * 29/5/2015
  */
 // Imports
-import filters.TiltShift;
 import flixel.FlxG;
 import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
-import openfl.filters.ShaderFilter;
 
 class Player extends Character {
   // Timers
@@ -88,7 +86,7 @@ class Player extends Character {
     bows = [
       new BowBasic(600.0, 0.6, 100.0, Team.PLAYER, 1000),
       new BowTriple(600, 1, 100, Team.PLAYER, 20),
-      new BowAutomatic(400, 0.1, 100, Team.PLAYER, 100),
+      new BowAutomatic(400, 0.02, 100, Team.PLAYER, 100),
       new BowShotgun(400, 2, 20, Team.PLAYER, 10)
     ];
 
@@ -114,7 +112,6 @@ class Player extends Character {
           _drone.kill();
           drone = null;
           FlxG.camera.follow(this, PLATFORMER, 1);
-          FlxG.camera.setFilters([]);
           FlxG.camera.zoom = 1;
         });
       }
@@ -168,9 +165,8 @@ class Player extends Character {
         drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
         drone.pickupArm(new BowBasic(1000, 0.5, 100, Team.PLAYER, DRONE_AMMO));
         FlxG.state.add(drone);
-        FlxG.camera.follow(drone, LOCKON, 1);
-        FlxG.camera.setFilters([new ShaderFilter(new Tiltshift())]);
-        FlxG.camera.zoom = 2;
+        FlxG.camera.follow(drone, LOCKON, 1.3);
+        FlxG.camera.zoom = 1.8;
       }
     }
 
@@ -196,13 +192,16 @@ class Player extends Character {
       ArrowUi.setBow(currentBow);
     }
 
+    // Right
     if (FlxG.keys.pressed.D) {
       moveRight();
     }
+
     // Left
     if (FlxG.keys.pressed.A) {
       moveLeft();
     }
+
     // Ladder
     if (isOnLadder) {
       if (FlxG.keys.pressed.W) {

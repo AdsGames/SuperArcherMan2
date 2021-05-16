@@ -52,8 +52,6 @@ class Bow extends Arm {
 
     name = "Abstract";
 
-    name = "Abstract";
-
     bowReleaseSound = new FlxSound();
     bowReleaseSound.loadEmbedded(AssetPaths.bow_release__wav);
 
@@ -83,6 +81,11 @@ class Bow extends Arm {
     trailEmitter.kill();
     stopSound();
     super.kill();
+  }
+
+  override public function revive() {
+    trailEmitter.revive();
+    super.revive();
   }
 
   // Update bow
