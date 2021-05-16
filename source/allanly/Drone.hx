@@ -8,10 +8,6 @@ package allanly;
  */
 // Libraries
 import flixel.FlxG;
-import flixel.group.FlxGroup;
-import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
-import js.html.AbortController;
 
 // Swinging enemies
 class Drone extends Character {
@@ -30,12 +26,10 @@ class Drone extends Character {
     super(x, y);
 
     // Init vars
-    health = 100;
+    health = 1000;
 
     // Images and animations
     loadGraphic(AssetPaths.drone__png, true, 16, 16);
-
-    // Player
   }
 
   // Update
@@ -49,6 +43,7 @@ class Drone extends Character {
   // Move around
   override public function move(elapsed:Float) {
     ignoreGravity = true;
+
     if (FlxG.keys.pressed.LEFT) {
       // Movement
       if (velocity.x > -MOVEMENT_SPEED_MAX) {
@@ -68,7 +63,6 @@ class Drone extends Character {
       // Movement
       if (velocity.x < MOVEMENT_SPEED_MAX) {
         // Less movement acceleration when jumping
-
         acceleration.x = MOVEMENT_SPEED_CHANGE_2 * (MOVEMENT_SPEED_MAX - velocity.x);
       }
       // Stop accelerating when we fast
@@ -79,11 +73,11 @@ class Drone extends Character {
         scale.x *= -1;
       }
     }
+
     if (FlxG.keys.pressed.DOWN) {
       // Movement
       if (velocity.y < MOVEMENT_SPEED_Y_MAX) {
         // Less movement acceleration when jumping
-
         acceleration.y = MOVEMENT_SPEED_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX - velocity.y);
       }
       // Stop accelerating when we fast
@@ -91,6 +85,7 @@ class Drone extends Character {
         acceleration.y = 0;
       }
     }
+
     if (FlxG.keys.pressed.UP) {
       // Movement
       if (velocity.y > -MOVEMENT_SPEED_Y_MAX) {
@@ -119,6 +114,7 @@ class Drone extends Character {
         acceleration.x = MOVEMENT_SPEED_CHANGE_2 * MOVEMENT_SPEED_DECELERATION_CHANGE_2 * (MOVEMENT_SPEED_MAX - velocity.x);
       }
     }
+
     if (!FlxG.keys.pressed.UP && !FlxG.keys.pressed.DOWN) {
       // Stopped
       if (velocity.y < 5 && velocity.y > -5) {
@@ -134,14 +130,15 @@ class Drone extends Character {
         acceleration.y = MOVEMENT_SPEED_CHANGE_2 * MOVEMENT_SPEED_DECELERATION_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX - velocity.y);
       }
     }
+
     super.move(elapsed);
   }
 
   // Kill
   override public function kill() {
-    healthBar.kill();
-    arm.kill();
     super.kill();
+    alive = false;
+    exists = false;
   }
 
   public function getBow():Bow {

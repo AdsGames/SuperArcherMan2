@@ -4,6 +4,7 @@ package;
 import allanly.Arrow;
 import allanly.Background;
 import allanly.Bow;
+import allanly.BowBasic;
 import allanly.Character;
 import allanly.Cloud;
 import allanly.Crank;
@@ -20,6 +21,7 @@ import allanly.Player;
 import allanly.Spawn;
 import allanly.StuckArrow;
 import allanly.Sword;
+import allanly.Team;
 import allanly.Throne;
 import allanly.Tools;
 import allanly.Torch;
@@ -133,19 +135,15 @@ class PlayState extends FlxState {
   // HINT: THIS UPDATES
   // THANKS TIPS
   override public function update(elapsed:Float) {
-    // trace("kill me right now"); // Move power text to mouse
     powerText.x = FlxG.mouse.x + 15;
     powerText.y = FlxG.mouse.y;
 
-    var bow = Std.downcast(jim.getArm(), Bow);
     var isDrone = jim.getDrone() != null;
-    if (isDrone)
-      bow = jim.getDrone().getBow();
-    if (bow != null) {
-      if (isDrone)
-        powerText.text = "" + bow.getPower() + "%" + " Arrows: " + jim.getDroneAmmo();
-      else
-        powerText.text = "" + bow.getPower() + "%";
+    if (isDrone) {
+      powerText.text = "Arrows: " + jim.getDroneAmmo();
+    }
+    else {
+      powerText.text = "";
     }
 
     enemies.forEachDead(function(enemy) {
@@ -160,13 +158,9 @@ class PlayState extends FlxState {
     // Collide everybuddy
     FlxG.collide(enemies, levelCollide);
     FlxG.collide(jim, levelCollide);
-    if (jim.getDrone() != null)
+    if (jim.getDrone() != null) {
       FlxG.collide(jim.getDrone(), levelCollide);
-
-    if (jim.getDrone() != null)
-      FlxG.overlap(jim, jim.getDrone(), function collideDrone(player:Character, drone:Drone) {
-        jim.pickupDrone();
-      });
+    }
 
     // Arrow vs door
     FlxG.overlap(Character.getArrows(), doors, function hitDoorArrow(arrow:Arrow, door:Door) {
@@ -187,7 +181,7 @@ class PlayState extends FlxState {
 
     // kill "friends"
     FlxG.overlap(Character.getArrows(), enemies, function hitEnemy(arrow:Arrow, enemy:Enemy) {
-      if (arrow.getTeam() == 0 && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
+      if (arrow.getTeam() == Team.PLAYER && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive && enemy.alive) {
         var angleBetween = FlxAngle.angleBetween(arrow, enemy, true);
         var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
         enemy.takeDamage(Math.abs(totalVelocity), angleBetween);
@@ -201,7 +195,7 @@ class PlayState extends FlxState {
 
     // Arrow vs jim
     FlxG.overlap(Character.getArrows(), jim, function(arrow:Arrow, player:Player) {
-      if (arrow.getTeam() == 1 && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
+      if (arrow.getTeam() == Team.ENEMY && arrow.velocity.x != 0 && arrow.velocity.y != 0 && arrow.alive) {
         var angleBetween = FlxAngle.angleBetween(arrow, player, true);
         var totalVelocity = VelocityHelpers.getTotalVelocity(arrow.velocity);
         player.takeDamage(Math.abs(totalVelocity), angleBetween);
@@ -400,13 +394,8 @@ class PlayState extends FlxState {
         // Add player
         jim = new Player(0, 0);
         jim.setPosition(obj.x, obj.y);
-        jim.pickupArm(new Bow(600.0, 1.0, 100.0));
+        jim.pickupArm(new BowBasic(600.0, 0.6, 100.0, Team.PLAYER));
         add(jim);
-
-        // drone = new Drone(jim); // Load map :D
-        //                                   ^ turn that frown upside down
-
-        // add(drone); // Add ur bum
 
         gameSpawn = new Spawn(obj.x, obj.y, obj.width, obj.height);
         add(gameSpawn);
@@ -424,7 +413,7 @@ class PlayState extends FlxState {
         return;
       case "enemy_bow":
         var enemy = new EnemyArcher(jim, obj.name, obj.x, obj.y);
-        enemy.pickupArm(new Bow(1000.0, 1.0, 100.0));
+        enemy.pickupArm(new BowBasic(1000.0, 1.0, 100.0, Team.ENEMY));
         enemies.add(enemy);
         add(enemy);
         return;
