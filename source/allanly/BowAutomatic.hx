@@ -14,10 +14,10 @@ class BowAutomatic extends Bow {
   public function new(maxPower:Float, chargeTime:Float, minPower:Float, team:Team) {
     super(maxPower, chargeTime, minPower, team);
 
-    loadGraphic(AssetPaths.bow_arm__png, true, 47, 24);
+    loadGraphic(AssetPaths.bow_arm_automatic__png, true, 47, 24);
     animation.add("drawback", [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15], 0, false);
     animation.play("drawback");
-    scale.set(0.70, 0.70);
+    scale.set(0.60, 0.60);
 
     name = "Bowtomatic";
 

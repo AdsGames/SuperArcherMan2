@@ -46,11 +46,13 @@ class EnemyArcher extends Enemy {
     bow.setTarget(jimPointer.getPosition());
 
     // Shoot
-    if (bow.getPower() == 0 && detected) {
-      bow.pullBack(1);
-    }
-    if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
-      bow.release();
+    if (alive) {
+      if (bow.getPower() == 0 && detected) {
+        bow.pullBack(1);
+      }
+      if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
+        bow.release();
+      }
     }
 
     // Move sword to self
