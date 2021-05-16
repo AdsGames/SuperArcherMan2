@@ -27,7 +27,7 @@ class EnemyArcher extends Enemy {
     detectDistance = 200;
 
     // Init health
-    health = 2000;
+    health = 1000;
     healthBar.setRange(0, health);
     pickupArm(new BowBasic(1000.0, 1.0, 100.0, Team.ENEMY, 1000));
   }
