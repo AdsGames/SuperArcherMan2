@@ -107,13 +107,22 @@ class Player extends Character {
     // Update bow target
     if (!dead) {
       // Pickup drone
-      if (FlxG.keys.justPressed.G && drone != null) {
-        FlxG.overlap(this, drone, function collideDrone(_, _drone:Drone) {
-          _drone.kill();
-          drone = null;
-          FlxG.camera.follow(this, PLATFORMER, 1);
-          FlxG.camera.zoom = 1;
-        });
+      if (FlxG.keys.justPressed.F) {
+        if (drone != null) {
+          FlxG.overlap(this, drone, function collideDrone(_, _drone:Drone) {
+            _drone.kill();
+            drone = null;
+            FlxG.camera.follow(this, PLATFORMER, 1);
+            FlxG.camera.zoom = 1;
+          });
+        }
+        else {
+          drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
+          drone.pickupArm(new BowBasic(1000, 0.5, 100, Team.PLAYER, DRONE_AMMO));
+          FlxG.state.add(drone);
+          FlxG.camera.follow(drone, LOCKON, 1.3);
+          FlxG.camera.zoom = 1.8;
+        }
       }
 
       var bow = Std.downcast(arm, Bow);
@@ -154,21 +163,8 @@ class Player extends Character {
 
   // Move character (keep out danny)
   // more like keep this rope off my neck
-
   override public function move(elapsed:Float) {
     ignoreGravity = isOnLadder;
-
-    // Move that character
-    // Right
-    if (FlxG.keys.pressed.F) {
-      if (drone == null) {
-        drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
-        drone.pickupArm(new BowBasic(1000, 0.5, 100, Team.PLAYER, DRONE_AMMO));
-        FlxG.state.add(drone);
-        FlxG.camera.follow(drone, LOCKON, 1.3);
-        FlxG.camera.zoom = 1.8;
-      }
-    }
 
     // Switch bow
     if (FlxG.keys.pressed.ONE) {
@@ -293,7 +289,7 @@ class Player extends Character {
   public function win() {
     if (!hasWon) {
       hasWon = true;
-      FlxG.sound.play(AssetPaths.win__mp3);
+      FlxG.sound.play(AssetPaths.win__wav);
       startTimer();
     }
   }
