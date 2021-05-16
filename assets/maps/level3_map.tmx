@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.5" tiledversion="1.6.0" orientation="orthogonal" renderorder="right-down" width="203" height="50" tilewidth="16" tileheight="16" infinite="0" backgroundcolor="#0094fe" nextlayerid="7" nextobjectid="108">
+ <properties>
+  <property name="background" value="assets/images/backdrop_spooky.png"/>
+  <property name="base_offset" value="100"/>
+  <property name="gradient_1" value="#ff333333"/>
+  <property name="gradient_2" value="#ff000000"/>
+  <property name="offset" value="20"/>
+ </properties>
+ <tileset firstgid="1" name="tilemapflat" tilewidth="16" tileheight="16" tilecount="1024" columns="64">
+  <image source="level1_tiles.png" width="1024" height="256"/>
+ </tileset>
+ <layer id="1" name="back" width="203" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2WduE1EUxfGRvRV6J9QF0XuHBdF7ZxNI+YTYADWQ3vjIecIR1mgi2+N5c+97/h/pp4lGiRPfd4/sJEVBCCGEEEIIISRGljtFsSKrsibr8qdj/VMRYpst3aLYKttke/ffvUO6HpYjclSOyfFuvccfp3fTNb8nITFyQvt4Uk7J6d5uXtf1htyUW3Jb7gzY26rOhYzTu9AV+kK85K528Z7clwe9vXyj61t5J+/lwxD7WtW5kDq92whdIZ7yRbv4Vb7J995eLuu6IquyJutD7GtV50Lq9O5j939P6ArJLVWdC6nTO7pCPORztzmjPO6oSakr4fl9aglpJ032JKaQ6b6rdxbzIfFivf91upIKqxmR5mK983SFrqQQ631vqiv9H3tlOScyXqx3vcmupMB6VqRerPecrtAV77He70k5f29d8T4vT7E+p1hnb/1akcrrCn0ZLtbnQ1foSpuZ7RTFnMzLgizKkuzQ898pu2S37CnNw/ps6IqvrqTel0H7HrJX9/bJfjkgB2VKzshZOSfn5ULpa2PO1sOZW+8/XWk3g/Y95KLuXZLLckWuyjV5KI/ksTyRp72vbXKmVefuJdb7n2JXUu7LZvven2e691xeyEt5Ja/lh/yUGfklvxucpfVu5ca6Hzl0pWrfy5nVvTmZlwVZlKXS5zU1R+udypV1P3Lpy6iJOUPrncqVdTdS7krd50NP/Ctn4551P1Lti/Wc6En7/bE+45T6Yj2XzWZlvUeTwPP5e95PL6z3Jxf9Sa0roCtWnaErebLerVj72sZ75qYfD36FWO91jI5YzxX5yakrdAQx5dIV6zkif6l3xXp+mBypdoX3W2hbSl3h93ZYSqEr/L0VHqTQFesZAYGHrvB/O6Sg7a7QCaSs6dcCXieQK/YeAAAAAAAAAHz4CwbDEao=
+  </data>
+ </layer>
+ <layer id="2" name="mid" width="203" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt3FlqwlAAheFLsokOdFxVW+ncLkvt5J5KobXDRnpAHxIo5klS9fvgJz4Y8CEHkQuWAgAAAACsor26lP10UPf9SaA/w6qUUTV7fZfrfTrMJo7S8Xwb57lepMuOrdgU6+w92/iYb+Ul10m6yrN+nW7SbRqmURo3NjDO+x7SY3pKz1V7U1tpO+2k3cZ9zW3CJpjmef9MX+k7/VTtTZ2k03SWBo2tNLcJAAAAAADLMF1w/vnWcTa66F4AAAAAAABYNa91O/63v84znWECAADAcvjNDQAAAAAAAOvNmSDAZvM9ADNd/78IAAAAAADQh18N8iW4
+  </data>
+ </layer>
+ <layer id="3" name="collide" width="203" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt3EFuwjAQRmGk3P9QpYKG7tuucpdilUiWFaMA9nj+6fskLyulZV5DgsPhgNbeptFHAGigFWAfWgH2oRVgH1oBts3XNi639UEnQNUx6+OTVoBN5+lvrWgF2IdWMMpynb2vF9e34fzSCizlfbTyam+1NRfHmF/nP7reDRYtx/Ij9HqureTz6Bn36fT1OJdYKM8r3tGKtkX49aMVWFHuJJknnfdfCa1oUu8k4byCnhbB65IaWkEvEc4luZPRvd5W94ZpRUO0TpKz2O9EK/5F7CTx3kq5X41WfIvaSeK9lRKt+NWqk/X/Y7lG83AMj6AVn1p0cq+LWj/Wy7v8MyBa8aXVPWGFOfTuVPwNaWWcrT3zLdBJH7TyvL17z2s/1wOdtHPhvGIq7ZHfWj3QSRvlPjWuV2Khk/5oRR+d2KAVbXTSRv6+q4ZWdNFJe6mV2jP9tKIraiv3Prv0uP8Y/kVrRenzfGiJNFM0gp4izBbnElhQni8agSXFOaMRjKA0bzSCkRTmjkbggef5oxF44mEOlZ95xP9hOY80AWXPzmnUZ+OBmsjfCQEAAAAAAAAAan4BCm9EKw==
+  </data>
+ </layer>
+ <layer id="4" name="front" width="203" height="50">
+  <data encoding="base64" compression="zlib">
+   eJzt2rlOQlEYhdE/3OcBlR7eyAF7fSMHqByib8RYKUTD7m9CQwwY1kq+6uYkpzi7u1UAAAAAwKkYNFXD5tC3gL/3knf+usdbv8vZe1vhBHzlnX/v8dY/cvZzx/m3fHu3Jaif7OB3xxbW+baxFQAAAAAAAACAozHtVM3SPC3SMq06h74VHJ9uU9VLZ+k8XaS+f6Gg5TK7uErX6SaN0q2tQMtDdvGYntJzGqeJrUDLNLuYpXlapGVa2QoAAAAAAAAAAAAAAAAAAAAAAAAAwL+yBXtUH04=
+  </data>
+ </layer>
+ <objectgroup id="5" name="objects">
+  <object id="2" type="player" x="5.45455" y="369.091" width="58.6987" height="31.1837"/>
+  <object id="46" name="enemy_1" type="enemy_bow" x="1312" y="64" width="7.81818" height="3.81818"/>
+  <object id="58" name="enemy_1" type="enemy" x="1968" y="320" width="7.81818" height="3.81818"/>
+  <object id="59" name="enemy_1" type="enemy_bow" x="1904" y="448" width="7.81818" height="3.81818"/>
+  <object id="60" name="enemy_3" type="enemy_bow" x="1504" y="464" width="7.81818" height="3.81818"/>
+  <object id="65" name="enemy_1" type="enemy_bow" x="640" y="112" width="7.81818" height="3.81818"/>
+  <object id="67" type="enemy_bow" x="2352" y="368" width="16" height="32"/>
+  <object id="73" type="door" x="1280" y="128" width="16" height="32"/>
+  <object id="74" type="enemy_bow" x="2432" y="320" width="16" height="32"/>
+  <object id="75" type="enemy_bow" x="2384" y="352" width="16" height="32"/>
+  <object id="76" type="door" x="2792" y="288" width="8" height="32"/>
+  <object id="77" type="ladder" x="2752" y="208" width="16" height="112"/>
+  <object id="78" type="door" x="2720" y="288" width="8" height="32"/>
+  <object id="79" type="enemy_bow" x="2768" y="192" width="16" height="32"/>
+  <object id="80" type="enemy_bow" x="2736" y="192" width="16" height="32"/>
+  <object id="81" type="crown" x="2768" y="288" width="16" height="32"/>
+  <object id="84" name="tirefire" type="tirefire" x="1136" y="128" width="7.81818" height="3.81818"/>
+  <object id="89" name="campfire" type="campfire" x="848" y="128" width="7.81818" height="3.81818"/>
+  <object id="91" name="enemy_1" type="enemy_bow" x="1328" y="64" width="7.81818" height="3.81818"/>
+  <object id="92" name="enemy_2" type="enemy" x="1408" y="240" width="7.81818" height="3.81818"/>
+  <object id="93" name="enemy_2" type="enemy" x="1440" y="240" width="7.81818" height="3.81818"/>
+  <object id="94" name="enemy_2" type="enemy" x="1488" y="240" width="7.81818" height="3.81818"/>
+  <object id="95" name="enemy_2" type="enemy" x="1568" y="240" width="7.81818" height="3.81818"/>
+  <object id="98" name="enemy_3" type="enemy_bow" x="1440" y="464" width="7.81818" height="3.81818"/>
+  <object id="99" name="enemy_3" type="enemy_bow" x="1584" y="464" width="7.81818" height="3.81818"/>
+  <object id="100" name="enemy_3" type="enemy" x="1680" y="464" width="7.81818" height="3.81818"/>
+  <object id="101" type="crown" x="544" y="656" width="16" height="32"/>
+  <object id="102" name="enemy_4" type="enemy" x="576" y="656" width="7.81818" height="3.81818"/>
+  <object id="103" name="enemy_4" type="enemy" x="608" y="656" width="7.81818" height="3.81818"/>
+  <object id="104" name="enemy_4" type="enemy" x="656" y="656" width="7.81818" height="3.81818"/>
+  <object id="105" name="enemy_1" type="enemy_bow" x="1008" y="128" width="7.81818" height="3.81818"/>
+  <object id="106" name="enemy_1" type="enemy_bow" x="1024" y="128" width="7.81818" height="3.81818"/>
+  <object id="107" name="enemy_1" type="enemy_bow" x="1952" y="384" width="7.81818" height="3.81818"/>
+ </objectgroup>
+ <objectgroup id="6" name="nodes">
+  <object id="47" name="patrol" x="1376" y="272">
+   <properties>
+    <property name="enemy_name" value="enemy_2"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="48" name="patrol" x="1406" y="496">
+   <properties>
+    <property name="enemy_name" value="enemy_3"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="96" name="patrol" x="1888" y="272">
+   <properties>
+    <property name="enemy_name" value="enemy_2"/>
+   </properties>
+   <point/>
+  </object>
+  <object id="97" name="patrol" x="1808" y="496">
+   <properties>
+    <property name="enemy_name" value="enemy_3"/>
+   </properties>
+   <point/>
+  </object>
+ </objectgroup>
+</map>

@@ -28,8 +28,8 @@ class Campfire extends FlxSprite {
     trailEmitter.scale.set(1, 1, 1, 1, 0, 0, 0, 0);
     trailEmitter.launchMode = FlxEmitterMode.CIRCLE;
     trailEmitter.speed.set(5, 5);
-    trailEmitter.acceleration.set(0, -25);
-    trailEmitter.lifespan.set(3);
+    trailEmitter.acceleration.set(0, -25, 4);
+    trailEmitter.lifespan.set(10);
     trailEmitter.start(false, 0.1, 0);
     FlxG.state.add(trailEmitter);
     trailEmitter.emitting = true;
