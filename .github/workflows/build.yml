@@ -35,7 +35,7 @@ jobs:
           BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
           ITCH_GAME: super-archer-man-2
           ITCH_USER: ads-games
-          CHANNEL: web
+          CHANNEL: HTML5 / Playable in browser
           PACKAGE: export/html5/bin
 
 
