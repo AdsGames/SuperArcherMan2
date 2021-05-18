@@ -6,9 +6,6 @@ package allanly;
  * This is the enemy, the archnemeis of our hero JIM!
  * 1/6/2015
  */
-// Libraries
-import flixel.math.FlxRandom;
-
 // Swinging enemies
 class EnemyArcher extends Enemy {
   // Create enemy
@@ -34,8 +31,6 @@ class EnemyArcher extends Enemy {
 
   // Update
   override public function update(elapsed:Float) {
-    var bow = Std.downcast(arm, Bow);
-
     super.update(elapsed);
 
     // Move enemy
@@ -50,7 +45,7 @@ class EnemyArcher extends Enemy {
       if (bow.getPower() == 0 && detected) {
         bow.pullBack();
       }
-      if (bow.getPower() > 70 && (new FlxRandom()).bool(10)) {
+      if (bow.getPower() > 70 && Tools.randomChance(10)) {
         bow.release();
       }
     }

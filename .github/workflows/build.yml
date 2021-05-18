@@ -18,6 +18,13 @@ jobs:
         with:
           haxe-version: 4.1.5
 
+      - name: Cache Haxe Libs
+        id: cache-primes
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/lib/haxe/lib/
+          key: ${{ runner.os }}-haxe-libs
+
       - name: Setup Haxe Libs
         run: |
           haxelib install lime --quiet
@@ -28,7 +35,18 @@ jobs:
       - name: Build project
         run: haxelib run lime build html5
 
-      - name: Deploy 🚀
+
+      - name: Deploy to Itch.io 🚀
+        uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_GAME: super-archer-man-2
+          ITCH_USER: ads-games
+          CHANNEL: HTML5
+          PACKAGE: export/html5/bin
+
+
+      - name: Deploy to Pages 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
         with:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

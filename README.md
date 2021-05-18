@@ -28,4 +28,4 @@ For better development download the LIME plugin for vscode.
 
 ## Demo
 
-Code is built and automatically deployed [here](https://adsgames.github.io/SuperArcherMan/)!
+Code is built and automatically deployed [here](https://adsgames.github.io/SuperArcherMan2/)!
