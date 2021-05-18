@@ -21,4 +21,10 @@ class Tools {
     var n:Int = Math.round(min + Math.random() * (max - min));
     return n;
   }
+
+  // Random chance
+  public static function randomChance(chance:Int):Bool {
+    var n:Int = Math.round(Math.random() * (100));
+    return n <= chance;
+  }
 }

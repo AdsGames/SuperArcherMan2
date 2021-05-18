@@ -4,19 +4,15 @@ package;
 import allanly.Arrow;
 import allanly.ArrowUi;
 import allanly.Background;
-import allanly.BowBasic;
 import allanly.Campfire;
 import allanly.Character;
 import allanly.Cloud;
-import allanly.Crank;
 import allanly.Crown;
 import allanly.Door;
-import allanly.Drawbridge;
 import allanly.Enemy;
 import allanly.EnemyArcher;
 import allanly.EnemySword;
 import allanly.Ladder;
-import allanly.Painting;
 import allanly.Player;
 import allanly.Spawn;
 import allanly.StuckArrow;
@@ -37,7 +33,6 @@ import flixel.addons.editors.tiled.TiledTileLayer;
 import flixel.group.FlxGroup;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
-import flixel.text.FlxText;
 import flixel.tile.FlxTilemap;
 import helpers.VelocityHelpers;
 
@@ -57,10 +52,6 @@ class PlayState extends FlxState {
 
   // Hold doors
   private var doors:FlxTypedGroup<Door>;
-
-  // Cranks/drawbridges
-  private var gameCrank:Crank;
-  private var gameDrawbridge:Drawbridge;
 
   // Crown
   private var gameCrown:Crown;
@@ -104,9 +95,7 @@ class PlayState extends FlxState {
     doors = new FlxTypedGroup<Door>();
 
     // Create location for pointer so no crashing
-    gameCrank = new Crank(-100, -100);
     gameCrown = new Crown(-100, -100);
-    gameDrawbridge = new Drawbridge(-100, -100, 0, 0);
     gameSpawn = new Spawn(-100, -100, 0, 0);
 
     loadMap(levelOn);
@@ -200,11 +189,6 @@ class PlayState extends FlxState {
         door.hitDoor(player.velocity.x);
       });
 
-    // Run into draw bridge
-    FlxG.collide(jim, gameDrawbridge);
-    if (jim.getDrone() != null)
-      FlxG.collide(jim.getDrone(), gameDrawbridge);
-
     FlxG.overlap(jim, doors, function collideDoor(player:Character, door:Door) {
       door.hitDoor(player.velocity.x);
     });
@@ -213,20 +197,9 @@ class PlayState extends FlxState {
       door.hitDoor(player.velocity.x);
     });
 
-    // Run into draw bridge
-    FlxG.collide(jim, gameDrawbridge);
-    FlxG.collide(enemies, gameDrawbridge);
-    FlxG.collide(Character.getArrows(), gameDrawbridge);
-
     // Win!
     if (FlxG.overlap(jim, gameSpawn) && gameCrown.isTaken()) {
       jim.win();
-    }
-
-    // The drawbridge + crank
-    if (FlxG.overlap(gameCrank, Character.getArrows()) && !gameCrank.getActivated()) {
-      gameDrawbridge.fall();
-      gameCrank.spin();
     }
 
     // Crown
@@ -297,8 +270,11 @@ class PlayState extends FlxState {
     }
 
     levelFront = new FlxTilemap();
+    levelFront.allowCollisions = 0;
     levelMid = new FlxTilemap();
+    levelMid.allowCollisions = 0;
     levelBack = new FlxTilemap();
+    levelBack.allowCollisions = 0;
     levelCollide = new FlxTilemap();
 
     add(levelBack);
@@ -424,9 +400,6 @@ class PlayState extends FlxState {
         gameCrown.setPosition(obj.x, obj.y);
         add(gameCrown);
         return;
-      case "painting":
-        add(new Painting(obj.x, obj.y));
-        return;
       case "tirefire":
         add(new Tirefire(obj.x, obj.y));
         return;
@@ -435,14 +408,6 @@ class PlayState extends FlxState {
         return;
       case "throne":
         add(new Throne(obj.x, obj.y));
-        return;
-      case "drawBridge":
-        gameDrawbridge = new Drawbridge(obj.x, obj.y, obj.width, obj.height);
-        add(gameDrawbridge);
-        return;
-      case "crank":
-        gameCrank.setPosition(obj.x, obj.y);
-        add(gameCrank);
         return;
       case "water":
         // var water = new Water(obj.x, obj.y, obj.width, obj.height);

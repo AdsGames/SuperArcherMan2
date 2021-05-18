@@ -1,7 +1,7 @@
 name: Build Haxe Project
 
 on:
-  pull_request:
+  push:
     branches: 
       - main
 
@@ -17,6 +17,13 @@ jobs:
         uses: krdlab/setup-haxe@v1
         with:
           haxe-version: 4.1.5
+
+      - name: Cache Haxe Libs
+        id: cache-primes
+        uses: actions/cache@v2
+        with:
+          path: /usr/local/lib/haxe/lib/
+          key: ${{ runner.os }}-haxe-libs
 
       - name: Setup Haxe Libs
         run: |

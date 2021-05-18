@@ -86,8 +86,8 @@ class Player extends Character {
     bows = [
       new BowBasic(600.0, 0.6, 100.0, Team.PLAYER, 1000),
       new BowTriple(600, 1, 100, Team.PLAYER, 20),
-      new BowAutomatic(400, 0.02, 100, Team.PLAYER, 100),
-      new BowShotgun(400, 2, 20, Team.PLAYER, 10)
+      new BowAutomatic(400, 0.04, 100, Team.PLAYER, 50),
+      new BowShotgun(400, 1.8, 20, Team.PLAYER, 10)
     ];
 
     pickupArm(bows[0]);

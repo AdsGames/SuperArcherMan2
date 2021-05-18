@@ -58,13 +58,13 @@ class Arrow extends FlxSprite {
     }
 
     // Create emitter
-    trailEmitter = new FlxEmitter(5, 5, 100);
-    trailEmitter.loadParticles(AssetPaths.particle_star__png, 100);
+    trailEmitter = new FlxEmitter(5, 5, 10);
+    trailEmitter.loadParticles(AssetPaths.particle_star__png, 10);
     trailEmitter.scale.set(0.6, 0.6, 0.6, 0.6, 0, 0, 0, 0);
     trailEmitter.launchMode = FlxEmitterMode.CIRCLE;
     trailEmitter.speed.set(0.01, 0);
     trailEmitter.lifespan.set(0.6);
-    trailEmitter.start(false, 0.07, 0);
+    trailEmitter.start(false, 0.1, 0);
     FlxG.state.add(trailEmitter);
 
     // Load sounds

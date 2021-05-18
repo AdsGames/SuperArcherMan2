@@ -12,6 +12,7 @@ import flixel.effects.particles.FlxEmitter;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
 import flixel.system.FlxSound;
+import flixel.util.FlxColor;
 import flixel.util.FlxTimer;
 
 class Bow extends Arm {
@@ -27,12 +28,15 @@ class Bow extends Arm {
   private var team:Team;
 
   private var bowReleaseSound:FlxSound;
+
   private var charge1:FlxSound;
   private var charge2:FlxSound;
   private var charge3:FlxSound;
 
   // Emitter for charge VFX
   private var trailEmitter:FlxEmitter;
+
+  // Ammo count
   private var ammo:Int;
 
   // Create bow
@@ -63,28 +67,29 @@ class Bow extends Arm {
     charge3.loadEmbedded(AssetPaths.charge3__wav);
 
     // Create emitter
-    trailEmitter = new FlxEmitter(5, 5, 100);
-    trailEmitter.loadParticles(AssetPaths.particle_star__png, 100);
+    trailEmitter = new FlxEmitter(x, y, 30);
+    trailEmitter.loadParticles(AssetPaths.particle_star__png, 30);
     trailEmitter.scale.set(0.6, 0.6, 0.6, 0.6, 0, 0, 0, 0);
     trailEmitter.launchMode = FlxEmitterMode.CIRCLE;
     trailEmitter.speed.set(20, 20);
     trailEmitter.lifespan.set(0.6);
     trailEmitter.start(false, 0.01, 0);
-    FlxG.state.add(trailEmitter);
     trailEmitter.emitting = false;
+    FlxG.state.add(trailEmitter);
 
     // Default target
     target = new FlxPoint(0, 0);
   }
 
   override public function kill() {
-    trailEmitter.kill();
     stopSound();
+    power = 0;
+    powerTimer.cancel();
+    trailEmitter.emitting = false;
     super.kill();
   }
 
   override public function revive() {
-    trailEmitter.revive();
     super.revive();
   }
 
@@ -93,6 +98,9 @@ class Bow extends Arm {
     super.update(elapsed);
 
     trailEmitter.setPosition(x + width / 2, y + height / 2);
+
+    // Frame for bow power state
+    animation.frameIndex = Std.int((power / maxPower) * 15);
 
     // Rotate
     angle = FlxAngle.angleBetweenPoint(this, target, true) + 90;
@@ -106,9 +114,6 @@ class Bow extends Arm {
   // Ticker for bow power
   private function powerTicker(timer:FlxTimer) {
     power += maxPower * (timer.elapsedTime / chargeTime);
-
-    // Frame for bow power state
-    animation.frameIndex = Std.int((power / maxPower) * 15);
 
     // VFX for charge stats
     if (this.team == Team.PLAYER) {
