@@ -4,6 +4,8 @@ on:
   push:
     branches: 
       - main
+    tags:
+      - v*
 
 jobs:
   build:
@@ -34,17 +36,10 @@ jobs:
 
       - name: Build project
         run: haxelib run lime build html5
-
-
-      - name: Deploy to Itch.io 🚀
-        uses: josephbmanley/butler-publish-itchio-action@master
-        env:
-          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
-          ITCH_GAME: super-archer-man-2
-          ITCH_USER: ads-games
-          CHANNEL: HTML5
-          PACKAGE: export/html5/bin
-
+      
+      - name: Get the version
+        id: get_version
+        run: echo ::set-output name=VERSION::$(echo $GITHUB_REF | cut -d / -f 3)
 
       - name: Deploy to Pages 🚀
         uses: JamesIves/github-pages-deploy-action@3.7.1
@@ -53,3 +48,26 @@ jobs:
           BRANCH: gh-pages
           FOLDER: export/html5/bin
           SINGLE_COMMIT: true
+          
+      - name: Deploy to Itch.io 🚀
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: josephbmanley/butler-publish-itchio-action@master
+        env:
+          BUTLER_CREDENTIALS: ${{ secrets.BUTLER_API_KEY }}
+          ITCH_GAME: super-archer-man-2
+          ITCH_USER: ads-games
+          CHANNEL: HTML5
+          PACKAGE: export/html5/bin
+          VERSION: ${{ steps.get_version.outputs.VERSION }}
+
+      - name: Deploy to A.D.S. Games
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: adsgames/deploy-to-adsgames@main
+        with:
+          project-id: superarcherman2
+          version: ${{ steps.get_version.outputs.VERSION }}
+          build-dir: export/html5/bin
+          platform: WEB
+          bucket-access-key: ${{ secrets.LINODE_BUCKET_ACCESS_KEY }}
+          bucket-secret-key: ${{ secrets.LINODE_BUCKET_SECRET_KEY }}
+          api-key: ${{ secrets.ADSGAMES_API_KEY }}
