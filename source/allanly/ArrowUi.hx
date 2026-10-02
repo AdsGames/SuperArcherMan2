@@ -9,7 +9,8 @@ package allanly;
 // Imports
 import flixel.FlxG;
 import flixel.FlxSprite;
-import flixel.text.FlxText;
+import flixel.text.FlxBitmapText;
+import ui.PixelText;
 
 class ArrowUi extends FlxSprite {
   // Variables
@@ -17,9 +18,12 @@ class ArrowUi extends FlxSprite {
 
   private var bowTiles:Array<FlxSprite>;
 
-  // Power text
-  private var powerText:FlxText;
-  private var bowText:FlxText;
+  // Ammo and bow name text
+  private var ammoText:FlxBitmapText;
+  private var bowText:FlxBitmapText;
+
+  // Shows the aim point when aiming with a gamepad, as there is no mouse cursor
+  private var crosshair:FlxSprite;
   private var jimPointer:Player;
 
   // Create bow
@@ -34,12 +38,15 @@ class ArrowUi extends FlxSprite {
     bowTiles.push(new FlxSprite(0, 0, AssetPaths.bow_automatic_ui__png));
     bowTiles.push(new FlxSprite(0, 0, AssetPaths.bow_shotgun_ui__png));
 
-    // Power text
-    powerText = new FlxText(0, 0, 0, "");
-    FlxG.state.add(powerText);
-
-    bowText = new FlxText(10, 10, 0, "");
+    bowText = PixelText.create("", 10, 10, 2);
     FlxG.state.add(bowText);
+
+    ammoText = PixelText.create("", 10, 10, 2);
+    FlxG.state.add(ammoText);
+
+    crosshair = new FlxSprite(0, 0, AssetPaths.cursor__png);
+    crosshair.visible = false;
+    FlxG.state.add(crosshair);
 
     visible = false;
 
@@ -68,13 +75,17 @@ class ArrowUi extends FlxSprite {
       index += 1;
     }
 
-    powerText.x = FlxG.mouse.x + 15;
-    powerText.y = FlxG.mouse.y;
-    powerText.text = "Arrows: " + jimPointer.getAmmo();
-
     bowText.x = FlxG.camera.scroll.x + 10;
     bowText.y = FlxG.camera.scroll.y + 62;
     bowText.text = jimPointer.getArm().getName();
+
+    ammoText.x = FlxG.camera.scroll.x + 10;
+    ammoText.y = FlxG.camera.scroll.y + 80;
+    ammoText.text = "Arrows: " + jimPointer.getAmmo();
+
+    // Runs after the player has updated this frame's aim
+    crosshair.visible = Controls.gamepadAim;
+    crosshair.setPosition(Controls.aim.x - crosshair.width / 2, Controls.aim.y - crosshair.height / 2);
   }
 
   public static function setBow(bow:Int) {

@@ -33,7 +33,7 @@ class BowShotgun extends Bow {
     // Min velocity
     if (power > minPower) {
       for (_ in 0...10) {
-        Character.arrowContainer.add(new Arrow(this, x + origin.x, y + origin.y, angle + Tools.myRandom(-10, 10), power, team));
+        Arrow.fire(this, x + origin.x, y + origin.y, angle + Tools.myRandom(-10, 10), power, team);
       }
 
       bowReleaseSound.play();

@@ -10,7 +10,7 @@ import flixel.FlxG;
 import flixel.FlxSprite;
 import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.ui.FlxBar;
 import flixel.util.FlxColor;
 
@@ -66,7 +66,7 @@ class Character extends FlxSprite {
 
     // Hit sound
     hitSound = new FlxSound();
-    hitSound.loadEmbedded(AssetPaths.flesh_hit__mp3);
+    hitSound.load(AssetPaths.flesh_hit__mp3);
 
     // Gravity
     acceleration.y = GRAVITY;
@@ -117,15 +117,6 @@ class Character extends FlxSprite {
   // Get arrows
   public static function getArrows():FlxTypedGroup<Arrow> {
     return arrowContainer;
-  }
-
-  // Clean up arrows
-  public static function cleanUpArrows() {
-    arrowContainer.forEachDead(function(arrow) {
-      if (arrow.exists == false) {
-        arrowContainer.remove(arrow);
-      }
-    });
   }
 
   // On hit
@@ -193,7 +184,7 @@ class Character extends FlxSprite {
         acceleration.x = movementSpeedChange * (movementSpeedMax - velocity.x);
       }
       else {
-        acceleration.x = movementSpeedChange * MOVEMENT_SPEED_JUMPING_CHANGE * (movementSpeedMax + velocity.x);
+        acceleration.x = movementSpeedChange * MOVEMENT_SPEED_JUMPING_CHANGE * (movementSpeedMax - velocity.x);
       }
     }
     // Stop accelerating when we fast

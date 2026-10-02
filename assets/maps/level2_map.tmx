@@ -4,7 +4,7 @@
   <property name="background" value="assets/images/mountains.png"/>
   <property name="base_offset" value="100"/>
   <property name="gradient_1" value="#75b8fa"/>
-  <property name="gradient_2" value="# cddcfa"/>
+  <property name="gradient_2" value="#cddcfa"/>
   <property name="offset" value="20"/>
  </properties>
  <tileset firstgid="1" name="tilemapflat" tilewidth="16" tileheight="16" tilecount="1024" columns="64">

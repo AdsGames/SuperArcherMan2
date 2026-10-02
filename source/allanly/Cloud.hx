@@ -27,5 +27,12 @@ class Cloud extends FlxSprite {
     // Update parent
     super.update(elapsed);
     setPosition(x, FlxG.camera.y + 10);
+
+    // Drifted past the level, remove
+    if (x > FlxG.worldBounds.right) {
+      kill();
+      FlxG.state.remove(this);
+      destroy();
+    }
   }
 }

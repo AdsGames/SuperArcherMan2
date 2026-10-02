@@ -7,8 +7,9 @@ package allanly;
  * 1/6/2015
  */
 // Libraries
+import flixel.FlxG;
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 
@@ -66,13 +67,13 @@ class Enemy extends Character {
 
     // Load sounds
     heySound = new FlxSound();
-    heySound.loadEmbedded(AssetPaths.enemy_hey__mp3);
+    heySound.load(AssetPaths.enemy_hey__mp3);
     hitSound1 = new FlxSound();
-    hitSound1.loadEmbedded(AssetPaths.enemy_ugh__wav);
+    hitSound1.load(AssetPaths.enemy_ugh__wav);
     hitSound2 = new FlxSound();
-    hitSound2.loadEmbedded(AssetPaths.enemy_hu__wav);
+    hitSound2.load(AssetPaths.enemy_hu__wav);
     hitSound3 = new FlxSound();
-    hitSound3.loadEmbedded(AssetPaths.enemy_oof__wav);
+    hitSound3.load(AssetPaths.enemy_oof__wav);
 
     // Patrol array
     patrolPoints = new Array<FlxPoint>();
@@ -89,7 +90,7 @@ class Enemy extends Character {
     move(elapsed);
 
     // Die
-    if (health <= 0) {
+    if (health <= 0 && alive) {
       kill();
     }
   }
@@ -116,12 +117,20 @@ class Enemy extends Character {
 
   function finishKill(_) {
     exists = false;
+
+    // Fade is done, drop everything we added to the state
+    FlxG.state.remove(arm);
+    FlxG.state.remove(healthBar);
+    FlxG.state.remove(bloodEmitter);
+    FlxG.state.remove(this);
   }
 
   // Move around
   override public function move(elapsed:Float) {
     // Detection
-    var distance = Tools.getDistance(new FlxPoint(x, y), new FlxPoint(jimPointer.x, jimPointer.y));
+    var dx = jimPointer.x - x;
+    var dy = jimPointer.y - y;
+    var distance = Math.sqrt(dx * dx + dy * dy);
     if (!detected && distance < detectDistance && health > 0) {
       detectPlayer();
     }

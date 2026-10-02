@@ -35,6 +35,8 @@ class StuckArrow extends FlxSprite {
 
     if (parent == null || !parent.alive) {
       kill();
+      FlxG.state.remove(this);
+      destroy();
     }
     else {
       setPosition(parent.x + offsetX, parent.y + offsetY);

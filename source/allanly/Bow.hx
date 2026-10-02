@@ -11,9 +11,7 @@ import flixel.FlxG;
 import flixel.effects.particles.FlxEmitter;
 import flixel.math.FlxAngle;
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
-import flixel.util.FlxColor;
-import flixel.util.FlxTimer;
+import flixel.sound.FlxSound;
 
 class Bow extends Arm {
   // Variables
@@ -22,7 +20,7 @@ class Bow extends Arm {
   private var minPower:Float;
 
   // Variables
-  private var powerTimer:FlxTimer;
+  private var charging:Bool;
   private var power:Float;
   private var target:FlxPoint;
   private var team:Team;
@@ -45,7 +43,7 @@ class Bow extends Arm {
 
     // Init vars
     power = 0;
-    powerTimer = new FlxTimer();
+    charging = false;
 
     // Set max power it can shoot with
     this.maxPower = maxPower;
@@ -57,14 +55,14 @@ class Bow extends Arm {
     name = "Abstract";
 
     bowReleaseSound = new FlxSound();
-    bowReleaseSound.loadEmbedded(AssetPaths.bow_release__wav);
+    bowReleaseSound.load(AssetPaths.bow_release__wav);
 
     charge1 = new FlxSound();
-    charge1.loadEmbedded(AssetPaths.charge1__wav);
+    charge1.load(AssetPaths.charge1__wav);
     charge2 = new FlxSound();
-    charge2.loadEmbedded(AssetPaths.charge2__wav);
+    charge2.load(AssetPaths.charge2__wav);
     charge3 = new FlxSound();
-    charge3.loadEmbedded(AssetPaths.charge3__wav);
+    charge3.load(AssetPaths.charge3__wav);
 
     // Create emitter
     trailEmitter = new FlxEmitter(x, y, 30);
@@ -84,7 +82,7 @@ class Bow extends Arm {
   override public function kill() {
     stopSound();
     power = 0;
-    powerTimer.cancel();
+    charging = false;
     trailEmitter.emitting = false;
     super.kill();
   }
@@ -97,13 +95,20 @@ class Bow extends Arm {
   override public function update(elapsed:Float) {
     super.update(elapsed);
 
+    if (charging) {
+      charge(elapsed);
+    }
+
     trailEmitter.setPosition(x + width / 2, y + height / 2);
 
     // Frame for bow power state
     animation.frameIndex = Std.int((power / maxPower) * 15);
+  }
 
-    // Rotate
+  // Rotate at draw time, the bow updates before its holder sets this frame's position and target
+  override public function draw() {
     angle = FlxAngle.angleBetweenPoint(this, target, true) + 90;
+    super.draw();
   }
 
   // Get power
@@ -111,9 +116,9 @@ class Bow extends Arm {
     return Math.round(power * 100.0 / maxPower);
   }
 
-  // Ticker for bow power
-  private function powerTicker(timer:FlxTimer) {
-    power += maxPower * (timer.elapsedTime / chargeTime);
+  // Build up bow power
+  private function charge(elapsed:Float) {
+    power += maxPower * (elapsed / chargeTime);
 
     // VFX for charge stats
     if (this.team == Team.PLAYER) {
@@ -140,13 +145,13 @@ class Bow extends Arm {
     }
   }
 
-  public function setTarget(point:FlxPoint) {
-    target = point;
+  public function setTarget(x:Float, y:Float) {
+    target.set(x, y);
   }
 
   public function pullBack() {
     if (ammo > 0) {
-      powerTimer.start(0.01, powerTicker, 0);
+      charging = true;
       animation.play("drawback");
     }
     else {
@@ -159,7 +164,11 @@ class Bow extends Arm {
     trailEmitter.emitting = false;
     stopSound();
     power = 0;
-    powerTimer.cancel();
+    charging = false;
+  }
+
+  public function setAmmo(ammo:Int) {
+    this.ammo = ammo;
   }
 
   private function stopSound() {

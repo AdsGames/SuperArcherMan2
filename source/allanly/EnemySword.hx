@@ -8,7 +8,7 @@ package allanly;
  */
 // Libraries
 import flixel.math.FlxPoint;
-import flixel.system.FlxSound;
+import flixel.sound.FlxSound;
 
 // Swinging enemies
 class EnemySword extends Enemy {
@@ -25,11 +25,11 @@ class EnemySword extends Enemy {
     super(jimPointer, name, x, y);
 
     chainSaw = new FlxSound();
-    chainSaw.loadEmbedded(AssetPaths.chainSaw__wav);
+    chainSaw.load(AssetPaths.chainSaw__wav);
     chainSaw2 = new FlxSound();
-    chainSaw2.loadEmbedded(AssetPaths.chainSaw2__wav);
+    chainSaw2.load(AssetPaths.chainSaw2__wav);
     woosh = new FlxSound();
-    woosh.loadEmbedded(AssetPaths.woosh__wav);
+    woosh.load(AssetPaths.woosh__wav);
 
     // Images and animations
     loadGraphic(AssetPaths.enemy__png, true, 14, 30);
@@ -82,9 +82,6 @@ class EnemySword extends Enemy {
       chainSawCount = 0;
     }
     chainSawCount++;
-
-    // Move enemy
-    move(elapsed);
   }
 
   override public function detectPlayer() {

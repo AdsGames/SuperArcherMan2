@@ -26,19 +26,16 @@ class EnemyArcher extends Enemy {
     // Init health
     health = 1000;
     healthBar.setRange(0, health);
-    pickupArm(new BowBasic(1000.0, 1.0, 100.0, Team.ENEMY, 1000));
+    pickupArm(new BowBasic(1000.0, 5.0, 100.0, Team.ENEMY, 1000));
   }
 
   // Update
   override public function update(elapsed:Float) {
     super.update(elapsed);
 
-    // Move enemy
-    move(elapsed);
-
     // Downcast sword
     var bow = Std.downcast(arm, Bow);
-    bow.setTarget(jimPointer.getPosition());
+    bow.setTarget(jimPointer.x, jimPointer.y);
 
     // Shoot
     if (alive) {

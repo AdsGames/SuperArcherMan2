@@ -8,14 +8,17 @@ package allanly;
  */
 // Imports
 import flixel.FlxG;
-import flixel.math.FlxPoint;
 import flixel.util.FlxTimer;
 
 class Player extends Character {
   // Timers
   private var counter:Int;
 
+  // Active drone (null when not deployed)
   private var drone:Drone;
+
+  // Drone instance, reused between deployments
+  private var dronePool:Drone;
 
   // Variables
   private var isOnLadder:Bool;
@@ -38,6 +41,7 @@ class Player extends Character {
 
     // Default values
     counter = 0;
+    currentBow = 0;
     movementSpeedMax = 200;
 
     // Variables
@@ -84,10 +88,10 @@ class Player extends Character {
     }
 
     bows = [
-      new BowBasic(600.0, 0.6, 100.0, Team.PLAYER, 1000),
-      new BowTriple(600, 1, 100, Team.PLAYER, 20),
-      new BowAutomatic(400, 0.04, 100, Team.PLAYER, 50),
-      new BowShotgun(400, 1.8, 20, Team.PLAYER, 10)
+      new BowBasic(600.0, 3.0, 100.0, Team.PLAYER, 1000),
+      new BowTriple(600, 5, 100, Team.PLAYER, 20),
+      new BowAutomatic(400, 0.2, 100, Team.PLAYER, 50),
+      new BowShotgun(400, 9, 20, Team.PLAYER, 10)
     ];
 
     pickupArm(bows[0]);
@@ -100,14 +104,14 @@ class Player extends Character {
     droneFollower.setVisible(drone == null);
     // Kill urself
     // Don't threaten me with a good time
-    if (FlxG.keys.pressed.K) {
+    if (Controls.suicide()) {
       health = 0;
     }
 
     // Update bow target
     if (!dead) {
       // Pickup drone
-      if (FlxG.keys.justPressed.F) {
+      if (Controls.toggleDrone()) {
         if (drone != null) {
           FlxG.overlap(this, drone, function collideDrone(_, _drone:Drone) {
             _drone.kill();
@@ -117,30 +121,38 @@ class Player extends Character {
           });
         }
         else {
-          drone = new Drone(getPosition().x, getPosition().y, this); // Images and animations <-- this actually is not Images and aminations
-          drone.pickupArm(new BowBasic(1000, 0.5, 100, Team.PLAYER, DRONE_AMMO));
-          FlxG.state.add(drone);
+          if (dronePool == null) {
+            dronePool = new Drone(x, y, this);
+            dronePool.pickupArm(new BowBasic(1000, 2.5, 100, Team.PLAYER, DRONE_AMMO));
+            FlxG.state.add(dronePool);
+          }
+          else {
+            dronePool.deploy(x, y);
+            dronePool.getBow().setAmmo(DRONE_AMMO);
+          }
+          drone = dronePool;
           FlxG.camera.follow(drone, LOCKON, 1.3);
           FlxG.camera.zoom = 1.8;
         }
       }
 
+      // Move around (before aiming, so the bow is at this frame's position)
+      move(elapsed);
+
       var bow = Std.downcast(arm, Bow);
       if (drone != null) {
         bow = drone.getBow();
       }
-      bow.setTarget(new FlxPoint(FlxG.mouse.x, FlxG.mouse.y));
+      var aim = Controls.updateAim(bow.x + bow.width / 2, bow.y + bow.height / 2);
+      bow.setTarget(aim.x, aim.y);
 
       // Make arrows
-      if (FlxG.mouse.justPressed) {
+      if (Controls.fireJustPressed()) {
         bow.pullBack();
       }
-      else if (FlxG.mouse.justReleased) {
+      else if (Controls.fireJustReleased()) {
         bow.release();
       }
-
-      // Move around
-      move(elapsed);
 
       if (health <= 0) {
         die();
@@ -152,12 +164,12 @@ class Player extends Character {
     if (hasWon && counter >= DEATH_TIMER) {
       FlxG.sound.music.stop();
       counter = 0;
-      FlxG.switchState(new MenuState());
+      FlxG.switchState(() -> new MenuState());
     }
 
     if (dead && counter >= DEATH_TIMER) {
       FlxG.sound.music.stop();
-      FlxG.switchState(new PlayState(PlayState.levelOn));
+      FlxG.switchState(() -> new PlayState(PlayState.levelOn));
     }
   }
 
@@ -167,55 +179,53 @@ class Player extends Character {
     ignoreGravity = isOnLadder;
 
     // Switch bow
-    if (FlxG.keys.pressed.ONE) {
-      currentBow = 0;
-      pickupArm(bows[currentBow]);
-      ArrowUi.setBow(currentBow);
+    if (FlxG.keys.justPressed.ONE) {
+      selectBow(0);
     }
-    else if (FlxG.keys.pressed.TWO) {
-      currentBow = 1;
-      pickupArm(bows[currentBow]);
-      ArrowUi.setBow(currentBow);
+    else if (FlxG.keys.justPressed.TWO) {
+      selectBow(1);
     }
-    else if (FlxG.keys.pressed.THREE) {
-      currentBow = 2;
-      pickupArm(bows[currentBow]);
-      ArrowUi.setBow(currentBow);
+    else if (FlxG.keys.justPressed.THREE) {
+      selectBow(2);
     }
-    else if (FlxG.keys.pressed.FOUR) {
-      currentBow = 3;
-      pickupArm(bows[currentBow]);
-      ArrowUi.setBow(currentBow);
+    else if (FlxG.keys.justPressed.FOUR) {
+      selectBow(3);
+    }
+    else if (Controls.nextBow()) {
+      selectBow((currentBow + 1) % bows.length);
+    }
+    else if (Controls.previousBow()) {
+      selectBow((currentBow + bows.length - 1) % bows.length);
     }
 
     // Right
-    if (FlxG.keys.pressed.D) {
+    if (Controls.right(D)) {
       moveRight();
     }
 
     // Left
-    if (FlxG.keys.pressed.A) {
+    if (Controls.left(A)) {
       moveLeft();
     }
 
     // Ladder
     if (isOnLadder) {
-      if (FlxG.keys.pressed.W) {
+      if (Controls.up(W)) {
         animation.play("climb");
         y -= 1;
       }
-      else if (FlxG.keys.pressed.S) {
+      else if (Controls.down(S)) {
         animation.play("climb");
         y += 1;
       }
     }
     // Jump Jump!
     // me on the edge of the building
-    if (FlxG.keys.pressed.SPACE) {
+    if (Controls.jump()) {
       jump(JUMP_VELOCITY);
     }
     // Idleing
-    if (!FlxG.keys.pressed.A && !FlxG.keys.pressed.D) {
+    if (!Controls.left(A) && !Controls.right(D)) {
       // Stopped
       if (velocity.x < 5 && velocity.x > -5) {
         acceleration.x = 0;
@@ -226,10 +236,9 @@ class Player extends Character {
           animation.play("idle");
         }
         else {
-          animation.play("climbing");
+          animation.play("climb");
         }
       }
-
       // Decelerating
       else if (velocity.x > 0) {
         acceleration.x = -movementSpeedChange * MOVEMENT_SPEED_DECELERATION_CHANGE * (movementSpeedMax + velocity.x);
@@ -239,7 +248,7 @@ class Player extends Character {
           animation.play("walk");
         }
         else {
-          animation.play("climbing");
+          animation.play("climb");
         }
       }
       else if (velocity.x < 0) {
@@ -251,12 +260,22 @@ class Player extends Character {
           animation.play("walk");
         }
         else {
-          animation.play("climbing");
+          animation.play("climb");
         }
       }
     }
 
     super.move(elapsed);
+  }
+
+  // Equip bow by index, ignore if already held
+  private function selectBow(index:Int) {
+    if (arm == bows[index]) {
+      return;
+    }
+    currentBow = index;
+    pickupArm(bows[currentBow]);
+    ArrowUi.setBow(currentBow);
   }
 
   // ur butt
@@ -270,6 +289,7 @@ class Player extends Character {
       animation.play("die");
       arm.visible = false;
       dead = true;
+      FlxG.sound.music.stop();
       FlxG.sound.play(AssetPaths.bell__mp3);
       startTimer();
       velocity.x = 0;
@@ -299,7 +319,7 @@ class Player extends Character {
     this.isOnLadder = isOnLadder;
 
     if (isOnLadder) {
-      if (FlxG.keys.pressed.W || FlxG.keys.pressed.S) {
+      if (Controls.up(W) || Controls.down(S)) {
         x = ladderX;
       }
     }

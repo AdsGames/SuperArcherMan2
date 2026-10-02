@@ -8,14 +8,38 @@ You will need [haxelib](https://haxe.org/download/)
 haxelib install lime
 haxelib install openfl
 haxelib install flixel
+haxelib run lime setup
 haxelib run lime setup flixel
 haxelib run flixel-tools setup
 ```
 
-## Running
+Optional:
 
 ```sh
-lime test html5 --connect 6000
+haxelib install checkstyle
+haxelib install formatter
+```
+
+## Running
+
+### Neko
+
+```sh
+haxelib run lime test neko
+```
+
+### Native
+
+```sh
+haxelib run lime test cpp
+```
+
+### HTML5
+
+```sh
+# Not required if using vscode
+haxe --wait 6000
+haxelib run lime test html5 --connect 6000
 ```
 
 or in vscode

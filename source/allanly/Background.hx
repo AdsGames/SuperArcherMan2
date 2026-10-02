@@ -31,7 +31,15 @@ class Background extends FlxSprite {
   }
 
   public function createBackdrop(gradient1:String, gradient2:String) {
-    var _sprSolid = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [FlxColor.fromString(gradient1), FlxColor.fromString(gradient2)], 8);
+    // Invalid colors parse to null, which crashes FlxGradient on native targets
+    var color1 = FlxColor.fromString(gradient1);
+    var color2 = FlxColor.fromString(gradient2);
+    if (color1 == null || color2 == null) {
+      trace("Invalid background gradient " + gradient1 + " " + gradient2);
+      return;
+    }
+
+    var _sprSolid = FlxGradient.createGradientFlxSprite(FlxG.width, FlxG.height, [color1, color2], 8);
     _sprSolid.y = 0;
     _sprSolid.scrollFactor.set();
     FlxG.state.add(_sprSolid);

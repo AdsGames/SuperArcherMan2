@@ -55,7 +55,7 @@ class Drone extends Character {
 
   // Move around
   override public function move(elapsed:Float) {
-    if (FlxG.keys.pressed.LEFT) {
+    if (Controls.left(LEFT)) {
       animation.play("fly");
       // Movement
       if (velocity.x > -MOVEMENT_SPEED_MAX) {
@@ -71,7 +71,7 @@ class Drone extends Character {
       }
     }
 
-    if (FlxG.keys.pressed.RIGHT) {
+    if (Controls.right(RIGHT)) {
       animation.play("fly");
       // Movement
       if (velocity.x < MOVEMENT_SPEED_MAX) {
@@ -86,7 +86,7 @@ class Drone extends Character {
         scale.x *= -1;
       }
     }
-    if (FlxG.keys.pressed.UP) {
+    if (Controls.up(UP)) {
       animation.play("fly");
       // Movement
       if (velocity.y > -MOVEMENT_SPEED_Y_MAX) {
@@ -98,7 +98,7 @@ class Drone extends Character {
         acceleration.y = 0;
       }
     }
-    if (FlxG.keys.pressed.DOWN) {
+    if (Controls.down(DOWN)) {
       animation.play("glide");
       // Movement
       if (velocity.y < MOVEMENT_SPEED_Y_MAX) {
@@ -111,16 +111,15 @@ class Drone extends Character {
         acceleration.y = 0;
       }
     }
-    if (!FlxG.keys.pressed.LEFT && !FlxG.keys.pressed.RIGHT && !FlxG.keys.pressed.UP && !FlxG.keys.pressed.DOWN)
+    if (!Controls.left(LEFT) && !Controls.right(RIGHT) && !Controls.up(UP) && !Controls.down(DOWN))
       animation.play("idle");
-    if (!FlxG.keys.pressed.LEFT && !FlxG.keys.pressed.RIGHT) {
+    if (!Controls.left(LEFT) && !Controls.right(RIGHT)) {
       // Stopped
       // just like my heart should be
       if (velocity.x < 5 && velocity.x > -5) {
         acceleration.x = 0;
         velocity.x = 0;
       }
-
       // Decelerating
       else if (velocity.x > 0) {
         acceleration.x = -MOVEMENT_SPEED_CHANGE_2 * MOVEMENT_SPEED_DECELERATION_CHANGE_2 * (MOVEMENT_SPEED_MAX + velocity.x);
@@ -130,13 +129,12 @@ class Drone extends Character {
       }
     }
 
-    if (!FlxG.keys.pressed.UP && !FlxG.keys.pressed.DOWN) {
+    if (!Controls.up(UP) && !Controls.down(DOWN)) {
       // Stopped
       if (velocity.y < 5 && velocity.y > -5) {
         acceleration.y = 0;
         velocity.y = 0;
       }
-
       // Decelerating
       else if (velocity.y > 0) {
         acceleration.y = -MOVEMENT_SPEED_CHANGE_2 * MOVEMENT_SPEED_DECELERATION_CHANGE_2 * (MOVEMENT_SPEED_Y_MAX + velocity.y);
@@ -147,6 +145,15 @@ class Drone extends Character {
     }
 
     super.move(elapsed);
+  }
+
+  // Bring back a killed drone at a new position
+  public function deploy(x:Float, y:Float) {
+    reset(x, y);
+    acceleration.set();
+    dronePointer.revive();
+    arm.revive();
+    healthBar.revive();
   }
 
   // Kill

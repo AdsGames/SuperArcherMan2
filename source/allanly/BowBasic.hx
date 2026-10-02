@@ -32,7 +32,7 @@ class BowBasic extends Bow {
   public override function release() {
     // Min velocity
     if (power > minPower) {
-      Character.arrowContainer.add(new Arrow(this, x + origin.x, y + origin.y, angle, power, team));
+      Arrow.fire(this, x + origin.x, y + origin.y, angle, power, team);
       bowReleaseSound.play();
       ammo -= 1;
     }

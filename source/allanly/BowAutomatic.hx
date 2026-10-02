@@ -34,7 +34,7 @@ class BowAutomatic extends Bow {
     if (power >= maxPower) {
       release();
       if (ammo > 0) {
-        powerTimer.start(0.01, powerTicker, 0);
+        charging = true;
       }
     }
     super.update(elapsed);
@@ -43,7 +43,7 @@ class BowAutomatic extends Bow {
   public override function release() {
     // Min velocity
     if (power > minPower) {
-      Character.arrowContainer.add(new Arrow(this, x + origin.x, y + origin.y, angle - 5, power, team));
+      Arrow.fire(this, x + origin.x, y + origin.y, angle - 5, power, team);
       bowReleaseSound.play();
       ammo -= 1;
     }

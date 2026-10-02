@@ -29,12 +29,12 @@ class Follower extends FlxSprite {
 
   // poop.fart
   override public function update(elapsed:Float) {
-    if (parent.getPosition().x > x) {
+    if (parent.x > x) {
       if (scale.x > 0) {
         scale.x *= -1;
       }
     }
-    if (parent.getPosition().x < x) {
+    if (parent.x < x) {
       if (scale.x < 0) {
         scale.x *= -1;
       }

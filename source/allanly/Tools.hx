@@ -6,6 +6,7 @@ package allanly;
  * Tools for all classes
  * 14/6/2015
  */
+import flixel.FlxG;
 import flixel.math.FlxPoint;
 
 class Tools {
@@ -16,15 +17,13 @@ class Tools {
     return Math.sqrt(xx * xx + yy * yy);
   }
 
-  // Random generator
+  // Random generator, min and max inclusive with equal odds
   public static function myRandom(min:Int, max:Int):Int {
-    var n:Int = Math.round(min + Math.random() * (max - min));
-    return n;
+    return FlxG.random.int(min, max);
   }
 
-  // Random chance
+  // Random chance, true chance% of the time
   public static function randomChance(chance:Int):Bool {
-    var n:Int = Math.round(Math.random() * (100));
-    return n <= chance;
+    return FlxG.random.bool(chance);
   }
 }

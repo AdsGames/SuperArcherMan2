@@ -10,7 +10,8 @@ import flixel.FlxSprite;
 import flixel.FlxState;
 import flixel.effects.particles.FlxEmitter;
 import flixel.effects.particles.FlxParticle;
-import flixel.ui.FlxButton;
+import ui.MenuNav;
+import ui.PixelButton;
 
 class MenuState extends FlxState {
   // Arrows
@@ -22,8 +23,6 @@ class MenuState extends FlxState {
 
   // Init game
   override public function create() {
-    FlxG.mouse.visible = true;
-
     createEmitter();
     createUI();
     startMusic();
@@ -50,8 +49,11 @@ class MenuState extends FlxState {
   // Create UI
   private function createUI() {
     add(new FlxSprite(150, 50, AssetPaths.title__png));
-    add(new FlxButton(650, 380, "Start Game", startGame));
-    add(new FlxButton(650, 420, "Instructions", showHelp));
+    var startButton = new PixelButton(650, 380, "Start Game", startGame);
+    var helpButton = new PixelButton(650, 420, "Instructions", showHelp);
+    add(startButton);
+    add(helpButton);
+    add(new MenuNav([startButton, helpButton]));
   }
 
   // Start music
@@ -63,12 +65,11 @@ class MenuState extends FlxState {
 
   // Start
   private function startGame() {
-    FlxG.mouse.visible = false;
-    FlxG.switchState(new LevelSelect());
+    FlxG.switchState(() -> new LevelSelect());
   }
 
   // Help
   private function showHelp() {
-    FlxG.switchState(new HelpState());
+    FlxG.switchState(() -> new HelpState());
   }
 }
